@@ -11,4 +11,4 @@ services:
         - "vite.config.js"
         - "package.json"
         - "pnpm-lock.yaml"
-    plan: free
+ 
