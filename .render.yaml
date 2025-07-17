@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: fitcode-frontend
+    env: static
+    buildCommand: pnpm install && pnpm run build
+    staticPublishPath: dist
+    buildFilter:
+      paths:
+        - "src/**"
+        - "public/**"
+        - "vite.config.js"
+        - "package.json"
+        - "pnpm-lock.yaml"
+    plan: free
