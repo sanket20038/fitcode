@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './App.css';
 
@@ -47,78 +47,75 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50">
-        <Routes>
-          {/* Public Routes */}
-          <Route 
-            path="/login" 
-            element={
-              authenticated ? 
-                <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
-                <Login setAuthenticated={setAuthenticated} setUserType={setUserType} />
-            } 
-          />
-          <Route 
-            path="/register" 
-            element={
-              authenticated ? 
-                <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
-                <Register />
-            } 
-          />
+    <div className="min-h-screen bg-gray-50">
+      <Routes>
+        {/* Public Routes */}
+        <Route 
+          path="/login" 
+          element={
+            authenticated ? 
+              <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
+              <Login setAuthenticated={setAuthenticated} setUserType={setUserType} />
+          } 
+        />
+        <Route 
+          path="/register" 
+          element={
+            authenticated ? 
+              <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
+              <Register />
+          } 
+        />
 
-          {/* Owner Routes */}
-          <Route 
-            path="/owner/dashboard" 
-            element={
-              <ProtectedRoute userType="owner">
-                <OwnerDashboard setAuthenticated={setAuthenticated} setUserType={setUserType} />
-              </ProtectedRoute>
-            } 
-          />
+        {/* Owner Routes */}
+        <Route 
+          path="/owner/dashboard" 
+          element={
+            <ProtectedRoute userType="owner">
+              <OwnerDashboard setAuthenticated={setAuthenticated} setUserType={setUserType} />
+            </ProtectedRoute>
+          } 
+        />
 
-          {/* Client Routes */}
-          <Route 
-            path="/client/dashboard" 
-            element={
-              <ProtectedRoute userType="client">
-                <ClientDashboard setAuthenticated={setAuthenticated} setUserType={setUserType} />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/client/scanner" 
-            element={
-              <ProtectedRoute userType="client">
-                <QRScanner />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/machine/:machineId" 
-            element={
-              <ProtectedRoute userType="client">
-                <MachineInfo />
-              </ProtectedRoute>
-            } 
-          />
+        {/* Client Routes */}
+        <Route 
+          path="/client/dashboard" 
+          element={
+            <ProtectedRoute userType="client">
+              <ClientDashboard setAuthenticated={setAuthenticated} setUserType={setUserType} />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/client/scanner" 
+          element={
+            <ProtectedRoute userType="client">
+              <QRScanner />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/machine/:machineId" 
+          element={
+            <ProtectedRoute userType="client">
+              <MachineInfo />
+            </ProtectedRoute>
+          } 
+        />
 
-          {/* Default Routes */}
-          <Route 
-            path="/" 
-            element={
-              authenticated ? 
-                <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
-                <Navigate to="/login" replace />
-            } 
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </div>
-    </Router>
+        {/* Default Routes */}
+        <Route 
+          path="/" 
+          element={
+            authenticated ? 
+              <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
+              <Navigate to="/login" replace />
+          } 
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
   );
 }
 
 export default App;
-
