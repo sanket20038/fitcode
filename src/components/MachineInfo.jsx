@@ -109,7 +109,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
     clearAuth();
     setAuthenticated(false);
     setUserType(null);
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   // Direct translation function that bypasses your backend
