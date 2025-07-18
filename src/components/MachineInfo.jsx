@@ -407,16 +407,16 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
         {/* Gym Information Card - From Database */}
         {gymInfo && (
           <Card className="mb-8 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 hover:scale-[1.02]">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 p-1">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
+                <div className="relative mb-2 sm:mb-0">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 p-1">
                     <div className="w-full h-full rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center">
                       {gymInfo.logo_url ? (
                         <img 
                           src={gymInfo.logo_url} 
                           alt={gymInfo.name}
-                          className="w-12 h-12 rounded-full object-cover"
+                          className="w-9 h-9 sm:w-12 sm:h-12 rounded-full object-cover"
                           onError={(e) => {
                             e.target.style.display = 'none';
                             e.target.nextSibling.style.display = 'flex';
@@ -424,29 +424,28 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                         />
                       ) : null}
                       <div 
-                        className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center" 
+                        className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center" 
                         style={{display: gymInfo.logo_url ? 'none' : 'flex'}}
                       >
-                        <Dumbbell className="h-6 w-6 text-white" />
+                        <Dumbbell className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-white mb-1">{gymInfo.name}</h2>
-                  <p className="text-white/60 text-sm font-medium">ID: {gymInfo.id}</p>
-                  
+                <div className="flex-1 text-center sm:text-left">
+                  <h2 className="text-lg sm:text-2xl font-bold text-white mb-1">{gymInfo.name}</h2>
+                  <p className="text-white/60 text-xs sm:text-sm font-medium">ID: {gymInfo.id}</p>
                   {gymInfo.contact_info && (
-                    <div className="flex items-center space-x-2 mt-3">
+                    <div className="flex items-center justify-center sm:justify-start space-x-2 mt-2">
                       <Phone className="h-4 w-4 text-green-400" />
-                      <span className="text-white/90 text-sm">{gymInfo.contact_info}</span>
+                      <span className="text-white/90 text-xs sm:text-sm">{gymInfo.contact_info}</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="text-right">
-                  <div className="text-white/70 text-sm">
+                <div className="text-center sm:text-right mt-2 sm:mt-0">
+                  <div className="text-white/70 text-xs sm:text-sm">
                     <p>Owner ID: {gymInfo.owner_id}</p>
                   </div>
                 </div>

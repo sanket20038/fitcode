@@ -308,38 +308,37 @@ const exportToPDF = async (aiResponses) => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Modern Header with Glassmorphism */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-75"></div>
-                <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-2xl shadow-xl">
-                  <Dumbbell className="h-8 w-8 text-white" />
-                </div>
-              </div>
-              <div>
-                <h1 className="text-3xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  FitCode
-                </h1>
-                <p className="text-white/60 text-sm font-medium">Premium Fitness Platform</p>
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          {/* Logo and App Name */}
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-75"></div>
+              <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 p-2 rounded-2xl shadow-xl">
+                <Dumbbell className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
             </div>
-            
-            <div className="flex items-center space-x-6">
-              <div className="text-right">
-                <p className="text-white/60 text-sm">Welcome back,</p>
-                <p className="text-white font-bold text-lg">{user?.username}</p>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-xl transition-all duration-300 hover:scale-105"
-                onClick={handleLogout}
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
+            <div>
+              <h1 className="text-lg sm:text-2xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                FitCode
+              </h1>
+              <p className="text-white/60 text-xs sm:text-sm font-medium">Premium Fitness Platform</p>
             </div>
+          </div>
+          {/* Welcome and Logout */}
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="text-right">
+              <span className="block text-white/60 text-xs sm:text-sm">Welcome back,</span>
+              <span className="block text-white font-bold text-base sm:text-lg break-all">{user?.username}</span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 border-none text-white font-bold shadow-lg hover:from-pink-600 hover:to-yellow-500 hover:scale-105 active:scale-95 transition-all duration-300 px-4 py-1 text-xs sm:text-sm rounded-xl drop-shadow-lg"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
           </div>
         </div>
       </header>
