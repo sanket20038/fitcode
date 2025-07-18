@@ -305,7 +305,7 @@ const exportToPDF = async (aiResponses) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
       {/* Modern Header with Glassmorphism */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -627,7 +627,7 @@ const exportToPDF = async (aiResponses) => {
             </Card>
           </TabsContent>
 
-          {/* Scan History Tab - Now Third with Enhanced UI */}
+          {/* Scan History Tab - Now Third with Enhanced Responsive UI */}
           <TabsContent value="history" className="animate-in fade-in duration-500">
             <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
               <CardHeader>
@@ -658,34 +658,35 @@ const exportToPDF = async (aiResponses) => {
                         key={scan.id} 
                         className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 hover:scale-[1.02] group"
                       >
-                        <CardContent className="p-6">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                              <div className="relative">
-                                <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
-                                  <Dumbbell className="h-6 w-6 text-white" />
+                        <CardContent className="p-4 sm:p-6">
+                          <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-start sm:justify-between gap-3">
+                            {/* Left side - Machine info */}
+                            <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
+                              <div className="relative flex-shrink-0">
+                                <div className="p-2 sm:p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
+                                  <Dumbbell className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
                                 </div>
-                                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                                <div className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
                                   {index + 1}
                                 </div>
                               </div>
                               
-                              <div className="flex-1">
-                                <h3 className="font-bold text-lg text-white group-hover:text-blue-400 transition-colors mb-1">
+                              <div className="flex-1 min-w-0 pr-2">
+                                <h3 className="font-bold text-sm sm:text-base lg:text-lg text-white group-hover:text-blue-400 transition-colors mb-1 break-words leading-tight">
                                   {scan.machine.name}
                                 </h3>
-                                <div className="flex items-center space-x-4 text-white/70 text-sm">
+                                <div className="flex flex-col space-y-1 text-white/70 text-xs sm:text-sm">
                                   <div className="flex items-center space-x-1">
-                                    <MapPin className="h-3 w-3" />
-                                    <span>{scan.gym?.name}</span>
+                                    <MapPin className="h-3 w-3 flex-shrink-0" />
+                                    <span className="break-words leading-tight">{scan.gym?.name}</span>
                                   </div>
                                   <div className="flex items-center space-x-1">
-                                    <Clock className="h-3 w-3" />
-                                    <span>{getTimeAgo(scan.scanned_at)}</span>
+                                    <Clock className="h-3 w-3 flex-shrink-0" />
+                                    <span className="whitespace-nowrap">{getTimeAgo(scan.scanned_at)}</span>
                                   </div>
                                 </div>
                                 
-                                <div className="flex items-center space-x-2 mt-2">
+                                <div className="flex flex-wrap gap-1 sm:gap-2 mt-2">
                                   <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">
                                     <Activity className="h-3 w-3 mr-1" />
                                     Scanned
@@ -693,20 +694,20 @@ const exportToPDF = async (aiResponses) => {
                                   {scan.machine.how_to_use_video_url && (
                                     <Badge className="bg-green-500/20 text-green-300 border-green-500/30 text-xs">
                                       <Play className="h-3 w-3 mr-1" />
-                                      Video Available
+                                      Video
                                     </Badge>
                                   )}
                                 </div>
                               </div>
                             </div>
                             
-                            <div className="flex items-center space-x-2">
+                            {/* Right side - View button */}
+                            <div className="flex-shrink-0 w-full sm:w-auto">
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 hover:scale-105"
+                                className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 hover:scale-105 w-full sm:w-auto"
                                 onClick={() => navigate(`/machine/${scan.machine_id}`)}
-
                               >
                                 <Target className="h-4 w-4 mr-1" />
                                 View
@@ -718,7 +719,7 @@ const exportToPDF = async (aiResponses) => {
                           <div className="mt-4 pt-4 border-t border-white/10">
                             <div className="flex items-center justify-between text-xs text-white/60">
                               <span>Scan #{index + 1}</span>
-                              <span>{formatDate(scan.scanned_at)}</span>
+                              <span className="truncate ml-2">{formatDate(scan.scanned_at)}</span>
                             </div>
                           </div>
                         </CardContent>

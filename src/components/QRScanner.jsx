@@ -60,7 +60,7 @@ const QRScanner = () => {
       html5QrcodeScannerRef.current = new Html5QrcodeScanner(
         'qr-reader',
         {
-          fps: 10,
+          fps: 25,
           qrbox: { width: 280, height: 280 },
           aspectRatio: 1.0,
           showTorchButtonIfSupported: true,
@@ -114,43 +114,39 @@ const QRScanner = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
       {/* Modern Header with Glassmorphism */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/client/dashboard')}
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-xl transition-all duration-300 hover:scale-105"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-              
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-75"></div>
-                  <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-2xl shadow-xl">
-                    <QrCode className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-                <div>
-                  <h1 className="text-2xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    QR Scanner
-                  </h1>
-                  <p className="text-white/60 text-sm font-medium">Scan machine codes</p>
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/client/dashboard')}
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              <span className="text-xs sm:text-sm">Back</span>
+            </Button>
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-75"></div>
+                <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 p-2 sm:p-3 rounded-2xl shadow-xl">
+                  <QrCode className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                 </div>
               </div>
+              <div>
+                <h1 className="text-sm sm:text-2xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  QR Scanner
+                </h1>
+                <p className="text-white/60 text-xs sm:text-sm font-medium">Scan machine codes</p>
+              </div>
             </div>
-            
-            {/* Scan Counter */}
-            <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-xl rounded-full px-4 py-2">
-              <Target className="h-4 w-4 text-purple-400" />
-              <span className="text-white font-medium">{scanCount} scans</span>
-            </div>
+          </div>
+          {/* Scan Counter */}
+          <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-xl rounded-full px-2 sm:px-4 py-1 sm:py-2">
+            <Target className="h-4 w-4 text-purple-400" />
+            <span className="text-white font-medium text-xs sm:text-base">{scanCount} scans</span>
           </div>
         </div>
       </header>
@@ -204,11 +200,11 @@ const QRScanner = () => {
                 </p>
                 
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                  <div className="absolute -inset-1 from-blue-600 to-indigo-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                   <Button 
                     onClick={startScanning} 
                     size="lg"
-                    className="relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl"
+                    className="relative bg-gradient-to-r from-orange-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl"
                   >
                     <QrCode className="h-6 w-6 mr-3" />
                     Start Scanning
