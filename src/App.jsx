@@ -10,6 +10,9 @@ import ClientDashboard from './components/ClientDashboard';
 import QRScanner from './components/QRScanner';
 import MachineInfo from './components/MachineInfo';
 import ProtectedRoute from './components/ProtectedRoute';
+import LandingPage from './components/LandingPage';
+import ClientLogin from './components/ClientLogin';
+import OwnerLogin from './components/OwnerLogin';
 
 // Utils
 import { isAuthenticated, isOwner, isClient } from './lib/auth';
@@ -56,8 +59,24 @@ function App() {
             element={
               authenticated ? 
                 <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
-                <Login setAuthenticated={setAuthenticated} setUserType={setUserType} />
+                <Login />
             } 
+          />
+          <Route
+            path="/login/client"
+            element={
+              authenticated ?
+                <Navigate to="/client/dashboard" replace /> :
+                <ClientLogin setAuthenticated={setAuthenticated} setUserType={setUserType} />
+            }
+          />
+          <Route
+            path="/login/owner"
+            element={
+              authenticated ?
+                <Navigate to="/owner/dashboard" replace /> :
+                <OwnerLogin setAuthenticated={setAuthenticated} setUserType={setUserType} />
+            }
           />
           <Route 
             path="/register" 
@@ -110,7 +129,7 @@ function App() {
             element={
               authenticated ? 
                 <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
-                <Navigate to="/login" replace />
+                <LandingPage />
             } 
           />
           <Route path="*" element={<Navigate to="/" replace />} />
