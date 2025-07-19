@@ -369,7 +369,7 @@ const exportToPDF = async (aiResponses) => {
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
               <Card 
                 className="relative bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 hover:scale-[1.02] cursor-pointer rounded-3xl overflow-hidden"
-                onClick={() => navigate('/client/scanner')}
+                onClick={() => navigate('/QRScanner')}
               >
                 <CardContent className="p-12">
                   <div className="flex flex-col items-center">
