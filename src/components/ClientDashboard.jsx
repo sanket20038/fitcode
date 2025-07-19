@@ -46,6 +46,7 @@ import { clientAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
 
 import AskAIButton from './AskAIButton';
+import GymLoader from './GymLoader';
 
 const ClientDashboard = ({ setAuthenticated, setUserType }) => {
   const [user] = useState(getUser());
@@ -111,7 +112,7 @@ const ClientDashboard = ({ setAuthenticated, setUserType }) => {
     clearAuth();
     setAuthenticated(false);
     setUserType(null);
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   const handleRemoveBookmark = async (machineId) => {
@@ -293,13 +294,7 @@ const exportToPDF = async (aiResponses) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="w-24 h-24 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto"></div>
-            <div className="absolute inset-0 w-24 h-24 border-4 border-transparent border-t-pink-400 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
-          </div>
-          <p className="text-white/80 mt-6 text-lg font-medium">Loading your dashboard...</p>
-        </div>
+        <GymLoader size="xlarge" text="Loading your dashboard..." variant="pulse" />
       </div>
     );
   }
@@ -371,7 +366,7 @@ const exportToPDF = async (aiResponses) => {
             
             {/* Main QR Scanner Card */}
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
               <Card 
                 className="relative bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 hover:scale-[1.02] cursor-pointer rounded-3xl overflow-hidden"
                 onClick={() => navigate('/client/scanner')}
@@ -380,21 +375,22 @@ const exportToPDF = async (aiResponses) => {
                   <div className="flex flex-col items-center">
                     <div className="relative mb-8">
                       <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                      <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-full shadow-2xl">
-                        <QrCode className="h-16 w-16 text-white" />
+                      <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-full shadow-2xl group-hover:shadow-purple-500/50 transition-all duration-300">
+                        <QrCode className="h-16 w-16 text-white group-hover:scale-110 transition-transform duration-300" />
                       </div>
                     </div>
                     
                     <h3 className="text-4xl font-black text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                       Scan QR Code
                     </h3>
-                    <p className="text-white/80 text-lg mb-6 max-w-md">
+                    <p className="text-white/80 text-lg mb-8 max-w-md leading-relaxed">
                       Scan a machine QR code to view instructions and get personalized guidance
                     </p>
                     
-                    <div className="flex items-center space-x-2 text-white/60 text-sm">
-                      <Sparkles className="h-4 w-4" />
-                      <span>Click to start scanning</span>
+                    <div className="flex items-center space-x-3 text-white/70 text-sm group-hover:text-white/90 transition-colors duration-300">
+                      <Sparkles className="h-5 w-5 text-yellow-400 animate-pulse" />
+                      <span className="font-medium">Click to start scanning</span>
+                      <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
                     </div>
                   </div>
                 </CardContent>
@@ -448,51 +444,73 @@ const exportToPDF = async (aiResponses) => {
           </Card>
         </div>
 
-        {/* Modern Tabs - Reordered: AI Responses, Bookmarks, Scan History */}
+        {/* Enhanced Modern Tabs - Responsive */}
         <Tabs value={tabValue} onValueChange={setTabValue} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-xl max-w-2xl mx-auto">
-            <TabsTrigger 
-              value="airesponses"
-              className="rounded-xl transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/70 hover:text-white"
-            >
-              <Zap className="h-4 w-4 mr-2" />
-              AI Responses
-            </TabsTrigger>
-            <TabsTrigger 
-              value="bookmarks" 
-              className="rounded-xl transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/70 hover:text-white"
-            >
-              <Bookmark className="h-4 w-4 mr-2" />
-              Bookmarks
-            </TabsTrigger>
-            <TabsTrigger 
-              value="history"
-              className="rounded-xl transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/70 hover:text-white"
-            >
-              <History className="h-4 w-4 mr-2" />
-              History
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex justify-center px-4">
+            <TabsList className="inline-flex h-12 sm:h-16 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-1 sm:p-2 shadow-2xl w-full max-w-md sm:max-w-none">
+              <TabsTrigger 
+                value="airesponses"
+                className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1 sm:flex-none"
+              >
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="relative">
+                    <Zap className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span className="font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap">AI Responses</span>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 data-[state=active]:opacity-100 transition-opacity duration-500"></div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="bookmarks" 
+                className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1 sm:flex-none"
+              >
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="relative">
+                    <Bookmark className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span className="font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap">Bookmarks</span>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 data-[state=active]:opacity-100 transition-opacity duration-500"></div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="history"
+                className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1 sm:flex-none"
+              >
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="relative">
+                    <History className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span className="font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap">History</span>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 data-[state=active]:opacity-100 transition-opacity duration-500"></div>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           {/* AI Responses Tab - Now First */}
           <TabsContent value="airesponses" className="animate-in fade-in duration-500">
             <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
               <CardHeader>
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-gradient-to-r from-orange-600 to-red-600 rounded-lg">
-                      <Zap className="h-5 w-5 text-white" />
+                      <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div>
-                      <CardTitle className="text-white text-2xl">AI Responses</CardTitle>
-                      <CardDescription className="text-white/70">Your personalized AI fitness guidance</CardDescription>
+                      <CardTitle className="text-white text-lg sm:text-xl md:text-2xl">AI Responses</CardTitle>
+                      <CardDescription className="text-white/70 text-sm sm:text-base">Your personalized AI fitness guidance</CardDescription>
                     </div>
                   </div>
                   
                   {aiResponses.length > 0 && (
                     <Button
                       onClick={() => exportToPDF(aiResponses)}
-                      className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg transition-all duration-300 hover:scale-105"
+                      className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg transition-all duration-300 hover:scale-105 w-full sm:w-auto text-sm sm:text-base"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Export PDF
@@ -502,21 +520,21 @@ const exportToPDF = async (aiResponses) => {
               </CardHeader>
               <CardContent>
                 {aiResponses.length > 0 ? (
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     {aiResponses.map((response, index) => (
                       <Card 
                         key={index} 
                         className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300"
                       >
-                        <CardHeader>
-                          <CardTitle className="text-white text-lg flex items-center space-x-2">
-                            <Sparkles className="h-5 w-5 text-orange-400" />
+                        <CardHeader className="p-4 sm:p-6">
+                          <CardTitle className="text-white text-base sm:text-lg flex items-center space-x-2">
+                            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-orange-400" />
                             <span>AI Response {index + 1}</span>
                           </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="p-4 sm:p-6">
                           <div className="prose prose-invert max-w-none">
-                            <ReactMarkdown className="text-white/90 leading-relaxed">
+                            <ReactMarkdown className="text-white/90 leading-relaxed text-sm sm:text-base">
                               {response}
                             </ReactMarkdown>
                           </div>
@@ -525,12 +543,12 @@ const exportToPDF = async (aiResponses) => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-16">
-                    <div className="p-4 bg-gradient-to-r from-orange-600 to-red-600 rounded-full w-fit mx-auto mb-4">
-                      <Zap className="h-12 w-12 text-white" />
+                  <div className="text-center py-8 sm:py-16">
+                    <div className="p-3 sm:p-4 bg-gradient-to-r from-orange-600 to-red-600 rounded-full w-fit mx-auto mb-4">
+                      <Zap className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">No AI responses yet</h3>
-                    <p className="text-white/70 mb-6">Ask the AI assistant for personalized fitness guidance</p>
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No AI responses yet</h3>
+                    <p className="text-white/70 mb-4 sm:mb-6 text-sm sm:text-base">Ask the AI assistant for personalized fitness guidance</p>
                   </div>
                 )}
               </CardContent>
@@ -543,25 +561,25 @@ const exportToPDF = async (aiResponses) => {
               <CardHeader>
                 <div className="flex items-center space-x-3">
                   <div className="p-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg">
-                    <Bookmark className="h-5 w-5 text-white" />
+                    <Bookmark className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                   </div>
                   <div>
-                    <CardTitle className="text-white text-2xl">Bookmarked Machines</CardTitle>
-                    <CardDescription className="text-white/70">Your saved machines for quick access</CardDescription>
+                    <CardTitle className="text-white text-lg sm:text-xl md:text-2xl">Bookmarked Machines</CardTitle>
+                    <CardDescription className="text-white/70 text-sm sm:text-base">Your saved machines for quick access</CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 {bookmarks.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {bookmarks.map((bookmark) => (
                       <Card 
                         key={bookmark.id} 
                         className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 hover:scale-105 group"
                       >
-                        <CardContent className="p-6">
-                          <div className="flex justify-between items-start mb-4">
-                            <h3 className="font-bold text-lg text-white group-hover:text-green-400 transition-colors">
+                        <CardContent className="p-4 sm:p-6">
+                          <div className="flex justify-between items-start mb-3 sm:mb-4">
+                            <h3 className="font-bold text-base sm:text-lg text-white group-hover:text-green-400 transition-colors">
                               {bookmark.machine.name}
                             </h3>
                             <Button
@@ -574,23 +592,23 @@ const exportToPDF = async (aiResponses) => {
                             </Button>
                           </div>
                           
-                          <p className="text-white/70 text-sm mb-4">{bookmark.gym?.name}</p>
+                          <p className="text-white/70 text-xs sm:text-sm mb-3 sm:mb-4">{bookmark.gym?.name}</p>
                           
-                          <div className="flex flex-wrap gap-2 mb-4">
+                          <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
                             {bookmark.machine.how_to_use_video_url && (
-                              <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">
+                              <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">
                                 <Play className="h-3 w-3 mr-1" />
                                 Video
                               </Badge>
                             )}
                             {bookmark.machine.usage_guide && (
-                              <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
+                              <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-xs">
                                 <BookOpen className="h-3 w-3 mr-1" />
                                 Guide
                               </Badge>
                             )}
                             {bookmark.machine.safety_tips && (
-                              <Badge className="bg-orange-500/20 text-orange-300 border-orange-500/30">
+                              <Badge className="bg-orange-500/20 text-orange-300 border-orange-500/30 text-xs">
                                 <Shield className="h-3 w-3 mr-1" />
                                 Safety
                               </Badge>
@@ -598,7 +616,7 @@ const exportToPDF = async (aiResponses) => {
                           </div>
                           
                           <Button
-                            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg transition-all duration-300 hover:scale-105"
+                            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
                            onClick={() => navigate(`/machine/${bookmark.machine_id}`)}
 
                           >
@@ -609,14 +627,14 @@ const exportToPDF = async (aiResponses) => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-16">
-                    <div className="p-4 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full w-fit mx-auto mb-4">
-                      <Bookmark className="h-12 w-12 text-white" />
+                  <div className="text-center py-8 sm:py-16">
+                    <div className="p-3 sm:p-4 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full w-fit mx-auto mb-4">
+                      <Bookmark className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">No bookmarks yet</h3>
-                    <p className="text-white/70 mb-6">Start bookmarking machines to see them here</p>
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No bookmarks yet</h3>
+                    <p className="text-white/70 mb-4 sm:mb-6 text-sm sm:text-base">Start bookmarking machines to see them here</p>
                     <Button
-                      className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                      className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-sm sm:text-base"
                       onClick={() => navigate('/client/scanner')}
                     >
                       Scan a Machine
@@ -631,19 +649,19 @@ const exportToPDF = async (aiResponses) => {
           <TabsContent value="history" className="animate-in fade-in duration-500">
             <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg">
-                      <History className="h-5 w-5 text-white" />
+                      <History className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
                     <div>
-                      <CardTitle className="text-white text-2xl">Scan History</CardTitle>
-                      <CardDescription className="text-white/70">Your recent machine scans and activity</CardDescription>
+                      <CardTitle className="text-white text-lg sm:text-xl md:text-2xl">Scan History</CardTitle>
+                      <CardDescription className="text-white/70 text-sm sm:text-base">Your recent machine scans and activity</CardDescription>
                     </div>
                   </div>
                   
                   {scanHistory.length > 0 && (
-                    <div className="flex items-center space-x-2 text-white/60 text-sm">
+                    <div className="flex items-center space-x-2 text-white/60 text-xs sm:text-sm">
                       <BarChart3 className="h-4 w-4" />
                       <span>{scanHistory.length} total scans</span>
                     </div>
@@ -652,21 +670,21 @@ const exportToPDF = async (aiResponses) => {
               </CardHeader>
               <CardContent>
                 {scanHistory.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {scanHistory.map((scan, index) => (
                       <Card 
                         key={scan.id} 
                         className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 hover:scale-[1.02] group"
                       >
-                        <CardContent className="p-4 sm:p-6">
+                        <CardContent className="p-3 sm:p-4 md:p-6">
                           <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-start sm:justify-between gap-3">
                             {/* Left side - Machine info */}
-                            <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
+                            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 flex-1 min-w-0">
                               <div className="relative flex-shrink-0">
                                 <div className="p-2 sm:p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg">
-                                  <Dumbbell className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
+                                  <Dumbbell className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white" />
                                 </div>
-                                <div className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                                <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
                                   {index + 1}
                                 </div>
                               </div>
@@ -706,17 +724,17 @@ const exportToPDF = async (aiResponses) => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+                                className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 hover:scale-105 w-full sm:w-auto text-xs sm:text-sm"
                                 onClick={() => navigate(`/machine/${scan.machine_id}`)}
                               >
-                                <Target className="h-4 w-4 mr-1" />
+                                <Target className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                                 View
                               </Button>
                             </div>
                           </div>
                           
                           {/* Progress indicator */}
-                          <div className="mt-4 pt-4 border-t border-white/10">
+                          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/10">
                             <div className="flex items-center justify-between text-xs text-white/60">
                               <span>Scan #{index + 1}</span>
                               <span className="truncate ml-2">{formatDate(scan.scanned_at)}</span>
@@ -727,24 +745,24 @@ const exportToPDF = async (aiResponses) => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-16">
-                    <div className="relative mb-6">
-                      <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full w-fit mx-auto">
-                        <History className="h-12 w-12 text-white" />
+                  <div className="text-center py-8 sm:py-16">
+                    <div className="relative mb-4 sm:mb-6">
+                      <div className="p-3 sm:p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full w-fit mx-auto">
+                        <History className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
                       </div>
-                      <div className="absolute -top-2 -right-2 p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
-                        <Sparkles className="h-4 w-4 text-white" />
+                      <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 p-1 sm:p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
+                        <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">No scan history yet</h3>
-                    <p className="text-white/70 mb-6 max-w-md mx-auto">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No scan history yet</h3>
+                    <p className="text-white/70 mb-4 sm:mb-6 max-w-md mx-auto text-sm sm:text-base">
                       Start scanning machine QR codes to build your workout history and track your fitness journey
                     </p>
                     <Button
-                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all duration-300 hover:scale-105"
+                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
                       onClick={() => navigate('/client/scanner')}
                     >
-                      <QrCode className="h-4 w-4 mr-2" />
+                      <QrCode className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                       Start Scanning
                     </Button>
                   </div>

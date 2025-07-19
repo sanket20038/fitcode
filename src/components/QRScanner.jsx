@@ -1,43 +1,41 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Html5QrcodeScanner } from 'html5-qrcode';
 import { Button } from './ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from './ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Alert, AlertDescription } from './ui/alert';
+import { Badge } from './ui/badge';
 import { 
-  ArrowLeft, 
   QrCode, 
   Camera, 
-  Dumbbell,
-  Zap,
-  Target,
-  Scan,
-  CheckCircle,
+  Upload, 
+  ArrowLeft, 
+  LogOut, 
+  Play, 
+  BookOpen, 
+  Shield, 
   AlertTriangle,
+  CheckCircle,
+  Info,
   Sparkles,
-  Focus,
-  CameraOff,
-  RotateCcw,
-  Lightbulb,
-  Shield,
-  Activity
+  Zap
 } from 'lucide-react';
-import { qrAPI } from '../lib/api';
+import { clientAPI } from '../lib/api';
+import { getUser, clearAuth } from '../lib/auth';
+import GymLoader from './GymLoader';
 
 const QRScanner = () => {
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [scanCount, setScanCount] = useState(0);
+  const [cameraPermission, setCameraPermission] = useState('prompt'); // 'prompt', 'granted', 'denied'
+  const [isRequestingPermission, setIsRequestingPermission] = useState(false);
+  const [showUploadOption, setShowUploadOption] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
   const scannerRef = useRef(null);
   const html5QrcodeScannerRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Clean up scanner on unmount
   useEffect(() => {
@@ -54,29 +52,150 @@ const QRScanner = () => {
     setScanCount(parseInt(storedCount));
   }, []);
 
+  // Check camera permission on mount
+  useEffect(() => {
+    checkCameraPermission();
+  }, []);
+
   // Only initialize scanner when scanning is true and DOM is updated
   useEffect(() => {
-    if (scanning && scannerRef.current) {
-      html5QrcodeScannerRef.current = new Html5QrcodeScanner(
-        'qr-reader',
-        {
-          fps: 25,
-          qrbox: { width: 280, height: 280 },
-          aspectRatio: 1.0,
-          showTorchButtonIfSupported: true,
-          showZoomSliderIfSupported: true,
-        },
-        false
-      );
-
-      html5QrcodeScannerRef.current.render(onScanSuccess, onScanFailure);
+    if (scanning && scannerRef.current && cameraPermission === 'granted') {
+      initializeScanner();
     }
-  }, [scanning]);
+  }, [scanning, cameraPermission]);
+
+  const checkCameraPermission = async () => {
+    try {
+      if (navigator.permissions && navigator.permissions.query) {
+        const permission = await navigator.permissions.query({ name: 'camera' });
+        setCameraPermission(permission.state);
+        
+        permission.onchange = () => {
+          setCameraPermission(permission.state);
+        };
+      }
+    } catch (error) {
+      console.log('Permission API not supported, will request on scan');
+    }
+  };
+
+  const requestCameraPermission = async () => {
+    setIsRequestingPermission(true);
+    setError('');
+    
+    try {
+      // Try to get user media to request permission with back camera preference
+      const constraints = {
+        video: {
+          facingMode: 'environment', // Prefer back camera on mobile
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      };
+      
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      
+      // Stop the stream immediately after getting permission
+      stream.getTracks().forEach(track => track.stop());
+      
+      setCameraPermission('granted');
+      setScanning(true);
+    } catch (error) {
+      console.error('Camera permission denied:', error);
+      setCameraPermission('denied');
+      setShowUploadOption(true);
+      setError('Camera not available. You can upload an image with a QR code instead.');
+    } finally {
+      setIsRequestingPermission(false);
+    }
+  };
+
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      // Check if file is an image
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Please select an image file (JPEG, PNG, etc.)');
+      }
+
+      // Create HTML5Qrcode instance for file scanning
+      const html5QrCode = new Html5Qrcode("qr-reader");
+      
+      // Read the file and scan for QR codes
+      const qrCodeData = await html5QrCode.scanFile(file, true);
+      
+      if (qrCodeData) {
+        await onScanSuccess(qrCodeData);
+      } else {
+        setError('No QR code found in the uploaded image. Please try with a different image.');
+      }
+    } catch (error) {
+      console.error('File scan error:', error);
+      if (error.message.includes('No QR code found')) {
+        setError('No QR code found in the uploaded image. Please try with a different image.');
+      } else {
+        setError('Error processing image. Please try again with a clear image containing a QR code.');
+      }
+    } finally {
+      setIsUploading(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const triggerFileUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const initializeScanner = () => {
+    if (html5QrcodeScannerRef.current) {
+      html5QrcodeScannerRef.current.clear().catch(console.error);
+    }
+
+    html5QrcodeScannerRef.current = new Html5QrcodeScanner(
+      'qr-reader',
+      {
+        fps: 25,
+        qrbox: { width: 280, height: 280 },
+        aspectRatio: 1.0,
+        showTorchButtonIfSupported: true,
+        showZoomSliderIfSupported: true,
+        // Disable camera selection dialog completely
+        showCameraSelectionButton: false,
+        // Disable permission request dialog
+        showPermissionRequestButton: false,
+        // Auto-start scanning
+        autoStart: true,
+        // Disable all UI elements that might interfere
+        showScanRegionSelectionButton: false,
+        showScanRegionSelectionDialog: false,
+      },
+      false
+    );
+
+    html5QrcodeScannerRef.current.render(onScanSuccess, onScanFailure);
+  };
 
   const startScanning = () => {
     setError('');
     setSuccess('');
-    setScanning(true);
+    
+    if (cameraPermission === 'granted') {
+      setScanning(true);
+    } else if (cameraPermission === 'denied') {
+      setError('Camera permission is required. Please enable camera access in your browser settings and try again.');
+    } else {
+      // Request permission first
+      requestCameraPermission();
+    }
   };
 
   const stopScanning = () => {
@@ -196,20 +315,68 @@ const QRScanner = () => {
                   Ready to Scan
                 </h3>
                 <p className="text-white/70 text-lg mb-8 max-w-md mx-auto">
-                  Make sure you have a FitCode QR code ready and your camera permissions are enabled
+                  {cameraPermission === 'denied' 
+                    ? 'Camera not available. You can upload an image with a QR code instead.'
+                    : 'Make sure you have a FitCode QR code ready. Camera will be automatically selected.'
+                  }
                 </p>
                 
-                <div className="relative group">
-                  <div className="absolute -inset-1 from-blue-600 to-indigo-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                  <Button 
-                    onClick={startScanning} 
-                    size="lg"
-                    className="relative bg-gradient-to-r from-orange-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl"
-                  >
-                    <QrCode className="h-6 w-6 mr-3" />
-                    Start Scanning
-                    <Sparkles className="h-4 w-4 ml-2" />
-                  </Button>
+                <div className="space-y-4">
+                  <div className="relative group">
+                    <div className="absolute -inset-1 from-blue-600 to-indigo-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                    <Button 
+                      onClick={startScanning} 
+                      size="lg"
+                      disabled={isRequestingPermission}
+                      className="relative bg-gradient-to-r from-orange-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isRequestingPermission ? (
+                        <>
+                          <GymLoader size="small" text="Requesting Camera..." variant="dumbbells" />
+                        </>
+                      ) : (
+                        <>
+                          <QrCode className="h-6 w-6 mr-3" />
+                          Start Scanning
+                          <Sparkles className="h-4 w-4 ml-2" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  {/* Upload Option - Show when camera is denied or as alternative */}
+                  {(cameraPermission === 'denied' || showUploadOption) && (
+                    <div className="relative group">
+                      <div className="absolute -inset-1 from-green-600 to-emerald-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                      <Button 
+                        onClick={triggerFileUpload}
+                        size="lg"
+                        disabled={isUploading}
+                        className="relative bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isUploading ? (
+                          <>
+                            <GymLoader size="small" text="Processing Image..." variant="weights" />
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-6 w-6 mr-3" />
+                            Upload QR Image
+                            <Image className="h-4 w-4 ml-2" />
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Hidden file input */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
                 </div>
                 
                 {/* Quick Stats */}
@@ -233,6 +400,30 @@ const QRScanner = () => {
                     <p className="text-white/60 text-sm">Instant</p>
                   </div>
                 </div>
+
+                {/* Upload Instructions */}
+                {(cameraPermission === 'denied' || showUploadOption) && (
+                  <div className="mt-8 p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <Image className="h-5 w-5 text-green-400" />
+                      <h4 className="text-white font-semibold">Upload QR Image</h4>
+                    </div>
+                    <ul className="text-white/70 text-sm space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span>Take a clear photo of the QR code</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span>Ensure good lighting and focus</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span>Supported formats: JPEG, PNG, WebP</span>
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="space-y-6">
@@ -243,6 +434,10 @@ const QRScanner = () => {
                   </div>
                   <p className="text-white/70 text-sm mb-6">
                     Position the QR code within the scanning area below
+                    <br />
+                    <span className="text-xs text-white/50">
+                      {navigator.userAgent.includes('Mobile') ? 'Back camera selected' : 'Camera automatically selected'}
+                    </span>
                   </p>
                 </div>
                 
@@ -254,7 +449,57 @@ const QRScanner = () => {
                       id="qr-reader"
                       ref={scannerRef}
                       className="w-full min-h-[350px] rounded-2xl overflow-hidden"
+                      style={{
+                        // Hide unwanted HTML5 QR scanner UI elements
+                        '--html5-qr-code-scanner-camera-selection-button': 'none',
+                        '--html5-qr-code-scanner-permission-button': 'none',
+                        '--html5-qr-code-scanner-scan-region-button': 'none'
+                      }}
                     />
+                    <style>{`
+                      #qr-reader {
+                        border: none !important;
+                      }
+                      #qr-reader__scan_region {
+                        background: transparent !important;
+                      }
+                      #qr-reader__scan_region > img {
+                        display: none !important;
+                      }
+                      #qr-reader__camera_selection {
+                        display: none !important;
+                      }
+                      #qr-reader__dashboard {
+                        display: none !important;
+                      }
+                      #qr-reader__dashboard_section {
+                        display: none !important;
+                      }
+                      #qr-reader__dashboard_section_csr {
+                        display: none !important;
+                      }
+                      #qr-reader__status_span {
+                        display: none !important;
+                      }
+                      #qr-reader__camera_permission_button {
+                        display: none !important;
+                      }
+                      #qr-reader__scan_region_scan_region_selection {
+                        display: none !important;
+                      }
+                      #qr-reader__camera_permission_button {
+                        display: none !important;
+                      }
+                      #qr-reader__scan_region_scan_region_selection {
+                        display: none !important;
+                      }
+                      #qr-reader__scan_region_scan_region_selection_button {
+                        display: none !important;
+                      }
+                      #qr-reader__scan_region_scan_region_selection_dialog {
+                        display: none !important;
+                      }
+                    `}</style>
                   </div>
                 </div>
                 

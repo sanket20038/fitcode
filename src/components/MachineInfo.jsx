@@ -5,8 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Alert, AlertDescription } from './ui/alert';
 import { Badge } from './ui/badge';
-import {  Sparkles, Target } from 'lucide-react';
-
 import {
   ArrowLeft,
   Heart,
@@ -26,10 +24,19 @@ import {
   AlertTriangle,
   Loader2,
   MapPin,
-  Phone
+  Phone,
+  Info,
+  AlertCircle,
+  Lightbulb,
+  Target,
+  Activity,
+  Sparkles,
+  Award,
+  TrendingUp
 } from 'lucide-react';
 import { clientAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
+import GymLoader from './GymLoader';
 
 const allSupportedLanguages = ['en', 'es', 'fr', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'bn', 'ta', 'te', 'mr', 'gu', 'kn', 'ml', 'or', 'pa', 'tr'];
 
@@ -63,45 +70,47 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
     try {
       setLoading(true);
       const response = await clientAPI.getMachineDetails(machineId);
-      setMachine(response.data.machine);
+      const machineData = response.data.machine;
+      setMachine(machineData);
       
-      // Fetch gym information from database
-      if (response.data.machine?.gym_id) {
-        await loadGymData(response.data.machine.gym_id);
-      }
-      
-    } catch (error) {
-      setError(error.response?.data?.message || 'Failed to load machine information');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadGymData = async (gymId) => {
-    try {
-      // Fetch gym data from your database
-      const gymResponse = await clientAPI.getGymDetails(gymId);
-      
-      if (gymResponse.data.gym) {
-        const gym = gymResponse.data.gym;
+      // Extract gym information from the machine response
+      if (machineData?.gym) {
+        const gym = machineData.gym;
         setGymInfo({
           id: gym.id,
           owner_id: gym.owner_id,
           name: gym.name,
           logo_url: gym.logo_url,
-          contact_info: gym.contact_info
+          contact_info: gym.contact_info,
+          created_at: gym.created_at
+        });
+      } else {
+        // Fallback gym info if gym data is not available
+        setGymInfo({
+          id: 'N/A',
+          owner_id: 'N/A',
+          name: 'Gym Name',
+          logo_url: null,
+          contact_info: 'Contact information not available',
+          created_at: null
         });
       }
+      
     } catch (error) {
-      console.error('Failed to load gym information:', error);
-      // Set fallback gym info if API fails
+      console.error('Failed to load machine information:', error);
+      setError(error.response?.data?.message || 'Failed to load machine information');
+      
+      // Set fallback gym info on error
       setGymInfo({
         id: 'N/A',
         owner_id: 'N/A',
         name: 'Gym Name',
         logo_url: null,
-        contact_info: 'Contact information not available'
+        contact_info: 'Contact information not available',
+        created_at: null
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,7 +118,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
     clearAuth();
     setAuthenticated(false);
     setUserType(null);
-    navigate('/login');
+    navigate('/');
   };
 
   // Direct translation function that bypasses your backend
@@ -322,13 +331,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="w-24 h-24 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto"></div>
-            <div className="absolute inset-0 w-24 h-24 border-4 border-transparent border-t-pink-400 rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
-          </div>
-          <p className="text-white/80 mt-6 text-lg font-medium">Loading machine details...</p>
-        </div>
+        <GymLoader size="xlarge" text="Loading machine details..." variant="target" />
       </div>
     );
   }
@@ -404,19 +407,120 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
           </Alert>
         )}
 
-        {/* Gym Information Card - From Database */}
-        {gymInfo && (
-          <Card className="mb-8 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 hover:scale-[1.02]">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
-                <div className="relative mb-2 sm:mb-0">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 p-1">
-                    <div className="w-full h-full rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center">
+        {/* Enhanced Gym Information Card - Mobile Optimized */}
+        {loading ? (
+          <Card className="mb-6 sm:mb-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20 border-purple-500/20 backdrop-blur-xl shadow-2xl">
+            <CardContent className="p-4 sm:p-6 lg:p-8">
+              <GymLoader size="large" text="Loading gym information..." variant="flame" />
+            </CardContent>
+          </Card>
+        ) : gymInfo ? (
+          <Card className="mb-6 sm:mb-8 bg-gradient-to-r from-purple-900/20 to-pink-900/20 border-purple-500/20 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 hover:scale-[1.02]">
+            <CardContent className="p-4 sm:p-6 lg:p-8">
+              {/* Mobile Layout */}
+              <div className="block sm:hidden">
+                <div className="flex flex-col items-center space-y-4">
+                  {/* Logo and Badge */}
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="relative">
+                      <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-xl flex items-center justify-center shadow-2xl">
+                        {gymInfo.logo_url ? (
+                          <img 
+                            src={gymInfo.logo_url} 
+                            alt={gymInfo.name}
+                                className="w-16 h-16 rounded-xl object-cover"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
+                          />
+                        ) : null}
+                        <div 
+                              className="w-16 h-16 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center" 
+                          style={{display: gymInfo.logo_url ? 'none' : 'flex'}}
+                        >
+                              <Dumbbell className="h-8 w-8 text-white" />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-full px-4 py-2">
+                      <Award className="h-4 w-4 text-purple-400" />
+                      <span className="text-white/90 text-sm font-semibold">Premium Gym</span>
+                    </div>
+                  </div>
+                  
+                  {/* Gym Name and ID */}
+                  <div className="text-center space-y-2">
+                    <h2 className="text-2xl font-black text-white bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      {gymInfo.name}
+                    </h2>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-white/70 text-sm font-medium">Gym ID: {gymInfo.id}</p>
+                      {gymInfo.created_at && (
+                        <p className="text-white/50 text-sm">
+                          Established: {new Date(gymInfo.created_at).getFullYear()}
+                        </p>
+                      )}
+                    </div>
+                </div>
+                
+                  {/* Contact Info - Mobile Stacked */}
+                  {gymInfo.contact_info && gymInfo.contact_info !== 'Contact information not available' ? (
+                    <div className="flex flex-col space-y-2 w-full">
+                      <div className="flex items-center justify-center space-x-2 bg-white/5 backdrop-blur-xl rounded-lg px-4 py-3">
+                        <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
+                        <span className="text-white/90 text-sm">{gymInfo.contact_info}</span>
+                  </div>
+                      <div className="flex items-center justify-center space-x-2 bg-white/5 backdrop-blur-xl rounded-lg px-4 py-3">
+                        <MapPin className="h-4 w-4 text-blue-400 flex-shrink-0" />
+                        <span className="text-white/90 text-sm">Visit us today!</span>
+                </div>
+              </div>
+                  ) : (
+                    <div className="flex items-center justify-center space-x-2 bg-white/5 backdrop-blur-xl rounded-lg px-4 py-3 w-full">
+                      <Info className="h-4 w-4 text-yellow-400 flex-shrink-0" />
+                      <span className="text-white/70 text-sm">Contact information not available</span>
+                    </div>
+                  )}
+                  
+                  {/* FitCode Branding - Mobile */}
+                  <div className="flex flex-col items-center space-y-3 pt-2">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center space-x-2 mb-2">
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-indigo-600 rounded-lg blur opacity-75"></div>
+                          <div className="relative bg-gradient-to-r from-orange-600 to-indigo-600 p-2 rounded-lg">
+                            <Dumbbell className="h-4 w-4 text-white" />
+                          </div>
+                        </div>
+                        <span className="text-lg font-bold bg-gradient-to-r from-orange-400 to-indigo-400 bg-clip-text text-transparent">
+                          FitCode
+                        </span>
+                      </div>
+                      <p className="text-white/60 text-xs">Powered by FitCode</p>
+                      <p className="text-white/40 text-xs">Smart Gym Solutions</p>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-indigo-600/20 border border-orange-500/30 rounded-full px-3 py-1">
+                      <Sparkles className="h-3 w-3 text-orange-400" />
+                      <span className="text-white/80 text-xs font-medium">AI-Powered</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Desktop Layout */}
+              <div className="hidden sm:flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6 lg:space-x-8">
+                {/* Gym Logo and Branding */}
+                <div className="flex flex-col items-center md:items-start space-y-3 lg:space-y-4">
+                  <div className="relative">
+                    <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-2xl bg-white/10 backdrop-blur-xl flex items-center justify-center shadow-2xl">
                       {gymInfo.logo_url ? (
                         <img 
                           src={gymInfo.logo_url} 
                           alt={gymInfo.name}
-                          className="w-9 h-9 sm:w-12 sm:h-12 rounded-full object-cover"
+                          className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl object-cover"
                           onError={(e) => {
                             e.target.style.display = 'none';
                             e.target.nextSibling.style.display = 'flex';
@@ -424,88 +528,272 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                         />
                       ) : null}
                       <div 
-                        className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center" 
+                        className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center" 
                         style={{display: gymInfo.logo_url ? 'none' : 'flex'}}
                       >
-                        <Dumbbell className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                        <Dumbbell className="h-8 w-8 lg:h-10 lg:w-10 text-white" />
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Gym Badge */}
+                  <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 rounded-full px-4 py-2">
+                    <Award className="h-4 w-4 text-purple-400" />
+                    <span className="text-white/90 text-sm font-semibold">Premium Gym</span>
+                  </div>
                 </div>
                 
-                <div className="flex-1 text-center sm:text-left">
-                  <h2 className="text-lg sm:text-2xl font-bold text-white mb-1">{gymInfo.name}</h2>
-                  <p className="text-white/60 text-xs sm:text-sm font-medium">ID: {gymInfo.id}</p>
-                  {gymInfo.contact_info && (
-                    <div className="flex items-center justify-center sm:justify-start space-x-2 mt-2">
-                      <Phone className="h-4 w-4 text-green-400" />
-                      <span className="text-white/90 text-xs sm:text-sm">{gymInfo.contact_info}</span>
+                {/* Gym Details */}
+                <div className="flex-1 text-center md:text-left space-y-3 lg:space-y-4">
+                <div>
+                    <h2 className="text-2xl lg:text-3xl font-black text-white mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      {gymInfo.name}
+                    </h2>
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-1 sm:space-y-0 sm:space-x-4">
+                      <p className="text-white/70 text-sm font-medium">Gym ID: {gymInfo.id}</p>
+                      {gymInfo.created_at && (
+                        <p className="text-white/50 text-sm">
+                          Established: {new Date(gymInfo.created_at).getFullYear()}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Contact Info */}
+                  {gymInfo.contact_info && gymInfo.contact_info !== 'Contact information not available' ? (
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-2 sm:space-y-0 sm:space-x-4 lg:space-x-6">
+                      <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-xl rounded-lg px-3 py-2 w-full sm:w-auto justify-center sm:justify-start">
+                        <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
+                        <span className="text-white/90 text-sm truncate">{gymInfo.contact_info}</span>
+                      </div>
+                      <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-xl rounded-lg px-3 py-2 w-full sm:w-auto justify-center sm:justify-start">
+                        <MapPin className="h-4 w-4 text-blue-400 flex-shrink-0" />
+                        <span className="text-white/90 text-sm">Visit us today!</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center sm:justify-start space-x-2 bg-white/5 backdrop-blur-xl rounded-lg px-3 py-2">
+                      <Info className="h-4 w-4 text-yellow-400 flex-shrink-0" />
+                      <span className="text-white/70 text-sm">Contact information not available</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="text-center sm:text-right mt-2 sm:mt-0">
-                  <div className="text-white/70 text-xs sm:text-sm">
-                    <p>Owner ID: {gymInfo.owner_id}</p>
+                {/* FitCode Branding */}
+                <div className="flex flex-col items-center md:items-end space-y-3 lg:space-y-4">
+                  <div className="text-center md:text-right">
+                    <div className="flex items-center justify-center md:justify-end space-x-2 mb-2">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-indigo-600 rounded-lg blur opacity-75"></div>
+                        <div className="relative bg-gradient-to-r from-orange-600 to-indigo-600 p-2 rounded-lg">
+                          <Dumbbell className="h-4 w-4 text-white" />
+                        </div>
+                      </div>
+                      <span className="text-lg font-bold bg-gradient-to-r from-orange-400 to-indigo-400 bg-clip-text text-transparent">
+                        FitCode
+                      </span>
+                    </div>
+                    <p className="text-white/60 text-xs">Powered by FitCode</p>
+                    <p className="text-white/40 text-xs">Smart Gym Solutions</p>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2 bg-gradient-to-r from-orange-600/20 to-indigo-600/20 border border-orange-500/30 rounded-full px-3 py-1">
+                    <Sparkles className="h-3 w-3 text-orange-400" />
+                    <span className="text-white/80 text-xs font-medium">AI-Powered</span>
                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
-        )}
+        ) : null}
 
-        {/* Machine Header Card */}
-        <Card className="mb-8 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 hover:scale-[1.02]">
-          <CardHeader className="pb-6">
-            <div className="flex justify-between items-start">
-              <div className="space-y-4">
-                <div>
-                  <CardTitle className="text-4xl font-black text-white mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+        {/* Enhanced Machine Header Card - Mobile Optimized */}
+        <Card className="mb-6 sm:mb-8 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border-blue-500/20 backdrop-blur-xl shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 hover:scale-[1.02]">
+          <CardContent className="p-4 sm:p-6 lg:p-8">
+            {/* Mobile Layout */}
+            <div className="block sm:hidden space-y-4">
+              {/* Machine Title and Badge */}
+              <div className="flex flex-col space-y-3">
+                <div className="text-center">
+                  <CardTitle className="text-2xl font-black text-white bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
                     {machine.name}
                   </CardTitle>
-                  <CardDescription className="text-white/70 text-lg leading-relaxed max-w-2xl">
+                  <CardDescription className="text-white/70 text-base leading-relaxed mt-2">
                     {machine.description}
                   </CardDescription>
                 </div>
                 
+                <div className="flex justify-center">
+                  <Badge 
+                    variant="secondary" 
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 px-4 py-2 text-sm font-bold shadow-lg"
+                  >
+                    {machine.category}
+                  </Badge>
+                </div>
+              </div>
+              
+              {/* Safety Alert - Mobile */}
+              <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-4 backdrop-blur-xl">
+                <div className="flex items-start space-x-3">
+                  <div className="p-2 bg-gradient-to-r from-orange-600 to-red-600 rounded-lg flex-shrink-0">
+                    <AlertCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-white font-semibold mb-1">Safety First!</h4>
+                    <p className="text-white/80 text-sm">
+                      Always check the safety tab before using this machine. Follow proper form and start with lighter weights.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
 
+              
+              {/* Quick Actions - Mobile */}
+              <div className="space-y-2">
+                <Button 
+                  onClick={() => setActiveTab('safety')}
+                  size="sm"
+                  className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg"
+                >
+                  <Shield className="h-4 w-4 mr-2" />
+                  View Safety Tips
+                </Button>
+                <Button 
+                  onClick={() => setActiveTab('instructions')}
+                  size="sm"
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg"
+                >
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Read Instructions
+                </Button>
+              </div>
+            </div>
+            
+            {/* Desktop Layout */}
+            <div className="hidden sm:flex flex-col lg:flex-row items-start space-y-6 lg:space-y-0 lg:space-x-8">
+              {/* Machine Info */}
+              <div className="flex-1 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-2">
+                    <CardTitle className="text-3xl sm:text-4xl font-black text-white bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                      {machine.name}
+                    </CardTitle>
+                    <CardDescription className="text-white/70 text-lg leading-relaxed max-w-2xl">
+                      {machine.description}
+                    </CardDescription>
               </div>
               
               <Badge 
                 variant="secondary" 
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-4 py-2 text-sm font-bold shadow-lg"
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 px-4 py-2 text-sm font-bold shadow-lg ml-4"
               >
                 {machine.category}
               </Badge>
             </div>
-          </CardHeader>
+                
+                {/* Quick Safety Alert */}
+                <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-4 backdrop-blur-xl">
+                  <div className="flex items-start space-x-3">
+                    <div className="p-2 bg-gradient-to-r from-orange-600 to-red-600 rounded-lg flex-shrink-0">
+                      <AlertCircle className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-white font-semibold mb-1">Safety First!</h4>
+                      <p className="text-white/80 text-sm">
+                        Always check the safety tab before using this machine. Follow proper form and start with lighter weights.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Quick Actions */}
+              <div className="flex flex-col space-y-4 lg:w-64">
+                
+                {/* Quick Actions */}
+                <div className="space-y-2">
+                  <Button 
+                    onClick={() => setActiveTab('safety')}
+                    size="sm"
+                    className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg"
+                  >
+                    <Shield className="h-4 w-4 mr-2" />
+                    View Safety Tips
+                  </Button>
+                  <Button 
+                    onClick={() => setActiveTab('instructions')}
+                    size="sm"
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg"
+                  >
+                    <BookOpen className="h-4 w-4 mr-2" />
+                    Read Instructions
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
         </Card>
 
-        {/* Modern Tabs */}
+        {/* Enhanced Tabs Section */}
+        <div className="space-y-8">
+          {/* Tab Header with Description */}
+          <div className="text-center space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+              Machine Guide
+            </h2>
+            <p className="text-white/70 text-lg max-w-2xl mx-auto">
+              Learn how to use this machine safely and effectively with our comprehensive guides
+            </p>
+          </div>
+          
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-xl">
-            <TabsTrigger 
-              value="video" 
-              className="rounded-xl transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/70 hover:text-white"
-            >
-              <Play className="h-4 w-4 mr-2" />
-              Video Guide
-            </TabsTrigger>
-            <TabsTrigger 
-              value="instructions"
-              className="rounded-xl transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/70 hover:text-white"
-            >
-              <BookOpen className="h-4 w-4 mr-2" />
-              Instructions
-            </TabsTrigger>
-            <TabsTrigger 
-              value="safety"
-              className="rounded-xl transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/70 hover:text-white"
-            >
-              <Shield className="h-4 w-4 mr-2" />
-              Safety
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex justify-center px-4">
+            <TabsList className="inline-flex h-12 sm:h-16 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-1 sm:p-2 shadow-2xl w-full max-w-md sm:max-w-none">
+              <TabsTrigger 
+                value="video"
+                className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1 sm:flex-none"
+              >
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="relative">
+                    <Play className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span className="font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap">Video Guide</span>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 data-[state=active]:opacity-100 transition-opacity duration-500"></div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="instructions"
+                className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1 sm:flex-none"
+              >
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="relative">
+                    <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span className="font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap">Instructions</span>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 data-[state=active]:opacity-100 transition-opacity duration-500"></div>
+              </TabsTrigger>
+              
+              <TabsTrigger 
+                value="safety"
+                className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1 sm:flex-none"
+              >
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="relative">
+                    <Shield className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <span className="font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap">Safety Tips</span>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 data-[state=active]:opacity-100 transition-opacity duration-500"></div>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           {/* Video Tab */}
           <TabsContent value="video" className="animate-in fade-in duration-500">
@@ -615,10 +903,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                 {translateEnabledInstructions ? (
                   translatingInstructions ? (
                     <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
-                      <Loader2 className="h-12 w-12 text-purple-400 animate-spin mx-auto mb-4" />
-                      <p className="text-white/90 text-lg font-medium">
-                        Translating instructions to {getLanguageName(translateLanguageInstructions)}...
-                      </p>
+                      <GymLoader size="large" text={`Translating instructions to ${getLanguageName(translateLanguageInstructions)}...`} variant="energy" />
                     </div>
                   ) : translationErrorInstructions ? (
                     <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20">
@@ -726,10 +1011,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                 {translateEnabledSafety ? (
                   translatingSafety ? (
                     <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
-                      <Loader2 className="h-12 w-12 text-orange-400 animate-spin mx-auto mb-4" />
-                      <p className="text-white/90 text-lg font-medium">
-                        Translating safety information to {getLanguageName(translateLanguageSafety)}...
-                      </p>
+                      <GymLoader size="large" text={`Translating safety information to ${getLanguageName(translateLanguageSafety)}...`} variant="energy" />
                     </div>
                   ) : translationErrorSafety ? (
                     <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20">
@@ -780,6 +1062,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
             </Card>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
       {/* Footer - Powered by FitCode */}
 <footer className="mt-16 border-t border-white/10 bg-white/5 backdrop-blur-xl">

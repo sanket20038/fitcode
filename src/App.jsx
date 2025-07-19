@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LandingPage from './components/LandingPage';
 import ClientLogin from './components/ClientLogin';
 import OwnerLogin from './components/OwnerLogin';
+import GymLoader from './components/GymLoader';
 
 // Utils
 import { isAuthenticated, isOwner, isClient } from './lib/auth';
@@ -43,8 +44,8 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <GymLoader size="xlarge" text="Loading FitCode..." variant="target" />
       </div>
     );
   }

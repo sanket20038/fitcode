@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { gymAPI, qrAPI, analyticsAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
+import GymLoader from './GymLoader';
 
 const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
   const [user] = useState(getUser());
@@ -75,6 +76,33 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
     return match ? `https://drive.google.com/file/d/${match[1]}/preview` : null;
   };
 
+  // Helper function to convert Google Drive image URL to direct link
+  const getDriveImageUrl = (url) => {
+    if (!url) return null;
+    // Google Drive share link format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+    // Direct image format: https://drive.google.com/uc?export=view&id=FILE_ID
+    const regex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/;
+    const match = url.match(regex);
+    return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : null;
+  };
+
+  // Helper function to validate image URL
+  const validateImageUrl = (url) => {
+    if (!url) return false;
+    // Check if it's a direct image URL
+    const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
+    if (imageExtensions.test(url)) return true;
+    
+    // Check if it's a Google Drive URL
+    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/;
+    if (driveRegex.test(url)) return true;
+    
+    // Check if it's a data URL
+    if (url.startsWith('data:image/')) return true;
+    
+    return false;
+  };
+
   useEffect(() => {
     loadData();
   }, []);
@@ -123,7 +151,7 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
     clearAuth();
     setAuthenticated(false);
     setUserType(null);
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   const handleGymSubmit = async (e) => {
@@ -235,8 +263,8 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
+        <GymLoader size="xlarge" text="Loading gym dashboard..." variant="flame" />
       </div>
     );
   }
@@ -266,56 +294,49 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
       <Dialog open={showDriveInfoDialog} onOpenChange={setShowDriveInfoDialog}>
         <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>How to Upload Videos to Google Drive</DialogTitle>
+            <DialogTitle>How to Upload Files to Google Drive</DialogTitle>
             <DialogDescription>
-              Follow these steps to upload your videos to Google Drive and get the shareable link.
+              Follow these steps to upload your videos and images to Google Drive and get the shareable link.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <ol className="list-decimal list-inside text-sm text-gray-700">
-              <li>Open your Google Drive account.</li>
-              <li>Click the "New" button and select "File upload".</li>
-              <li>Choose the video file from your computer and upload it.</li>
-              <li>Once uploaded, right-click the video file and select "Get link".</li>
-              <li>Set the link sharing to "Anyone with the link".</li>
-              <li>Copy the shareable link and paste it into the video URL field.</li>
-            </ol>
-            <div className="aspect-w-16 aspect-h-9">
-              <iframe
-                width="100%"
-                height="360"
-                src="https://www.youtube.com/embed/moVJE5h_np8?si=m_heRcsmqEcSh6kN"
-                title="YouTube video tutorial"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+          <div className="space-y-6">
+            {/* For Videos */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">For Videos:</h3>
+              <ol className="list-decimal list-inside text-sm text-gray-700 space-y-1">
+                <li>Open your Google Drive account.</li>
+                <li>Click the "New" button and select "File upload".</li>
+                <li>Choose the video file from your computer and upload it.</li>
+                <li>Once uploaded, right-click the video file and select "Get link".</li>
+                <li>Set the link sharing to "Anyone with the link".</li>
+                <li>Copy the shareable link and paste it into the video URL field.</li>
+              </ol>
             </div>
-          </div>
-          <div className="mt-4 flex justify-end">
-            <Button onClick={() => setShowDriveInfoDialog(false)}>Close</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Drive Upload Info Dialog */}
-      <Dialog open={showDriveInfoDialog} onOpenChange={setShowDriveInfoDialog}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>How to Upload Videos to Google Drive</DialogTitle>
-            <DialogDescription>
-              Follow these steps to upload your videos to Google Drive and get the shareable link.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <ol className="list-decimal list-inside text-sm text-gray-700">
-              <li>Open your Google Drive account.</li>
-              <li>Click the "New" button and select "File upload".</li>
-              <li>Choose the video file from your computer and upload it.</li>
-              <li>Once uploaded, right-click the video file and select "Get link".</li>
-              <li>Set the link sharing to "Anyone with the link".</li>
-              <li>Copy the shareable link and paste it into the video URL field.</li>
-            </ol>
+            
+            {/* For Images */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">For Images (Logo):</h3>
+              <ol className="list-decimal list-inside text-sm text-gray-700 space-y-1">
+                <li>Open your Google Drive account.</li>
+                <li>Click the "New" button and select "File upload".</li>
+                <li>Choose your logo image file (JPG, PNG, GIF, etc.) and upload it.</li>
+                <li>Once uploaded, right-click the image file and select "Get link".</li>
+                <li>Set the link sharing to "Anyone with the link".</li>
+                <li>Copy the shareable link and paste it into the logo URL field.</li>
+                <li>The system will automatically convert it to a direct image link.</li>
+              </ol>
+            </div>
+            
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="font-semibold text-blue-900 mb-2">Important Notes:</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• Make sure to set sharing permissions to "Anyone with the link can view"</li>
+                <li>• For images, the system supports JPG, PNG, GIF, WebP, and SVG formats</li>
+                <li>• For videos, the system supports MP4, AVI, MOV, and other common formats</li>
+                <li>• You can also use direct image URLs from other sources</li>
+              </ul>
+            </div>
+            
             <div className="aspect-w-16 aspect-h-9">
               <iframe
                 width="100%"
@@ -420,7 +441,20 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                       <h3 className="text-lg font-medium">{gym.name}</h3>
                       <p className="text-gray-600">{gym.contact_info}</p>
                       {gym.logo_url && (
-                        <img src={gym.logo_url} alt="Gym Logo" className="mt-2 h-16 w-16 object-cover rounded" />
+                        <div className="mt-2">
+                          <img 
+                            src={getDriveImageUrl(gym.logo_url) || gym.logo_url} 
+                            alt="Gym Logo" 
+                            className="h-16 w-16 object-cover rounded border border-gray-200"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'block';
+                            }}
+                          />
+                          <div className="hidden text-sm text-gray-500 mt-1">
+                            Invalid logo URL
+                          </div>
+                        </div>
                       )}
                     </div>
                     <Dialog open={showGymDialog} onOpenChange={setShowGymDialog}>
@@ -444,11 +478,58 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                             onChange={(e) => setGymForm({ ...gymForm, name: e.target.value })}
                             required
                           />
-                          <Input
-                            placeholder="Logo URL"
-                            value={gymForm.logo_url}
-                            onChange={(e) => setGymForm({ ...gymForm, logo_url: e.target.value })}
-                          />
+                          <div className="space-y-2">
+                            <label className="block text-sm font-semibold text-gray-900">
+                              Logo URL
+                            </label>
+                            <div className="flex items-center space-x-2">
+                              <Input
+                                placeholder="Enter logo URL (direct image link or Google Drive share link)"
+                                value={gymForm.logo_url}
+                                onChange={(e) => setGymForm({ ...gymForm, logo_url: e.target.value })}
+                                className={`rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                                  gymForm.logo_url && !validateImageUrl(gymForm.logo_url) 
+                                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                                    : 'border-gray-300'
+                                }`}
+                              />
+                              <button
+                                type="button"
+                                aria-label="Show Drive upload info"
+                                onClick={() => {
+                                  setShowDriveInfoDialog(true);
+                                }}
+                                className="text-blue-600 hover:text-blue-800 focus:outline-none p-1 rounded-full transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-blue-500"
+                                title="How to upload images to Google Drive"
+                              >
+                                <Info className="h-5 w-5" />
+                              </button>
+                            </div>
+                            {gymForm.logo_url && !validateImageUrl(gymForm.logo_url) && (
+                              <p className="text-sm text-red-600">
+                                Please enter a valid image URL or Google Drive share link
+                              </p>
+                            )}
+                            {gymForm.logo_url && validateImageUrl(gymForm.logo_url) && (
+                              <div className="mt-2">
+                                <label className="block text-sm font-semibold text-gray-900 mb-2">Logo Preview</label>
+                                <div className="w-20 h-20 rounded-lg border border-gray-300 overflow-hidden bg-gray-50 flex items-center justify-center">
+                                  <img 
+                                    src={getDriveImageUrl(gymForm.logo_url) || gymForm.logo_url} 
+                                    alt="Logo Preview" 
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.target.style.display = 'none';
+                                      e.target.nextSibling.style.display = 'flex';
+                                    }}
+                                  />
+                                  <div className="hidden text-gray-400 text-xs text-center p-2">
+                                    Invalid image
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                           <Textarea
                             placeholder="Contact Information"
                             value={gymForm.contact_info}
@@ -485,11 +566,58 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                             onChange={(e) => setGymForm({ ...gymForm, name: e.target.value })}
                             required
                           />
-                          <Input
-                            placeholder="Logo URL"
-                            value={gymForm.logo_url}
-                            onChange={(e) => setGymForm({ ...gymForm, logo_url: e.target.value })}
-                          />
+                          <div className="space-y-2">
+                            <label className="block text-sm font-semibold text-gray-900">
+                              Logo URL
+                            </label>
+                            <div className="flex items-center space-x-2">
+                              <Input
+                                placeholder="Enter logo URL (direct image link or Google Drive share link)"
+                                value={gymForm.logo_url}
+                                onChange={(e) => setGymForm({ ...gymForm, logo_url: e.target.value })}
+                                className={`rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                                  gymForm.logo_url && !validateImageUrl(gymForm.logo_url) 
+                                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                                    : 'border-gray-300'
+                                }`}
+                              />
+                              <button
+                                type="button"
+                                aria-label="Show Drive upload info"
+                                onClick={() => {
+                                  setShowDriveInfoDialog(true);
+                                }}
+                                className="text-blue-600 hover:text-blue-800 focus:outline-none p-1 rounded-full transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-blue-500"
+                                title="How to upload images to Google Drive"
+                              >
+                                <Info className="h-5 w-5" />
+                              </button>
+                            </div>
+                            {gymForm.logo_url && !validateImageUrl(gymForm.logo_url) && (
+                              <p className="text-sm text-red-600">
+                                Please enter a valid image URL or Google Drive share link
+                              </p>
+                            )}
+                            {gymForm.logo_url && validateImageUrl(gymForm.logo_url) && (
+                              <div className="mt-2">
+                                <label className="block text-sm font-semibold text-gray-900 mb-2">Logo Preview</label>
+                                <div className="w-20 h-20 rounded-lg border border-gray-300 overflow-hidden bg-gray-50 flex items-center justify-center">
+                                  <img 
+                                    src={getDriveImageUrl(gymForm.logo_url) || gymForm.logo_url} 
+                                    alt="Logo Preview" 
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.target.style.display = 'none';
+                                      e.target.nextSibling.style.display = 'flex';
+                                    }}
+                                  />
+                                  <div className="hidden text-gray-400 text-xs text-center p-2">
+                                    Invalid image
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                           <Textarea
                             placeholder="Contact Information"
                             value={gymForm.contact_info}
