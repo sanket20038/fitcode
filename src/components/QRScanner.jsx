@@ -17,9 +17,19 @@ import {
   CheckCircle,
   Info,
   Sparkles,
-  Zap
+  Zap,
+  Image,
+  Scan,
+  Target,
+  Activity,
+  CameraOff,
+  Lightbulb,
+  Focus,
+  Dumbbell,
+  RotateCcw
 } from 'lucide-react';
-import { clientAPI } from '../lib/api';
+// import { Html5Qrcode, Html5QrcodeScanner } from 'html5-qrcode';
+import { clientAPI, qrAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
 import GymLoader from './GymLoader';
 
@@ -124,24 +134,10 @@ const QRScanner = () => {
         throw new Error('Please select an image file (JPEG, PNG, etc.)');
       }
 
-      // Create HTML5Qrcode instance for file scanning
-      const html5QrCode = new Html5Qrcode("qr-reader");
-      
-      // Read the file and scan for QR codes
-      const qrCodeData = await html5QrCode.scanFile(file, true);
-      
-      if (qrCodeData) {
-        await onScanSuccess(qrCodeData);
-      } else {
-        setError('No QR code found in the uploaded image. Please try with a different image.');
-      }
+      setError('QR code scanning is temporarily unavailable. Please use the camera scanner instead.');
     } catch (error) {
       console.error('File scan error:', error);
-      if (error.message.includes('No QR code found')) {
-        setError('No QR code found in the uploaded image. Please try with a different image.');
-      } else {
-        setError('Error processing image. Please try again with a clear image containing a QR code.');
-      }
+      setError('Error processing image. Please try again with a clear image containing a QR code.');
     } finally {
       setIsUploading(false);
       // Reset file input
@@ -156,32 +152,13 @@ const QRScanner = () => {
   };
 
   const initializeScanner = () => {
-    if (html5QrcodeScannerRef.current) {
-      html5QrcodeScannerRef.current.clear().catch(console.error);
+    try {
+      setError('QR code scanning is temporarily unavailable. Please try again later.');
+      console.log('Scanner initialization disabled for testing');
+    } catch (error) {
+      console.error('Error initializing scanner:', error);
+      setError('Failed to initialize scanner. Please try again.');
     }
-
-    html5QrcodeScannerRef.current = new Html5QrcodeScanner(
-      'qr-reader',
-      {
-        fps: 25,
-        qrbox: { width: 280, height: 280 },
-        aspectRatio: 1.0,
-        showTorchButtonIfSupported: true,
-        showZoomSliderIfSupported: true,
-        // Disable camera selection dialog completely
-        showCameraSelectionButton: false,
-        // Disable permission request dialog
-        showPermissionRequestButton: false,
-        // Auto-start scanning
-        autoStart: true,
-        // Disable all UI elements that might interfere
-        showScanRegionSelectionButton: false,
-        showScanRegionSelectionDialog: false,
-      },
-      false
-    );
-
-    html5QrcodeScannerRef.current.render(onScanSuccess, onScanFailure);
   };
 
   const startScanning = () => {
