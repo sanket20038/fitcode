@@ -590,7 +590,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                         </Button>
                       </div>
                     ) : translatedInstructions[translateLanguageInstructions] ? (
-                      <div className="prose prose-invert max-w-none bg-white/5 rounded-2xl p-6 border border-white/10">
+                      <div className="prose prose-invert max-w-none bg-white/5 rounded-2xl p-6 border border-white/10 text-sm sm:text-base md:text-lg">
                         <div className="text-white/90 whitespace-pre-wrap leading-relaxed">
                           {translatedInstructions[translateLanguageInstructions]}
                         </div>
@@ -602,7 +602,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                       </div>
                     )
                   ) : machine?.usage_guide ? (
-                    <div className="prose prose-invert max-w-none bg-white/5 rounded-2xl p-6 border border-white/10">
+                    <div className="prose prose-invert max-w-none bg-white/5 rounded-2xl p-6 border border-white/10 text-sm sm:text-base md:text-lg">
                       <div className="text-white/90 whitespace-pre-wrap leading-relaxed">
                         {machine?.usage_guide}
                       </div>
@@ -697,7 +697,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                         </Button>
                       </div>
                     ) : translatedSafety[translateLanguageSafety] ? (
-                      <div className="prose prose-invert max-w-none bg-orange-500/5 rounded-2xl p-6 border border-orange-500/20">
+                      <div className="prose prose-invert max-w-none bg-orange-500/5 rounded-2xl p-6 border border-orange-500/20 text-sm sm:text-base md:text-lg">
                         <div className="text-white/90 whitespace-pre-wrap leading-relaxed">
                           {translatedSafety[translateLanguageSafety]}
                         </div>
@@ -709,7 +709,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                       </div>
                     )
                   ) : machine?.safety_tips ? (
-                    <div className="prose prose-invert max-w-none bg-orange-500/5 rounded-2xl p-6 border border-orange-500/20">
+                    <div className="prose prose-invert max-w-none bg-orange-500/5 rounded-2xl p-6 border border-orange-500/20 text-sm sm:text-base md:text-lg">
                       <div className="text-white/90 whitespace-pre-wrap leading-relaxed">
                         {machine?.safety_tips}
                       </div>

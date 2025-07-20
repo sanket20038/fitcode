@@ -72,21 +72,21 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 to-indigo-300 p-6">
-      <Card className="w-full max-w-md shadow-xl rounded-lg border border-gray-300">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 p-6">
+      <Card className="w-full max-w-md shadow-2xl rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-6">
-            <div className="bg-indigo-700 p-5 rounded-full shadow-lg animate-pulse">
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-5 rounded-full shadow-lg animate-pulse">
               <Dumbbell className="h-12 w-12 text-white" />
             </div>
           </div>
-          <CardTitle className="text-4xl font-extrabold text-gray-900">Client Login</CardTitle>
-          <CardDescription className="text-gray-700 mt-2">Sign in to your client account</CardDescription>
+          <CardTitle className="text-4xl font-extrabold text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">Client Login</CardTitle>
+          <CardDescription className="text-white/70 mt-2">Sign in to your client account</CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
-            <Alert className="mb-5 border-red-400 bg-red-100 animate-fade-in">
-              <AlertDescription className="text-red-900 font-semibold">{error}</AlertDescription>
+            <Alert className="mb-5 border-red-400 bg-red-500/10 animate-fade-in">
+              <AlertDescription className="text-red-100 font-semibold">{error}</AlertDescription>
             </Alert>
           )}
           <form onSubmit={handleLogin} className="space-y-6">
@@ -96,7 +96,7 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
               value={form.username}
               onChange={(e) => setForm({ ...form, username: e.target.value })}
               required
-              className="text-lg"
+              className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
             />
             <div className="flex items-center justify-between">
               <Input
@@ -105,12 +105,12 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 required
-                className="text-lg"
+                className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
               />
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="ml-2 text-indigo-600 hover:text-indigo-800 focus:outline-none"
+                className="ml-2 text-purple-400 hover:text-pink-400 focus:outline-none"
                 aria-label={form.showPassword ? 'Hide password' : 'Show password'}
               >
                 {form.showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -120,20 +120,20 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
             <div className="text-right">
               <button
                 type="button"
-                className="text-sm text-indigo-700 hover:underline focus:outline-none"
+                className="text-sm text-pink-400 hover:underline focus:outline-none"
                 onClick={() => setShowForgot(true)}
               >
                 Forgot Password?
               </button>
             </div>
-            <Button type="submit" className="w-full py-3 text-lg font-semibold" disabled={loading}>
+            <Button type="submit" className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 rounded-xl" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign in as Client'}
             </Button>
           </form>
           {/* Forgot Password Modal */}
           {showForgot && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-              <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm relative">
+              <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm relative backdrop-blur-xl border border-pink-400/20">
                 <button
                   className="absolute top-2 right-2 text-gray-400 hover:text-gray-700"
                   onClick={() => { setShowForgot(false); setForgotError(''); setForgotSuccess(''); setForgotValue(''); setForgotPassword(''); setForgotConfirmPassword(''); }}
@@ -141,7 +141,7 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
                 >
                   &times;
                 </button>
-                <h2 className="text-xl font-bold mb-2 text-gray-900">Forgot Password</h2>
+                <h2 className="text-xl font-bold mb-2 text-transparent bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text">Forgot Password</h2>
                 <p className="text-gray-600 mb-4 text-sm">Enter your username/email and new password to reset your password.</p>
                 {forgotError && <div className="mb-2 text-red-600 text-sm">{forgotError}</div>}
                 {forgotSuccess && <div className="mb-2 text-green-600 text-sm">{forgotSuccess}</div>}
@@ -152,6 +152,7 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
                     value={forgotValue}
                     onChange={e => setForgotValue(e.target.value)}
                     required
+                    className="bg-white/10 border-white/20 text-black placeholder:text-gray-500"
                   />
                   <Input
                     type="password"
@@ -159,6 +160,7 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
                     value={forgotPassword}
                     onChange={e => setForgotPassword(e.target.value)}
                     required
+                    className="bg-white/10 border-white/20 text-black placeholder:text-gray-500"
                   />
                   <Input
                     type="password"
@@ -166,8 +168,9 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
                     value={forgotConfirmPassword}
                     onChange={e => setForgotConfirmPassword(e.target.value)}
                     required
+                    className="bg-white/10 border-white/20 text-black placeholder:text-gray-500"
                   />
-                  <Button type="submit" className="w-full" disabled={forgotLoading}>
+                  <Button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 rounded-xl" disabled={forgotLoading}>
                     {forgotLoading ? 'Resetting...' : 'Reset Password'}
                   </Button>
                 </form>
@@ -175,9 +178,9 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
             </div>
           )}
           <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-white/70">
               Don't have an account?{' '}
-              <Link to="/register" className="text-indigo-700 font-semibold hover:underline">
+              <Link to="/register" className="text-pink-400 font-semibold hover:underline">
                 Sign up
               </Link>
             </p>
