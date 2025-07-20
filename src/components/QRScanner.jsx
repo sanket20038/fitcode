@@ -42,16 +42,31 @@ const QRScanner = () => {
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
   const [showUploadOption, setShowUploadOption] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   const scannerRef = useRef(null);
   const html5QrcodeScannerRef = useRef(null);
   const fileInputRef = useRef(null);
+  const mobileTimeoutRef = useRef(null);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+      setIsMobile(isMobileDevice);
+    };
+    checkMobile();
+  }, []);
 
   // Clean up scanner on unmount
   useEffect(() => {
     return () => {
       if (html5QrcodeScannerRef.current) {
         html5QrcodeScannerRef.current.clear().catch(console.error);
+      }
+      if (mobileTimeoutRef.current) {
+        clearTimeout(mobileTimeoutRef.current);
       }
     };
   }, []);
@@ -235,7 +250,7 @@ const QRScanner = () => {
       }
 
       const config = {
-        fps: 10,
+        fps: isMobile ? 5 : 10, // Lower FPS for mobile to reduce resource usage
         qrbox: { width: 250, height: 250 },
         aspectRatio: 1.0,
         supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
@@ -261,6 +276,16 @@ const QRScanner = () => {
 
       html5QrcodeScannerRef.current.render(onScanSuccess, onScanFailure);
       setError('');
+      
+      // Add automatic cleanup for mobile devices to prevent crashes
+      if (isMobile) {
+        mobileTimeoutRef.current = setTimeout(() => {
+          console.log('Auto-stopping scanner on mobile to prevent crashes');
+          stopScanning();
+          setError('Scanner stopped automatically to prevent mobile browser issues. Please try again or use the upload option.');
+          setShowUploadOption(true);
+        }, 30000); // Stop after 30 seconds on mobile
+      }
       
       // Add a timeout to check if scanner initialized properly
       setTimeout(() => {
@@ -296,6 +321,12 @@ const QRScanner = () => {
 
   const stopScanning = () => {
     try {
+      // Clear mobile timeout
+      if (mobileTimeoutRef.current) {
+        clearTimeout(mobileTimeoutRef.current);
+        mobileTimeoutRef.current = null;
+      }
+
       if (html5QrcodeScannerRef.current) {
         html5QrcodeScannerRef.current.clear().catch(console.error);
         html5QrcodeScannerRef.current = null;
@@ -305,6 +336,15 @@ const QRScanner = () => {
       const scannerElement = document.getElementById('qr-reader');
       if (scannerElement) {
         scannerElement.innerHTML = '';
+      }
+
+      // Force garbage collection hint for mobile
+      if (isMobile && window.gc) {
+        try {
+          window.gc();
+        } catch (e) {
+          // Ignore if garbage collection is not available
+        }
       }
     } catch (error) {
       console.error('Error stopping scanner:', error);
@@ -502,6 +542,7 @@ const QRScanner = () => {
                         <>
                           <Upload className="h-6 w-6 mr-3" />
                           {cameraPermission === 'denied' ? 'Upload QR Image' : 'Upload QR Image Instead'}
+                          {isMobile && <span className="text-xs ml-1">(Recommended)</span>}
                           <Image className="h-4 w-4 ml-2" />
                         </>
                       )}
@@ -596,6 +637,12 @@ const QRScanner = () => {
                         <span>Use this option if camera scanning doesn't work</span>
                       </li>
                     )}
+                    {isMobile && (
+                      <li className="flex items-start space-x-2">
+                        <CheckCircle className="h-4 w-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                        <span>Recommended for mobile devices to avoid browser crashes</span>
+                      </li>
+                    )}
                   </ul>
                 </div>
               </div>
@@ -606,13 +653,17 @@ const QRScanner = () => {
                     <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                     <p className="text-white font-medium">Scanning active</p>
                   </div>
-                  <p className="text-white/70 text-sm mb-6">
-                    Position the QR code within the scanning area below
-                    <br />
-                    <span className="text-xs text-white/50">
-                      {navigator.userAgent.includes('Mobile') ? 'Back camera selected' : 'Camera automatically selected'}
-                    </span>
-                  </p>
+                  <div className="text-white/70 text-sm mb-6">
+                    <p>Position the QR code within the scanning area below</p>
+                    <p className="text-xs text-white/50">
+                      {isMobile ? 'Back camera selected' : 'Camera automatically selected'}
+                    </p>
+                    {isMobile && (
+                      <p className="text-xs text-yellow-400">
+                        ⚠️ Scanner will auto-stop after 30 seconds to prevent mobile browser issues
+                      </p>
+                    )}
+                  </div>
                 </div>
                 
                 {/* Scanner Container with Modern Styling */}
