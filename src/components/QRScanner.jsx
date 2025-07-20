@@ -42,9 +42,6 @@ const QRScanner = () => {
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
   const [showUploadOption, setShowUploadOption] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [availableCameras, setAvailableCameras] = useState([]);
-  const [selectedCamera, setSelectedCamera] = useState(null);
-  const [showCameraSelector, setShowCameraSelector] = useState(false);
   const navigate = useNavigate();
   const scannerRef = useRef(null);
   const html5QrcodeScannerRef = useRef(null);
@@ -81,13 +78,13 @@ const QRScanner = () => {
         }
 
         // Enumerate cameras
-        const cameras = await enumerateCameras();
+        // const cameras = await enumerateCameras(); // Removed as per edit hint
         
-        if (cameras.length === 0) {
-          setCameraPermission('denied');
-          setShowUploadOption(true);
-          setError('No camera found on this device. Please use the upload option to scan QR codes.');
-        }
+        // if (cameras.length === 0) { // Removed as per edit hint
+        //   setCameraPermission('denied'); // Removed as per edit hint
+        //   setShowUploadOption(true); // Removed as per edit hint
+        //   setError('No camera found on this device. Please use the upload option to scan QR codes.'); // Removed as per edit hint
+        // } // Removed as per edit hint
       } catch (error) {
         console.log('Could not enumerate devices:', error);
         // If we can't enumerate devices, we'll still try to request camera access
@@ -127,32 +124,8 @@ const QRScanner = () => {
     }
   };
 
-  const enumerateCameras = async () => {
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const videoDevices = devices.filter(device => device.kind === 'videoinput');
-      
-      const cameras = videoDevices.map(device => ({
-        id: device.deviceId,
-        label: device.label || `Camera ${device.deviceId.slice(0, 8)}...`,
-        isBackCamera: device.label.toLowerCase().includes('back') || 
-                     device.label.toLowerCase().includes('rear') ||
-                     device.label.toLowerCase().includes('environment')
-      }));
-      
-      setAvailableCameras(cameras);
-      
-      // Auto-select back camera if available, otherwise first camera
-      const backCamera = cameras.find(cam => cam.isBackCamera);
-      const defaultCamera = backCamera || cameras[0];
-      setSelectedCamera(defaultCamera);
-      
-      return cameras;
-    } catch (error) {
-      console.error('Error enumerating cameras:', error);
-      return [];
-    }
-  };
+  // Removed enumerateCameras, selectCamera, switchCamera functions
+  // Removed all UI for camera selector and switch camera button
 
   const requestCameraPermission = async () => {
     setIsRequestingPermission(true);
@@ -160,23 +133,23 @@ const QRScanner = () => {
     
     try {
       // First, enumerate available cameras
-      const cameras = await enumerateCameras();
+      // const cameras = await enumerateCameras(); // Removed as per edit hint
       
-      if (cameras.length === 0) {
-        throw new Error('No cameras found');
-      }
+      // if (cameras.length === 0) { // Removed as per edit hint
+      //   throw new Error('No cameras found'); // Removed as per edit hint
+      // } // Removed as per edit hint
       
-      // If multiple cameras available, show camera selector
-      if (cameras.length > 1) {
-        setShowCameraSelector(true);
-        setCameraPermission('granted');
-        return;
-      }
+      // If multiple cameras available, show camera selector // Removed as per edit hint
+      // if (cameras.length > 1) { // Removed as per edit hint
+      //   setShowCameraSelector(true); // Removed as per edit hint
+      //   setCameraPermission('granted'); // Removed as per edit hint
+      //   return; // Removed as per edit hint
+      // } // Removed as per edit hint
       
       // Single camera - proceed with scanning
       const constraints = {
         video: {
-          deviceId: selectedCamera ? { exact: selectedCamera.id } : undefined,
+          facingMode: 'environment',
           width: { ideal: 1280 },
           height: { ideal: 720 }
         }
@@ -274,29 +247,8 @@ const QRScanner = () => {
     fileInputRef.current?.click();
   };
 
-  const selectCamera = (camera) => {
-    setSelectedCamera(camera);
-    setShowCameraSelector(false);
-    setScanning(true);
-  };
-
-  const switchCamera = async () => {
-    if (availableCameras.length <= 1) return;
-    
-    const currentIndex = availableCameras.findIndex(cam => cam.id === selectedCamera?.id);
-    const nextIndex = (currentIndex + 1) % availableCameras.length;
-    const nextCamera = availableCameras[nextIndex];
-    
-    setSelectedCamera(nextCamera);
-    
-    // Restart scanning with new camera
-    if (scanning) {
-      stopScanning();
-      setTimeout(() => {
-        setScanning(true);
-      }, 100);
-    }
-  };
+  // Removed selectCamera function
+  // Removed switchCamera function
 
   const initializeScanner = () => {
     try {
@@ -316,7 +268,7 @@ const QRScanner = () => {
         formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
         verbose: false,
         // Use selected camera if available
-        cameraId: selectedCamera?.id
+        // cameraId: selectedCamera?.id // Removed as per edit hint
       };
 
       // Clear any existing content
@@ -468,43 +420,7 @@ const QRScanner = () => {
         )}
 
         {/* Camera Selector Modal */}
-        {showCameraSelector && (
-          <Card className="mb-6 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
-            <CardHeader className="text-center">
-              <CardTitle className="text-white text-xl">Select Camera</CardTitle>
-              <CardDescription className="text-white/70">
-                Choose which camera to use for scanning
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {availableCameras.map((camera) => (
-                  <Button
-                    key={camera.id}
-                    onClick={() => selectCamera(camera)}
-                    variant="outline"
-                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-xl transition-all duration-300 hover:scale-105"
-                  >
-                    <Camera className="h-5 w-5 mr-3" />
-                    {camera.label}
-                    {camera.isBackCamera && (
-                      <Badge className="ml-2 bg-blue-500/20 text-blue-300 border-blue-500/30">
-                        Back
-                      </Badge>
-                    )}
-                  </Button>
-                ))}
-                <Button
-                  onClick={() => setShowCameraSelector(false)}
-                  variant="ghost"
-                  className="w-full bg-white/5 text-white/70 hover:bg-white/10"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Removed as per edit hint */}
 
         {/* Main Scanner Card */}
         <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl mb-8">
@@ -721,7 +637,8 @@ const QRScanner = () => {
                     Position the QR code within the scanning area below
                     <br />
                     <span className="text-xs text-white/50">
-                      {selectedCamera ? `Using: ${selectedCamera.label}` : 'Camera automatically selected'}
+                      {/* selectedCamera ? `Using: ${selectedCamera.label}` : 'Camera automatically selected' */}
+                      Camera will be automatically selected
                     </span>
                   </p>
                 </div>
@@ -794,27 +711,18 @@ const QRScanner = () => {
                     </Button>
                     
                     {/* Camera Switch Button - Only show if multiple cameras available */}
-                    {availableCameras.length > 1 && (
-                      <Button 
-                        variant="outline" 
-                        onClick={switchCamera}
-                        className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-xl transition-all duration-300 hover:scale-105"
-                      >
-                        <RotateCcw className="h-4 w-4 mr-2" />
-                        Switch Camera
-                      </Button>
-                    )}
+                    {/* Removed as per edit hint */}
                   </div>
                   
                   {/* Current Camera Info */}
-                  {selectedCamera && (
+                  {/* selectedCamera && ( // Removed as per edit hint
                     <p className="text-white/60 text-sm">
                       Using: {selectedCamera.label}
                       {selectedCamera.isBackCamera && (
                         <span className="ml-2 text-blue-400">(Back Camera)</span>
                       )}
                     </p>
-                  )}
+                  ) */}
                 </div>
               </div>
             )}
