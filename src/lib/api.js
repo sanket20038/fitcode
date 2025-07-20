@@ -39,6 +39,10 @@ export const authAPI = {
   loginOwner: (data) => api.post('/auth/login/owner', data),
   loginClient: (data) => api.post('/auth/login/client', data),
   verifyToken: () => api.post('/auth/verify-token'),
+  // Forgot password endpoints
+  forgotPasswordClient: (data) => api.post('/auth/forgot-password/client', data),
+  forgotPasswordOwner: (data) => api.post('/auth/forgot-password/owner', data),
+  resetPassword: (data) => api.post('/auth/reset-password', data),
 };
 
 // Gym Management API

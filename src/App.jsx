@@ -14,6 +14,7 @@ import LandingPage from './components/LandingPage';
 import ClientLogin from './components/ClientLogin';
 import OwnerLogin from './components/OwnerLogin';
 import GymLoader from './components/GymLoader';
+import ResetPassword from './components/ResetPassword';
 
 // Utils
 import { isAuthenticated, isOwner, isClient } from './lib/auth';
@@ -86,6 +87,11 @@ function App() {
                 <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
                 <Register />
             } 
+          />
+          {/* Reset Password Route */}
+          <Route 
+            path="/reset-password" 
+            element={<ResetPassword />} 
           />
 
           {/* Owner Routes */}
