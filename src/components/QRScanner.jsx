@@ -69,6 +69,14 @@ const QRScanner = () => {
     // Also check if camera is available on the device
     const checkCameraAvailability = async () => {
       try {
+        // Check if getUserMedia is supported
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          setCameraPermission('denied');
+          setShowUploadOption(true);
+          setError('Camera not supported in this browser. Please use the upload option to scan QR codes.');
+          return;
+        }
+
         const devices = await navigator.mediaDevices.enumerateDevices();
         const videoDevices = devices.filter(device => device.kind === 'videoinput');
         
@@ -79,6 +87,7 @@ const QRScanner = () => {
         }
       } catch (error) {
         console.log('Could not enumerate devices:', error);
+        // If we can't enumerate devices, we'll still try to request camera access
       }
     };
     
@@ -147,6 +156,10 @@ const QRScanner = () => {
         setError('No camera found on this device. You can upload an image with a QR code instead.');
       } else if (error.name === 'NotSupportedError') {
         setError('Camera not supported on this device. You can upload an image with a QR code instead.');
+      } else if (error.name === 'NotReadableError') {
+        setError('Camera is in use by another application. Please close other camera apps and try again.');
+      } else if (error.name === 'OverconstrainedError') {
+        setError('Camera constraints not supported. Please try again or use the upload option.');
       } else {
         setError('Camera not available. You can upload an image with a QR code instead.');
       }
@@ -169,47 +182,41 @@ const QRScanner = () => {
         throw new Error('Please select an image file (JPEG, PNG, etc.)');
       }
 
-      // Create HTML5 QR Code instance for file scanning
-      const html5QrCode = new Html5Qrcode("qr-reader");
+      // Create a temporary HTML5 QR Code instance for file scanning
+      const html5QrCode = new Html5Qrcode("temp-qr-reader");
       
-      // Convert file to base64
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          const base64Data = e.target.result;
-          
-          // Scan the image for QR codes
-          const decodedText = await html5QrCode.scanFile(base64Data, true);
-          
-          if (decodedText) {
-            await onScanSuccess(decodedText);
-          } else {
-            setError('No QR code found in the image. Please try with a clearer image.');
-          }
-        } catch (scanError) {
-          console.error('QR scan error:', scanError);
-          setError('No QR code found in the image or the QR code is invalid. Please try with a clearer image.');
-        } finally {
-          setIsUploading(false);
-          if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-          }
+      try {
+        // Scan the file directly - scanFile expects a File object
+        const decodedText = await html5QrCode.scanFile(file, true);
+        
+        if (decodedText) {
+          await onScanSuccess(decodedText);
+        } else {
+          setError('No QR code found in the image. Please try with a clearer image.');
         }
-      };
-      
-      reader.onerror = () => {
-        setError('Error reading the image file. Please try again.');
+      } catch (scanError) {
+        console.error('QR scan error:', scanError);
+        if (scanError.message && scanError.message.includes('No QR code found')) {
+          setError('No QR code found in the image. Please try with a clearer image containing a valid QR code.');
+        } else {
+          setError('Error scanning the image. Please try with a clearer image.');
+        }
+      } finally {
         setIsUploading(false);
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
-      };
-      
-      reader.readAsDataURL(file);
+      }
       
     } catch (error) {
       console.error('File scan error:', error);
-      setError('Error processing image. Please try again with a clear image containing a QR code.');
+      if (error.message && error.message.includes('File is not an image')) {
+        setError('Please select a valid image file (JPEG, PNG, WebP).');
+      } else if (error.message && error.message.includes('File is empty')) {
+        setError('The selected file is empty. Please try with a different image.');
+      } else {
+        setError('Error processing image. Please try again with a clear image containing a QR code.');
+      }
       setIsUploading(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -236,8 +243,15 @@ const QRScanner = () => {
         showTorchButtonIfSupported: true,
         showZoomSliderIfSupported: true,
         defaultZoomValueIfSupported: 2,
-        formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
+        formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
+        verbose: false
       };
+
+      // Clear any existing content
+      const scannerElement = document.getElementById('qr-reader');
+      if (scannerElement) {
+        scannerElement.innerHTML = '';
+      }
 
       html5QrcodeScannerRef.current = new Html5QrcodeScanner(
         "qr-reader",
@@ -252,8 +266,9 @@ const QRScanner = () => {
       setTimeout(() => {
         const scannerElement = document.getElementById('qr-reader');
         if (scannerElement && scannerElement.children.length === 0) {
-          setError('Scanner failed to initialize. Please refresh the page and try again.');
+          setError('Scanner failed to initialize. Please try the upload option instead.');
           setScanning(false);
+          setShowUploadOption(true);
         }
       }, 3000);
       
@@ -271,7 +286,8 @@ const QRScanner = () => {
     if (cameraPermission === 'granted') {
       setScanning(true);
     } else if (cameraPermission === 'denied') {
-      setError('Camera permission is required. Please enable camera access in your browser settings and try again.');
+      setError('Camera permission is required. Please enable camera access in your browser settings and try again, or use the upload option below.');
+      setShowUploadOption(true);
     } else {
       // Request permission first
       requestCameraPermission();
@@ -279,11 +295,22 @@ const QRScanner = () => {
   };
 
   const stopScanning = () => {
-    if (html5QrcodeScannerRef.current) {
-      html5QrcodeScannerRef.current.clear().catch(console.error);
-      html5QrcodeScannerRef.current = null;
+    try {
+      if (html5QrcodeScannerRef.current) {
+        html5QrcodeScannerRef.current.clear().catch(console.error);
+        html5QrcodeScannerRef.current = null;
+      }
+      
+      // Clear the scanner element
+      const scannerElement = document.getElementById('qr-reader');
+      if (scannerElement) {
+        scannerElement.innerHTML = '';
+      }
+    } catch (error) {
+      console.error('Error stopping scanner:', error);
+    } finally {
+      setScanning(false);
     }
-    setScanning(false);
   };
 
   const onScanSuccess = async (decodedText) => {
@@ -372,13 +399,26 @@ const QRScanner = () => {
         <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl mb-8">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center space-x-3 mb-4">
-              <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-lg">
-                <Scan className="h-8 w-8 text-white" />
+              <div className={`p-3 rounded-2xl shadow-lg ${
+                cameraPermission === 'denied' 
+                  ? 'bg-gradient-to-r from-green-600 to-emerald-600' 
+                  : 'bg-gradient-to-r from-blue-600 to-indigo-600'
+              }`}>
+                {cameraPermission === 'denied' ? (
+                  <Upload className="h-8 w-8 text-white" />
+                ) : (
+                  <Scan className="h-8 w-8 text-white" />
+                )}
               </div>
               <div>
-                <CardTitle className="text-white text-2xl">Scan Machine QR Code</CardTitle>
+                <CardTitle className="text-white text-2xl">
+                  {cameraPermission === 'denied' ? 'Upload QR Code' : 'Scan Machine QR Code'}
+                </CardTitle>
                 <CardDescription className="text-white/70">
-                  Point your camera at a FitCode QR code to access machine information
+                  {cameraPermission === 'denied' 
+                    ? 'Upload an image with a QR code to access machine information'
+                    : 'Point your camera at a FitCode QR code to access machine information'
+                  }
                 </CardDescription>
               </div>
             </div>
@@ -502,6 +542,9 @@ const QRScanner = () => {
                     onChange={handleFileUpload}
                     className="hidden"
                   />
+                  
+                  {/* Hidden element for file scanning */}
+                  <div id="temp-qr-reader" className="hidden"></div>
                 </div>
                 
                 {/* Quick Stats */}
@@ -580,19 +623,16 @@ const QRScanner = () => {
                       id="qr-reader"
                       ref={scannerRef}
                       className="w-full min-h-[350px] rounded-2xl overflow-hidden"
-                      style={{
-                        // Hide unwanted HTML5 QR scanner UI elements
-                        '--html5-qr-code-scanner-camera-selection-button': 'none',
-                        '--html5-qr-code-scanner-permission-button': 'none',
-                        '--html5-qr-code-scanner-scan-region-button': 'none'
-                      }}
                     />
                     <style>{`
                       #qr-reader {
                         border: none !important;
+                        background: transparent !important;
                       }
                       #qr-reader__scan_region {
                         background: transparent !important;
+                        border: 2px solid rgba(59, 130, 246, 0.5) !important;
+                        border-radius: 12px !important;
                       }
                       #qr-reader__scan_region > img {
                         display: none !important;
@@ -618,17 +658,14 @@ const QRScanner = () => {
                       #qr-reader__scan_region_scan_region_selection {
                         display: none !important;
                       }
-                      #qr-reader__camera_permission_button {
-                        display: none !important;
-                      }
-                      #qr-reader__scan_region_scan_region_selection {
-                        display: none !important;
-                      }
                       #qr-reader__scan_region_scan_region_selection_button {
                         display: none !important;
                       }
                       #qr-reader__scan_region_scan_region_selection_dialog {
                         display: none !important;
+                      }
+                      #qr-reader__scan_region > video {
+                        border-radius: 12px !important;
                       }
                     `}</style>
                   </div>
