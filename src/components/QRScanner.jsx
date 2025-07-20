@@ -28,7 +28,7 @@ import {
   Dumbbell,
   RotateCcw
 } from 'lucide-react';
-// import { Html5Qrcode, Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5Qrcode, Html5QrcodeScanner, Html5QrcodeScanType, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { clientAPI, qrAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
 import GymLoader from './GymLoader';
@@ -65,6 +65,24 @@ const QRScanner = () => {
   // Check camera permission on mount
   useEffect(() => {
     checkCameraPermission();
+    
+    // Also check if camera is available on the device
+    const checkCameraAvailability = async () => {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        
+        if (videoDevices.length === 0) {
+          setCameraPermission('denied');
+          setShowUploadOption(true);
+          setError('No camera found on this device. Please use the upload option to scan QR codes.');
+        }
+      } catch (error) {
+        console.log('Could not enumerate devices:', error);
+      }
+    };
+    
+    checkCameraAvailability();
   }, []);
 
   // Only initialize scanner when scanning is true and DOM is updated
@@ -80,8 +98,16 @@ const QRScanner = () => {
         const permission = await navigator.permissions.query({ name: 'camera' });
         setCameraPermission(permission.state);
         
+        // If permission is denied, show upload option
+        if (permission.state === 'denied') {
+          setShowUploadOption(true);
+        }
+        
         permission.onchange = () => {
           setCameraPermission(permission.state);
+          if (permission.state === 'denied') {
+            setShowUploadOption(true);
+          }
         };
       }
     } catch (error) {
@@ -114,7 +140,16 @@ const QRScanner = () => {
       console.error('Camera permission denied:', error);
       setCameraPermission('denied');
       setShowUploadOption(true);
-      setError('Camera not available. You can upload an image with a QR code instead.');
+      
+      if (error.name === 'NotAllowedError') {
+        setError('Camera access was denied. Please enable camera permissions in your browser settings and try again, or use the upload option below.');
+      } else if (error.name === 'NotFoundError') {
+        setError('No camera found on this device. You can upload an image with a QR code instead.');
+      } else if (error.name === 'NotSupportedError') {
+        setError('Camera not supported on this device. You can upload an image with a QR code instead.');
+      } else {
+        setError('Camera not available. You can upload an image with a QR code instead.');
+      }
     } finally {
       setIsRequestingPermission(false);
     }
@@ -134,13 +169,48 @@ const QRScanner = () => {
         throw new Error('Please select an image file (JPEG, PNG, etc.)');
       }
 
-      setError('QR code scanning is temporarily unavailable. Please use the camera scanner instead.');
+      // Create HTML5 QR Code instance for file scanning
+      const html5QrCode = new Html5Qrcode("qr-reader");
+      
+      // Convert file to base64
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const base64Data = e.target.result;
+          
+          // Scan the image for QR codes
+          const decodedText = await html5QrCode.scanFile(base64Data, true);
+          
+          if (decodedText) {
+            await onScanSuccess(decodedText);
+          } else {
+            setError('No QR code found in the image. Please try with a clearer image.');
+          }
+        } catch (scanError) {
+          console.error('QR scan error:', scanError);
+          setError('No QR code found in the image or the QR code is invalid. Please try with a clearer image.');
+        } finally {
+          setIsUploading(false);
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        }
+      };
+      
+      reader.onerror = () => {
+        setError('Error reading the image file. Please try again.');
+        setIsUploading(false);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      };
+      
+      reader.readAsDataURL(file);
+      
     } catch (error) {
       console.error('File scan error:', error);
       setError('Error processing image. Please try again with a clear image containing a QR code.');
-    } finally {
       setIsUploading(false);
-      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -153,11 +223,44 @@ const QRScanner = () => {
 
   const initializeScanner = () => {
     try {
-      setError('QR code scanning is temporarily unavailable. Please try again later.');
-      console.log('Scanner initialization disabled for testing');
+      if (html5QrcodeScannerRef.current) {
+        html5QrcodeScannerRef.current.clear().catch(console.error);
+      }
+
+      const config = {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0,
+        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+        rememberLastUsedCamera: true,
+        showTorchButtonIfSupported: true,
+        showZoomSliderIfSupported: true,
+        defaultZoomValueIfSupported: 2,
+        formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
+      };
+
+      html5QrcodeScannerRef.current = new Html5QrcodeScanner(
+        "qr-reader",
+        config,
+        false
+      );
+
+      html5QrcodeScannerRef.current.render(onScanSuccess, onScanFailure);
+      setError('');
+      
+      // Add a timeout to check if scanner initialized properly
+      setTimeout(() => {
+        const scannerElement = document.getElementById('qr-reader');
+        if (scannerElement && scannerElement.children.length === 0) {
+          setError('Scanner failed to initialize. Please refresh the page and try again.');
+          setScanning(false);
+        }
+      }, 3000);
+      
     } catch (error) {
       console.error('Error initializing scanner:', error);
       setError('Failed to initialize scanner. Please try again.');
+      setScanning(false);
     }
   };
 
@@ -206,7 +309,9 @@ const QRScanner = () => {
   };
 
   const onScanFailure = (error) => {
-    console.warn('Scan failed:', error);
+    // Only log the error, don't show it to user as it's expected during scanning
+    // The scanner will continuously try to scan, so we don't want to spam the user with errors
+    console.warn('Scan attempt failed:', error);
   };
 
   return (
@@ -282,64 +387,107 @@ const QRScanner = () => {
             {!scanning ? (
               <div className="text-center py-12">
                 <div className="relative mb-8">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                  <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 p-8 rounded-full shadow-2xl mx-auto w-fit">
-                    <Camera className="h-16 w-16 text-white" />
+                  <div className={`absolute inset-0 rounded-full blur-xl opacity-50 animate-pulse ${
+                    cameraPermission === 'denied' 
+                      ? 'bg-gradient-to-r from-green-600 to-emerald-600' 
+                      : 'bg-gradient-to-r from-blue-600 to-indigo-600'
+                  }`}></div>
+                  <div className={`relative p-8 rounded-full shadow-2xl mx-auto w-fit ${
+                    cameraPermission === 'denied' 
+                      ? 'bg-gradient-to-r from-green-600 to-emerald-600' 
+                      : 'bg-gradient-to-r from-blue-600 to-indigo-600'
+                  }`}>
+                    {cameraPermission === 'denied' ? (
+                      <Upload className="h-16 w-16 text-white" />
+                    ) : (
+                      <Camera className="h-16 w-16 text-white" />
+                    )}
                   </div>
                 </div>
                 
                 <h3 className="text-2xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                  Ready to Scan
+                  {cameraPermission === 'denied' ? 'Upload QR Image' : 'Ready to Scan'}
                 </h3>
                 <p className="text-white/70 text-lg mb-8 max-w-md mx-auto">
                   {cameraPermission === 'denied' 
-                    ? 'Camera not available. You can upload an image with a QR code instead.'
-                    : 'Make sure you have a FitCode QR code ready. Camera will be automatically selected.'
+                    ? 'Camera not available. Upload a clear image of the QR code to scan it.'
+                    : 'Make sure you have a FitCode QR code ready. Camera will be automatically selected, or upload an image instead.'
                   }
                 </p>
                 
                 <div className="space-y-4">
+                  {/* Camera Scan Button - Only show if camera is available */}
+                  {cameraPermission !== 'denied' && (
+                    <div className="relative group">
+                      <div className="absolute -inset-1 from-blue-600 to-indigo-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                      <Button 
+                        onClick={startScanning} 
+                        size="lg"
+                        disabled={isRequestingPermission}
+                        className="relative bg-gradient-to-r from-orange-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isRequestingPermission ? (
+                          <>
+                            <GymLoader size="small" text="Requesting Camera..." variant="dumbbells" />
+                          </>
+                        ) : (
+                          <>
+                            <QrCode className="h-6 w-6 mr-3" />
+                            Start Camera Scan
+                            <Sparkles className="h-4 w-4 ml-2" />
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Upload Option - Always show as alternative or primary when camera denied */}
                   <div className="relative group">
-                    <div className="absolute -inset-1 from-blue-600 to-indigo-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                    <div className="absolute -inset-1 from-green-600 to-emerald-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                     <Button 
-                      onClick={startScanning} 
+                      onClick={triggerFileUpload}
                       size="lg"
-                      disabled={isRequestingPermission}
-                      className="relative bg-gradient-to-r from-orange-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isUploading}
+                      className={`relative text-white shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed ${
+                        cameraPermission === 'denied' 
+                          ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700' 
+                          : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'
+                      }`}
                     >
-                      {isRequestingPermission ? (
+                      {isUploading ? (
                         <>
-                          <GymLoader size="small" text="Requesting Camera..." variant="dumbbells" />
+                          <GymLoader size="small" text="Processing Image..." variant="weights" />
                         </>
                       ) : (
                         <>
-                          <QrCode className="h-6 w-6 mr-3" />
-                          Start Scanning
-                          <Sparkles className="h-4 w-4 ml-2" />
+                          <Upload className="h-6 w-6 mr-3" />
+                          {cameraPermission === 'denied' ? 'Upload QR Image' : 'Upload QR Image Instead'}
+                          <Image className="h-4 w-4 ml-2" />
                         </>
                       )}
                     </Button>
                   </div>
 
-                  {/* Upload Option - Show when camera is denied or as alternative */}
-                  {(cameraPermission === 'denied' || showUploadOption) && (
+                  {/* Try Camera Again Option - Show when camera was denied */}
+                  {cameraPermission === 'denied' && (
                     <div className="relative group">
-                      <div className="absolute -inset-1 from-green-600 to-emerald-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                      <div className="absolute -inset-1 from-blue-600 to-indigo-600 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                       <Button 
-                        onClick={triggerFileUpload}
+                        onClick={requestCameraPermission}
                         size="lg"
-                        disabled={isUploading}
-                        className="relative bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isRequestingPermission}
+                        variant="outline"
+                        className="relative bg-white/10 border-white/20 text-white hover:bg-white/20 shadow-2xl transition-all duration-300 hover:scale-105 px-8 py-4 text-lg font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isUploading ? (
+                        {isRequestingPermission ? (
                           <>
-                            <GymLoader size="small" text="Processing Image..." variant="weights" />
+                            <GymLoader size="small" text="Requesting Camera..." variant="dumbbells" />
                           </>
                         ) : (
                           <>
-                            <Upload className="h-6 w-6 mr-3" />
-                            Upload QR Image
-                            <Image className="h-4 w-4 ml-2" />
+                            <Camera className="h-6 w-6 mr-3" />
+                            Try Camera Again
+                            <RotateCcw className="h-4 w-4 ml-2" />
                           </>
                         )}
                       </Button>
@@ -379,28 +527,34 @@ const QRScanner = () => {
                 </div>
 
                 {/* Upload Instructions */}
-                {(cameraPermission === 'denied' || showUploadOption) && (
-                  <div className="mt-8 p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <Image className="h-5 w-5 text-green-400" />
-                      <h4 className="text-white font-semibold">Upload QR Image</h4>
-                    </div>
-                    <ul className="text-white/70 text-sm space-y-2">
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
-                        <span>Take a clear photo of the QR code</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
-                        <span>Ensure good lighting and focus</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
-                        <span>Supported formats: JPEG, PNG, WebP</span>
-                      </li>
-                    </ul>
+                <div className="mt-8 p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <Image className="h-5 w-5 text-green-400" />
+                    <h4 className="text-white font-semibold">
+                      {cameraPermission === 'denied' ? 'Upload QR Image' : 'Alternative: Upload QR Image'}
+                    </h4>
                   </div>
-                )}
+                  <ul className="text-white/70 text-sm space-y-2">
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+                      <span>Take a clear photo of the QR code</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+                      <span>Ensure good lighting and focus</span>
+                    </li>
+                    <li className="flex items-start space-x-2">
+                      <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+                      <span>Supported formats: JPEG, PNG, WebP</span>
+                    </li>
+                    {cameraPermission !== 'denied' && (
+                      <li className="flex items-start space-x-2">
+                        <CheckCircle className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span>Use this option if camera scanning doesn't work</span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
               </div>
             ) : (
               <div className="space-y-6">
