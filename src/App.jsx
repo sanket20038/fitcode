@@ -15,6 +15,21 @@ import ClientLogin from './components/ClientLogin';
 import OwnerLogin from './components/OwnerLogin';
 import GymLoader from './components/GymLoader';
 import ResetPassword from './components/ResetPassword';
+import Abdominals from './components/musclewiki/Abdominals';
+import Biceps from './components/musclewiki/Biceps';
+import Triceps from './components/musclewiki/Triceps';
+import Traps from './components/musclewiki/Traps';
+import Shoulder from './components/musclewiki/Shoulder';
+import Quads from './components/musclewiki/Quads';
+import Obliques from './components/musclewiki/Obliques';
+import LowerBack from './components/musclewiki/LowerBack';
+import Lats from './components/musclewiki/Lats';
+import Hamstrings from './components/musclewiki/Hamstrings';
+import Glutes from './components/musclewiki/Glutes';
+import Calves from './components/musclewiki/Calves';
+import Chest from './components/musclewiki/Chest';
+import Forearms from './components/musclewiki/Forearms';
+import TrapsMidBack from './components/musclewiki/TrapsMidBack';
 
 // Utils
 import { isAuthenticated, isOwner, isClient } from './lib/auth';
@@ -127,6 +142,23 @@ function App() {
               </ProtectedRoute>
             } 
           />
+
+          {/* Muscle Wiki Routes */}
+          <Route path="/musclewiki/abdominals" element={<ProtectedRoute userType="client"><Abdominals /></ProtectedRoute>} />
+          <Route path="/musclewiki/biceps" element={<ProtectedRoute userType="client"><Biceps /></ProtectedRoute>} />
+          <Route path="/musclewiki/triceps" element={<ProtectedRoute userType="client"><Triceps /></ProtectedRoute>} />
+          <Route path="/musclewiki/traps" element={<ProtectedRoute userType="client"><Traps /></ProtectedRoute>} />
+          <Route path="/musclewiki/shoulder" element={<ProtectedRoute userType="client"><Shoulder /></ProtectedRoute>} />
+          <Route path="/musclewiki/quads" element={<ProtectedRoute userType="client"><Quads /></ProtectedRoute>} />
+          <Route path="/musclewiki/obliques" element={<ProtectedRoute userType="client"><Obliques /></ProtectedRoute>} />
+          <Route path="/musclewiki/lowerback" element={<ProtectedRoute userType="client"><LowerBack /></ProtectedRoute>} />
+          <Route path="/musclewiki/lats" element={<ProtectedRoute userType="client"><Lats /></ProtectedRoute>} />
+          <Route path="/musclewiki/hamstrings" element={<ProtectedRoute userType="client"><Hamstrings /></ProtectedRoute>} />
+          <Route path="/musclewiki/glutes" element={<ProtectedRoute userType="client"><Glutes /></ProtectedRoute>} />
+          <Route path="/musclewiki/calves" element={<ProtectedRoute userType="client"><Calves /></ProtectedRoute>} />
+          <Route path="/musclewiki/chest" element={<ProtectedRoute userType="client"><Chest /></ProtectedRoute>} />
+          <Route path="/musclewiki/forearms" element={<ProtectedRoute userType="client"><Forearms /></ProtectedRoute>} />
+          <Route path="/musclewiki/traps-mid-back" element={<ProtectedRoute userType="client"><TrapsMidBack /></ProtectedRoute>} />
 
           {/* Default Routes */}
           <Route 

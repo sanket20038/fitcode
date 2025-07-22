@@ -1,0 +1,69 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Dumbbell } from "lucide-react";
+
+const Quads = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
+      {/* Nav Bar */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center">
+          <button
+            onClick={() => navigate('/client/dashboard')}
+            className="mr-4 flex items-center text-white hover:text-pink-400 transition"
+          >
+            <ArrowLeft className="h-6 w-6 mr-1" />
+            <span className="font-semibold">Back</span>
+          </button>
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-75"></div>
+              <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 p-2 rounded-2xl shadow-xl">
+                <Dumbbell className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+              </div>
+            </div>
+            <h1 className="text-lg sm:text-2xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              FitCode
+            </h1>
+          </div>
+        </div>
+      </header>
+      <main className="max-w-3xl mx-auto px-4 py-8">
+        <div className="bg-white/5 border-white/10 backdrop-blur-xl shadow-xl rounded-2xl p-8">
+          <h1 className="text-4xl font-black text-white mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Quads</h1>
+          {/* Bodyweight Squat */}
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-2">Bodyweight Squat</h2>
+            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Beginner</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <img className="w-full rounded-xl" src="/musclewiki/Images/male-bodyweight-squat-front.gif" alt="Bodyweight Squat Front" />
+              <img className="w-full rounded-xl" src="/musclewiki/Images/male-bodyweight-squat-side.gif" alt="Bodyweight Squat Side" />
+            </div>
+            <ol className="list-decimal list-inside text-white/90 space-y-2">
+              <li>Stand with your feet shoulder-width apart.</li>
+              <li>Lower your body as if sitting back into a chair, keeping your chest up and knees behind your toes.</li>
+              <li>Push through your heels to return to standing.</li>
+            </ol>
+          </section>
+          {/* Dumbbell Lunge */}
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-2">Dumbbell Lunge</h2>
+            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Beginner</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <img className="w-full rounded-xl" src="/musclewiki/Images/male-dumbbell-lunge-front.gif" alt="Dumbbell Lunge Front" />
+              <img className="w-full rounded-xl" src="/musclewiki/Images/male-dumbbell-lunge-side.gif" alt="Dumbbell Lunge Side" />
+            </div>
+            <ol className="list-decimal list-inside text-white/90 space-y-2">
+              <li>Stand upright, holding a dumbbell in each hand.</li>
+              <li>Step forward with one leg and lower your hips until both knees are bent at about 90 degrees.</li>
+              <li>Push back to the starting position and repeat with the other leg.</li>
+            </ol>
+          </section>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Quads; 
