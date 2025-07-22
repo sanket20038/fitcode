@@ -6,7 +6,7 @@ const GymLoader = ({ text = 'Loading...' }) => {
       className="fixed inset-0 z-50 flex flex-col items-center justify-center min-h-screen w-screen bg-transparent"
     >
       <img
-        src="/id.gif"
+        src="/lg.gif"
         className="w-72 h-72 md:w-[28rem] md:h-[28rem] rounded-2xl "
         alt="Loading..."
         style={{ objectFit: 'contain', background: 'transparent', border: 'none' }}
