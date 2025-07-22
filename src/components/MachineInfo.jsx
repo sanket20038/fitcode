@@ -360,7 +360,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 flex items-center justify-center py-8 px-2">
-      <div className="w-full max-w-3xl mx-auto bg-white/5 border border-white/10 rounded-3xl shadow-2xl backdrop-blur-xl p-4 sm:p-8 flex flex-col gap-8">
+      <div className="w-full max-w-3xl mx-auto bg-white/5 border border-white/10 rounded-3xl shadow-2xl backdrop-blur-xl p-4 sm:p-8 flex flex-col gap-8 min-h-[600px]">
         {/* Top: Back and Bookmark Buttons */}
         <div className="flex items-center justify-between mb-4">
           <Button
@@ -437,7 +437,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
         </div>
         {/* Tabs Section */}
         <div className="w-full">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8 flex-1 flex flex-col">
             <div className="flex justify-center px-4">
               <TabsList className="inline-flex h-12 sm:h-16 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-1 sm:p-2 shadow-2xl w-full max-w-md sm:max-w-none">
                 <TabsTrigger value="video" className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1 sm:flex-none">
@@ -511,8 +511,8 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
               </Card>
             </TabsContent>
             {/* Instructions Tab */}
-            <TabsContent value="instructions" className="animate-in fade-in duration-500">
-              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500">
+            <TabsContent value="instructions" className="animate-in fade-in duration-500 flex-1 flex flex-col min-h-[350px]">
+              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 flex-1 flex flex-col h-full">
                 <CardHeader>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
                     {/* Left: Icon, Title, Description */}
@@ -563,11 +563,11 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-1 flex flex-col h-full">
                   {translateEnabledInstructions ? (
                     translatingInstructions ? (
-                      <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
-                        <GymLoader size="large" text={`Translating instructions to ${getLanguageName(translateLanguageInstructions)}...`} variant="video" />
+                      <div className="flex-1 w-full h-full flex items-center justify-center">
+                        <span className="text-white/80 text-base">Translating...</span>
                       </div>
                     ) : translationErrorInstructions ? (
                       <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20">
@@ -618,8 +618,8 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
               </Card>
             </TabsContent>
             {/* Safety Tab */}
-            <TabsContent value="safety" className="animate-in fade-in duration-500">
-              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500">
+            <TabsContent value="safety" className="animate-in fade-in duration-500 flex-1 flex flex-col min-h-[350px]">
+              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 flex-1 flex flex-col h-full">
                 <CardHeader>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
                     {/* Left: Icon, Title, Description */}
@@ -670,11 +670,11 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-1 flex flex-col h-full">
                   {translateEnabledSafety ? (
                     translatingSafety ? (
-                      <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
-                        <GymLoader size="large" text={`Translating safety information to ${getLanguageName(translateLanguageSafety)}...`} variant="video" />
+                      <div className="flex-1 w-full h-full flex items-center justify-center">
+                        <span className="text-white/80 text-base">Translating...</span>
                       </div>
                     ) : translationErrorSafety ? (
                       <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20">
