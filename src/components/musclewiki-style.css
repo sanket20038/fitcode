@@ -1,0 +1,23 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap'); */
+
+body, .musclemap-bg {
+  background: linear-gradient(135deg, #0f172a 0%, #a855f7 60%, #0f172a 100%) !important;
+  min-height: 100vh;
+  color: #252525;
+  font-family: 'Inter', 'Oswald', Arial, sans-serif !important;
+}
+
+.container-fluid {
+  padding-top: 2vw;
+  padding-bottom: 2vw;
+}
+
+.body-map__muscle path:hover {
+  fill: crimson;
+}
+
+@media screen and (max-width:600px) {
+  svg {
+    width: 100% !important;
+  }
+} 

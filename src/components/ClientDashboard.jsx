@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -47,6 +47,7 @@ import { getUser, clearAuth } from '../lib/auth';
 
 import AskAIButton from './AskAIButton';
 import GymLoader from './GymLoader';
+import MuscleMap from './MuscleMap';
 
 const ClientDashboard = ({ setAuthenticated, setUserType }) => {
   const [user] = useState(getUser());
@@ -318,6 +319,7 @@ const exportToPDF = async (aiResponses) => {
               </h1>
               <p className="text-white/60 text-xs sm:text-sm font-medium">Premium Fitness Platform</p>
             </div>
+            
           </div>
           {/* Welcome and Logout */}
           <div className="flex items-center space-x-2 sm:space-x-4">
@@ -397,6 +399,14 @@ const exportToPDF = async (aiResponses) => {
               </Card>
             </div>
           </div>
+        </div>
+
+        {/* Muscle Map Section */}
+        <div className="mb-16">
+          <h2 className="text-3xl sm:text-4xl font-black text-center mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Click the muscle you want to learn about
+          </h2>
+          <MuscleMap />
         </div>
 
         {/* Stats Cards */}
