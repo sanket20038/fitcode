@@ -495,7 +495,7 @@ const QRScanner = () => {
                       >
                         {isRequestingPermission ? (
                           <>
-                            <GymLoader size="small" text="Requesting Camera..." variant="dumbbells" />
+                            <GymLoader variant="video" text="Requesting Camera..." />
                           </>
                         ) : (
                           <>
@@ -523,7 +523,7 @@ const QRScanner = () => {
                     >
                       {isUploading ? (
                         <>
-                          <GymLoader size="small" text="Processing Image..." variant="weights" />
+                          <GymLoader variant="video" text="Processing Image..." />
                         </>
                       ) : (
                         <>
@@ -548,7 +548,7 @@ const QRScanner = () => {
                       >
                         {isRequestingPermission ? (
                           <>
-                            <GymLoader size="small" text="Requesting Camera..." variant="dumbbells" />
+                            <GymLoader variant="video" text="Requesting Camera..." />
                           </>
                         ) : (
                           <>

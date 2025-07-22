@@ -331,7 +331,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <GymLoader size="xlarge" text="Loading machine details..." variant="target" />
+        <GymLoader size="xlarge" text="Loading machine details..." variant="video" />
       </div>
     );
   }
@@ -567,7 +567,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                   {translateEnabledInstructions ? (
                     translatingInstructions ? (
                       <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
-                        <GymLoader size="large" text={`Translating instructions to ${getLanguageName(translateLanguageInstructions)}...`} variant="energy" />
+                        <GymLoader size="large" text={`Translating instructions to ${getLanguageName(translateLanguageInstructions)}...`} variant="video" />
                       </div>
                     ) : translationErrorInstructions ? (
                       <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20">
@@ -674,7 +674,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                   {translateEnabledSafety ? (
                     translatingSafety ? (
                       <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
-                        <GymLoader size="large" text={`Translating safety information to ${getLanguageName(translateLanguageSafety)}...`} variant="energy" />
+                        <GymLoader size="large" text={`Translating safety information to ${getLanguageName(translateLanguageSafety)}...`} variant="video" />
                       </div>
                     ) : translationErrorSafety ? (
                       <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20">

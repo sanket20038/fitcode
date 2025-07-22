@@ -264,7 +264,7 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
-        <GymLoader size="xlarge" text="Loading gym dashboard..." variant="flame" />
+        <GymLoader size="xlarge" text="Loading gym dashboard..." variant="video" />
       </div>
     );
   }
