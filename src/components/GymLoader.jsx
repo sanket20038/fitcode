@@ -3,7 +3,7 @@ import React from 'react';
 const GymLoader = ({ text = 'Loading...' }) => {
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center min-h-screen w-screen bg-transparent"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center min-h-screen w-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
     >
       <img
         src="/lg.gif"
