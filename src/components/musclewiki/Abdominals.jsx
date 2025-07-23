@@ -4,58 +4,150 @@ import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-reac
 import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
 import { Button } from "../ui/button";
 
+// Section intro and warm-up/cool-down tips
+const abdominalsIntro = {
+  intro: "Your abdominal muscles are crucial for core strength, stability, and posture. Training your abs can help prevent injury, improve athletic performance, and support daily movement.",
+  warmup: [
+    "5 minutes of light cardio (e.g., brisk walking, cycling)",
+    "Dynamic stretches: torso twists, standing side bends, cat-cow stretches"
+  ],
+  cooldown: [
+    "Gentle abdominal stretching (cobra pose, child's pose)",
+    "Deep breathing and relaxation for 2-3 minutes"
+  ]
+};
+
 const abdominalsContent = [
   {
     title: "Crunches",
     difficulty: "Beginner",
+    muscleFocus: "Rectus abdominis (front abs)",
+    benefits: [
+      "Strengthens core muscles",
+      "Improves posture",
+      "Enhances stability"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-bodyweight-crunch-front.gif", alt: "Crunch Front" },
-      { src: "/musclewiki/Images/male-bodyweight-crunch-side.gif", alt: "Crunch Side" }
+      { src: "/musclewiki/Images/male-bodyweight-crunch-front.gif", alt: "Person performing a crunch, front view" },
+      { src: "/musclewiki/Images/male-bodyweight-crunch-side.gif", alt: "Person performing a crunch, side view" }
     ],
     steps: [
-      "Lay flat on your back with your knees bent and your feet flat on the ground, about a foot from your lower back.",
-      "Place your fingertips on your temples with your palms facing out.",
-      "Draw your belly into the base of your spine to engage the muscles, then raise your head and shoulders off the floor. Return to starting position and repeat."
+      "Lie flat on your back with your knees bent and feet flat on the floor, hip-width apart.",
+      "Place your fingertips lightly behind your ears. Avoid pulling on your neck.",
+      "Engage your core by drawing your belly button toward your spine.",
+      "Exhale as you lift your head, neck, and shoulders off the ground, keeping your lower back pressed to the floor.",
+      "Pause briefly at the top, then slowly lower back down with control.",
+      "Repeat for the desired number of repetitions."
+    ],
+    proTips: [
+      "Keep your chin slightly tucked to avoid neck strain.",
+      "Focus on using your abdominal muscles rather than pulling with your hands."
+    ],
+    safetyTips: [
+      "Do not jerk your head forward.",
+      "Stop if you feel any pain in your neck or lower back."
+    ],
+    commonMistakes: [
+      "Using momentum instead of muscle control.",
+      "Lifting too high and rounding the lower back."
     ]
   },
   {
     title: "Leg Raises",
     difficulty: "Beginner",
+    muscleFocus: "Lower abdominals, hip flexors",
+    benefits: [
+      "Targets lower abdominal muscles",
+      "Improves hip flexibility",
+      "Strengthens core and lower back"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-bodyweight-leg-raises-front.gif", alt: "Leg Raises Front" },
-      { src: "/musclewiki/Images/male-bodyweight-leg-raises-side.gif", alt: "Leg Raises Side" }
+      { src: "/musclewiki/Images/male-bodyweight-leg-raises-front.gif", alt: "Person performing leg raises, front view" },
+      { src: "/musclewiki/Images/male-bodyweight-leg-raises-side.gif", alt: "Person performing leg raises, side view" }
     ],
     steps: [
-      "Lay on your back with your arms palms down on either side.",
+      "Lie on your back with your arms at your sides, palms facing down.",
       "Keep your legs together and as straight as possible.",
-      "Slowly raise your legs to a 90° angle, pause at this position, or as high as you can reach your legs, and then slowly lower your legs back down.",
-      "Duration of these movements should be slow so that you do not utilize momentum, enabling you to get the most out of the exercise."
+      "Slowly raise your legs to a 90° angle, keeping your lower back pressed to the floor.",
+      "Pause at the top, then lower your legs back down with control. Do not let your heels touch the ground between reps.",
+      "Repeat for the desired number of repetitions."
+    ],
+    proTips: [
+      "Engage your core throughout the movement.",
+      "Move slowly to maximize muscle activation."
+    ],
+    safetyTips: [
+      "Avoid arching your lower back.",
+      "Stop if you feel discomfort in your lower back."
+    ],
+    commonMistakes: [
+      "Using momentum to swing legs up.",
+      "Letting heels rest on the ground between reps."
     ]
   },
   {
     title: "Plank",
     difficulty: "Beginner",
+    muscleFocus: "Entire core, shoulders, glutes",
+    benefits: [
+      "Builds core endurance",
+      "Improves posture and balance",
+      "Strengthens shoulders and glutes"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-bodyweight-forearm-plank-front.gif", alt: "Plank Front" },
-      { src: "/musclewiki/Images/male-bodyweight-forarm-plank-side.gif", alt: "Plank Side" }
+      { src: "/musclewiki/Images/male-bodyweight-forearm-plank-front.gif", alt: "Person holding a forearm plank, front view" },
+      { src: "/musclewiki/Images/male-bodyweight-forarm-plank-side.gif", alt: "Person holding a forearm plank, side view" }
     ],
     steps: [
-      "Place forearms on the ground with your elbows bent at a 90° angle aligned beneath your shoulders, with your arms parallel at shoulder-width.",
-      "Your feet should be together, with only your toes touching the floor.",
-      "Lift your belly off the floor and form a straight line from your heels to the crown of your head and hold."
+      "Place your forearms on the ground with elbows under your shoulders, arms parallel.",
+      "Extend your legs behind you, feet together, toes on the floor.",
+      "Lift your body to form a straight line from head to heels, engaging your core and glutes.",
+      "Hold this position, breathing steadily, for as long as you can maintain good form."
+    ],
+    proTips: [
+      "Keep your hips level; avoid letting them sag or pike up.",
+      "Look slightly ahead to keep your neck neutral."
+    ],
+    safetyTips: [
+      "Stop if you feel pain in your lower back or shoulders.",
+      "Maintain a straight line—do not let your hips drop."
+    ],
+    commonMistakes: [
+      "Holding your breath.",
+      "Letting hips sag or rise too high."
     ]
   },
   {
     title: "Russian Twist",
     difficulty: "Intermediate",
+    muscleFocus: "Obliques, rectus abdominis",
+    benefits: [
+      "Strengthens obliques and rotational core muscles",
+      "Improves balance and coordination",
+      "Enhances functional movement"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-dumbbell-russian-twist-front.gif", alt: "Russian Twist Front" },
-      { src: "/musclewiki/Images/male-dumbbell-russian-twist-side.gif", alt: "Russian Twist Side" }
+      { src: "/musclewiki/Images/male-dumbbell-russian-twist-front.gif", alt: "Person performing Russian twist, front view" },
+      { src: "/musclewiki/Images/male-dumbbell-russian-twist-side.gif", alt: "Person performing Russian twist, side view" }
     ],
     steps: [
-      "Sit on the floor and flex your knees and hips to a 90 degree angle.",
-      "Your feet should be hovering off the ground. (If that's too hard start with heels on the floor)",
-      "Rotate your upper spine to engage your obliques."
+      "Sit on the floor with knees bent and feet lifted off the ground (or heels down for easier version).",
+      "Lean back slightly, keeping your back straight and core engaged.",
+      "Hold your hands together or a weight in front of your chest.",
+      "Rotate your torso to the right, then to the left, moving your hands across your body each time.",
+      "Repeat for the desired number of repetitions."
+    ],
+    proTips: [
+      "Move slowly and with control for maximum benefit.",
+      "Keep your chest lifted and back straight."
+    ],
+    safetyTips: [
+      "Avoid rounding your lower back.",
+      "Stop if you feel discomfort in your spine."
+    ],
+    commonMistakes: [
+      "Using momentum instead of muscle control.",
+      "Letting feet drop to the floor (unless modifying for difficulty)."
     ]
   }
 ];
@@ -75,6 +167,7 @@ const Abdominals = () => {
     abdominals: "Abdominals",
     difficulty: "Difficulty"
   });
+  const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -84,6 +177,7 @@ const Abdominals = () => {
       setTranslateLanguage("hi");
       setTranslatedContent([]);
       setTranslatedLabels({ abdominals: "Abdominals", difficulty: "Difficulty" });
+      setTranslatedIntro(null);
       setError("");
       return;
     }
@@ -99,19 +193,44 @@ const Abdominals = () => {
         abdominals: abdominalsLabel,
         difficulty: difficultyLabel
       });
-      // Translate all titles, difficulties, and steps
+      // Translate section intro
+      const [intro, ...warmup] = await Promise.all([
+        translateText(abdominalsIntro.intro, translateLanguage),
+        ...abdominalsIntro.warmup.map((item) => translateText(item, translateLanguage))
+      ]);
+      const cooldown = await Promise.all(abdominalsIntro.cooldown.map((item) => translateText(item, translateLanguage)));
+      setTranslatedIntro({ intro, warmup, cooldown });
+      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
       const translated = await Promise.all(
         abdominalsContent.map(async (section) => {
-          const [title, difficulty, ...steps] = await Promise.all([
+          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
             translateText(section.title, translateLanguage),
             translateText(section.difficulty, translateLanguage),
+            translateText(section.muscleFocus, translateLanguage),
             ...section.steps.map((step) => translateText(step, translateLanguage))
           ]);
+          const benefits = section.benefits
+            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
+            : [];
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const safetyTips = section.safetyTips
+            ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const commonMistakes = section.commonMistakes
+            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+            : [];
           return {
             ...section,
             title,
             difficulty,
-            steps
+            muscleFocus,
+            steps,
+            benefits,
+            proTips,
+            safetyTips,
+            commonMistakes
           };
         })
       );
@@ -129,10 +248,12 @@ const Abdominals = () => {
     setTranslateEnabled(false);
     setTranslatedContent([]);
     setTranslatedLabels({ abdominals: "Abdominals", difficulty: "Difficulty" });
+    setTranslatedIntro(null);
     setError("");
   };
 
   const contentToRender = translateEnabled ? translatedContent : abdominalsContent;
+  const introToRender = translateEnabled && translatedIntro ? translatedIntro : abdominalsIntro;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
@@ -160,6 +281,25 @@ const Abdominals = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Section Intro */}
+        <div className="mb-8 p-6 bg-white/10 rounded-2xl border border-white/10 shadow-lg animate-fade-in">
+          <h2 className="text-2xl font-bold text-white mb-2">Why Train Your Abdominals?</h2>
+          <p className="text-white/80 mb-4">{introToRender.intro}</p>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-pink-300 mb-1">Warm-Up</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.warmup.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-purple-300 mb-1">Cool-Down</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.cooldown.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
         {/* Translation Controls - sticky/floating bar */}
         <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
           <div className="flex items-center gap-2">
@@ -224,6 +364,13 @@ const Abdominals = () => {
                   {section.difficulty}
                 </span>
               </div>
+              {/* Muscle Focus and Benefits */}
+              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
+                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
+                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
+                </ul>
+              </div>
               {/* Images */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 {section.images.map((img, i) => (
@@ -237,13 +384,34 @@ const Abdominals = () => {
                 ))}
               </div>
               {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
                 {section.steps.map((step, i) => (
                   <li key={i} className="transition-all duration-300 hover:text-pink-300">
                     {step}
                   </li>
                 ))}
               </ol>
+              {/* Pro Tips, Safety Tips, Common Mistakes */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                <div className="bg-purple-900/20 rounded-xl p-3">
+                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-red-900/20 rounded-xl p-3">
+                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-yellow-900/20 rounded-xl p-3">
+                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>

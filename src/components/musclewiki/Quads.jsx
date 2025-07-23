@@ -4,30 +4,79 @@ import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-reac
 import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
 import { Button } from "../ui/button";
 
+// Section intro and warm-up/cool-down tips
+const quadsIntro = {
+  intro: "The quadriceps are essential for knee extension, walking, running, and jumping. Training your quads improves lower body strength, athletic performance, and injury prevention.",
+  warmup: [
+    "5 minutes of light cardio (e.g., brisk walking, bodyweight squats)",
+    "Dynamic stretches: leg swings, walking lunges, gentle quad stretches"
+  ],
+  cooldown: [
+    "Gentle quad and hip stretching",
+    "Deep breathing and relaxation for 2-3 minutes"
+  ]
+};
+
 const quadsContent = [
   {
     title: "Barbell Squat",
     difficulty: "Intermediate",
+    muscleFocus: "Quadriceps, glutes, hamstrings, core",
+    benefits: [
+      "Builds lower body and core strength",
+      "Improves balance and mobility",
+      "Supports athletic performance"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-barbell-squat-front.gif", alt: "Barbell Squat Front" },
-      { src: "/musclewiki/Images/male-barbell-squat-side.gif", alt: "Barbell Squat Side" }
+      { src: "/musclewiki/Images/male-barbell-squat-front.gif", alt: "Person performing barbell squat, front view" },
+      { src: "/musclewiki/Images/male-barbell-squat-side.gif", alt: "Person performing barbell squat, side view" }
     ],
     steps: [
       "Stand with your feet shoulder-width apart, barbell resting on your upper back.",
       "Squat down by bending your knees and hips, keeping your chest up.",
       "Push through your heels to return to standing."
+    ],
+    proTips: [
+      "Keep your knees tracking over your toes.",
+      "Brace your core throughout the movement."
+    ],
+    safetyTips: [
+      "Do not let your knees cave inward.",
+      "Use a spotter or safety bars if lifting heavy."
+    ],
+    commonMistakes: [
+      "Letting heels lift off the ground.",
+      "Rounding your back at the bottom."
     ]
   },
   {
     title: "Leg Extension",
     difficulty: "Beginner",
+    muscleFocus: "Quadriceps",
+    benefits: [
+      "Isolates and strengthens the quads",
+      "Improves knee joint health",
+      "Accessible for all fitness levels"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-machine-leg-extension-front.gif", alt: "Leg Extension Front" },
-      { src: "/musclewiki/Images/male-machine-leg-extension-side.gif", alt: "Leg Extension Side" }
+      { src: "/musclewiki/Images/male-machine-leg-extension-front.gif", alt: "Person performing leg extension, front view" },
+      { src: "/musclewiki/Images/male-machine-leg-extension-side.gif", alt: "Person performing leg extension, side view" }
     ],
     steps: [
       "Sit on a leg extension machine with your ankles under the pad.",
       "Extend your legs until they are straight, then lower back down."
+    ],
+    proTips: [
+      "Pause at the top for a stronger contraction.",
+      "Move slowly for maximum muscle activation."
+    ],
+    safetyTips: [
+      "Do not lock your knees at the top.",
+      "Use a weight you can control."
+    ],
+    commonMistakes: [
+      "Swinging the weight up.",
+      "Not lowering legs fully."
     ]
   }
 ];
@@ -47,6 +96,7 @@ const Quads = () => {
     quads: "Quads",
     difficulty: "Difficulty"
   });
+  const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -56,6 +106,7 @@ const Quads = () => {
       setTranslateLanguage("hi");
       setTranslatedContent([]);
       setTranslatedLabels({ quads: "Quads", difficulty: "Difficulty" });
+      setTranslatedIntro(null);
       setError("");
       return;
     }
@@ -71,19 +122,44 @@ const Quads = () => {
         quads: quadsLabel,
         difficulty: difficultyLabel
       });
-      // Translate all titles, difficulties, and steps
+      // Translate section intro
+      const [intro, ...warmup] = await Promise.all([
+        translateText(quadsIntro.intro, translateLanguage),
+        ...quadsIntro.warmup.map((item) => translateText(item, translateLanguage))
+      ]);
+      const cooldown = await Promise.all(quadsIntro.cooldown.map((item) => translateText(item, translateLanguage)));
+      setTranslatedIntro({ intro, warmup, cooldown });
+      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
       const translated = await Promise.all(
         quadsContent.map(async (section) => {
-          const [title, difficulty, ...steps] = await Promise.all([
+          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
             translateText(section.title, translateLanguage),
             translateText(section.difficulty, translateLanguage),
+            translateText(section.muscleFocus, translateLanguage),
             ...section.steps.map((step) => translateText(step, translateLanguage))
           ]);
+          const benefits = section.benefits
+            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
+            : [];
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const safetyTips = section.safetyTips
+            ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const commonMistakes = section.commonMistakes
+            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+            : [];
           return {
             ...section,
             title,
             difficulty,
-            steps
+            muscleFocus,
+            steps,
+            benefits,
+            proTips,
+            safetyTips,
+            commonMistakes
           };
         })
       );
@@ -101,10 +177,12 @@ const Quads = () => {
     setTranslateEnabled(false);
     setTranslatedContent([]);
     setTranslatedLabels({ quads: "Quads", difficulty: "Difficulty" });
+    setTranslatedIntro(null);
     setError("");
   };
 
   const contentToRender = translateEnabled ? translatedContent : quadsContent;
+  const introToRender = translateEnabled && translatedIntro ? translatedIntro : quadsIntro;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
@@ -132,6 +210,25 @@ const Quads = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Section Intro */}
+        <div className="mb-8 p-6 bg-white/10 rounded-2xl border border-white/10 shadow-lg animate-fade-in">
+          <h2 className="text-2xl font-bold text-white mb-2">Why Train Your Quads?</h2>
+          <p className="text-white/80 mb-4">{introToRender.intro}</p>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-pink-300 mb-1">Warm-Up</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.warmup.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-purple-300 mb-1">Cool-Down</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.cooldown.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
         {/* Translation Controls - sticky/floating bar */}
         <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
           <div className="flex items-center gap-2">
@@ -196,6 +293,13 @@ const Quads = () => {
                   {section.difficulty}
                 </span>
               </div>
+              {/* Muscle Focus and Benefits */}
+              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
+                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
+                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
+                </ul>
+              </div>
               {/* Images */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 {section.images.map((img, i) => (
@@ -209,13 +313,34 @@ const Quads = () => {
                 ))}
               </div>
               {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
                 {section.steps.map((step, i) => (
                   <li key={i} className="transition-all duration-300 hover:text-pink-300">
                     {step}
                   </li>
                 ))}
               </ol>
+              {/* Pro Tips, Safety Tips, Common Mistakes */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                <div className="bg-purple-900/20 rounded-xl p-3">
+                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-red-900/20 rounded-xl p-3">
+                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-yellow-900/20 rounded-xl p-3">
+                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>

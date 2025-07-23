@@ -4,68 +4,171 @@ import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-reac
 import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
 import { Button } from "../ui/button";
 
+// Section intro and warm-up/cool-down tips
+const trapsIntro = {
+  intro: "The trapezius muscles are essential for neck, shoulder, and upper back movement. Training your traps improves posture, neck health, and upper body strength.",
+  warmup: [
+    "5 minutes of light cardio (e.g., arm circles, brisk walking)",
+    "Dynamic stretches: shoulder shrugs, neck rolls, gentle trap stretches"
+  ],
+  cooldown: [
+    "Gentle trap and neck stretching",
+    "Deep breathing and relaxation for 2-3 minutes"
+  ]
+};
+
 const trapsContent = [
   {
     title: "Elevated Pike Press",
     difficulty: "Intermediate",
+    muscleFocus: "Trapezius, deltoids, upper chest",
+    benefits: [
+      "Builds upper trap and shoulder strength",
+      "Improves overhead pressing ability",
+      "Supports neck and shoulder health"
+    ],
     images: [
-      { src: "/musclewiki/Images/Elevated Pike Press.gif", alt: "Elevated Pike Press" },
-      { src: "/musclewiki/Images/Elevated Pike Press Side.gif", alt: "Elevated Pike Press Side" }
+      { src: "/musclewiki/Images/Elevated Pike Press.gif", alt: "Person performing elevated pike press, front view" },
+      { src: "/musclewiki/Images/Elevated Pike Press Side.gif", alt: "Person performing elevated pike press, side view" }
     ],
     steps: [
       "Use a bench or an object to elevate your feet.",
       "Lower your head by bending your elbows towards the floor",
       "Push through your hands and reach the starting pike position",
       "Repeat"
+    ],
+    proTips: [
+      "Keep your elbows tucked in as you lower.",
+      "Push through your palms for more power."
+    ],
+    safetyTips: [
+      "Do not let your head touch the floor.",
+      "Stop if you feel neck or shoulder pain."
+    ],
+    commonMistakes: [
+      "Letting elbows flare out.",
+      "Dropping hips too low."
     ]
   },
   {
     title: "Elevated Pike Shoulder Shrug",
     difficulty: "Beginner",
+    muscleFocus: "Trapezius, deltoids",
+    benefits: [
+      "Isolates and strengthens the upper traps",
+      "Improves scapular control",
+      "Supports neck and shoulder health"
+    ],
     images: [
-      { src: "/musclewiki/Images/Elevated Pike Shoulder Shrug.gif", alt: "Elevated Pike Shoulder Shrug" },
-      { src: "/musclewiki/Images/Elevated Pike Shoulder Shrug Side.gif", alt: "Elevated Pike Shoulder Shrug Side" }
+      { src: "/musclewiki/Images/Elevated Pike Shoulder Shrug.gif", alt: "Person performing elevated pike shoulder shrug, front view" },
+      { src: "/musclewiki/Images/Elevated Pike Shoulder Shrug Side.gif", alt: "Person performing elevated pike shoulder shrug, side view" }
     ],
     steps: [
       "Use a bench or an object like a chair to elevate your feet.",
       "Slowly lower your body (scapula) while keeping your elbows locked(this is key)",
       "Slowly raise your body back to the starting position"
+    ],
+    proTips: [
+      "Keep your elbows locked throughout.",
+      "Move slowly for maximum muscle activation."
+    ],
+    safetyTips: [
+      "Do not use excessive weight.",
+      "Stop if you feel neck pain."
+    ],
+    commonMistakes: [
+      "Letting elbows bend.",
+      "Using momentum instead of muscle."
     ]
   },
   {
     title: "Dumbbells Shrugs",
     difficulty: "Beginner",
+    muscleFocus: "Trapezius, forearms",
+    benefits: [
+      "Builds upper trap and grip strength",
+      "Improves posture",
+      "Supports neck and shoulder health"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-dumbbell-shrug-front.gif", alt: "Dumbbell Shrug Front" },
-      { src: "/musclewiki/Images/male-dumbbell-shrug-side.gif", alt: "Dumbbell Shrug Side" }
+      { src: "/musclewiki/Images/male-dumbbell-shrug-front.gif", alt: "Person performing dumbbell shrug, front view" },
+      { src: "/musclewiki/Images/male-dumbbell-shrug-side.gif", alt: "Person performing dumbbell shrug, side view" }
     ],
     steps: [
       "Stand tall with two dumbbells. Pull your shoulder blades up. Give a one second squeeze at the top."
+    ],
+    proTips: [
+      "Keep your arms straight throughout.",
+      "Squeeze at the top for maximum benefit."
+    ],
+    safetyTips: [
+      "Do not roll your shoulders.",
+      "Stop if you feel neck pain."
+    ],
+    commonMistakes: [
+      "Shrugging with bent arms.",
+      "Using momentum instead of muscle."
     ]
   },
   {
     title: "Dumbbells Seated Shrugs",
     difficulty: "Beginner",
+    muscleFocus: "Trapezius, forearms",
+    benefits: [
+      "Builds upper trap and grip strength",
+      "Improves posture",
+      "Supports neck and shoulder health"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-dumbbell-seated-shrug-front.gif", alt: "Dumbbell Seated Shrug Front" },
-      { src: "/musclewiki/Images/male-dumbbell-seated-shrug-side.gif", alt: "Dumbbell Seated Shrug Side" }
+      { src: "/musclewiki/Images/male-dumbbell-seated-shrug-front.gif", alt: "Person performing dumbbell seated shrug, front view" },
+      { src: "/musclewiki/Images/male-dumbbell-seated-shrug-side.gif", alt: "Person performing dumbbell seated shrug, side view" }
     ],
     steps: [
       "Sit on a bench with dumbbells in both hands, palms facing your body, back straight.",
       "Elevate your shoulders and hold the contracted position at the apex of the motion",
       "Slowly lower your shoulders back to starting position."
+    ],
+    proTips: [
+      "Keep your arms straight throughout.",
+      "Squeeze at the top for maximum benefit."
+    ],
+    safetyTips: [
+      "Do not roll your shoulders.",
+      "Stop if you feel neck pain."
+    ],
+    commonMistakes: [
+      "Shrugging with bent arms.",
+      "Using momentum instead of muscle."
     ]
   },
   {
     title: "Barbell Upright Row",
     difficulty: "Advanced",
+    muscleFocus: "Trapezius, deltoids, biceps",
+    benefits: [
+      "Builds upper trap and shoulder strength",
+      "Improves upper back development",
+      "Supports athletic performance"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-barbell-upright-row-front_3ROsKgm.gif", alt: "Barbell Upright Row Front" },
-      { src: "/musclewiki/Images/male-barbell-upright-row-side_NBzD3il.gif", alt: "Barbell Upright Row Side" }
+      { src: "/musclewiki/Images/male-barbell-upright-row-front_3ROsKgm.gif", alt: "Person performing barbell upright row, front view" },
+      { src: "/musclewiki/Images/male-barbell-upright-row-side_NBzD3il.gif", alt: "Person performing barbell upright row, side view" }
     ],
     steps: [
       "Take a double overhand roughly shoulder width grip.",
       "Pull your elbows straight up the ceiling. Aim to get the bar to chin level or slightly higher."
+    ],
+    proTips: [
+      "Keep the bar close to your body.",
+      "Lead with your elbows."
+    ],
+    safetyTips: [
+      "Do not use excessive weight.",
+      "Stop if you feel shoulder pain."
+    ],
+    commonMistakes: [
+      "Letting elbows flare out too much.",
+      "Using momentum instead of muscle."
     ]
   }
 ];
@@ -85,6 +188,7 @@ const Traps = () => {
     traps: "Traps",
     difficulty: "Difficulty"
   });
+  const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -94,6 +198,7 @@ const Traps = () => {
       setTranslateLanguage("hi");
       setTranslatedContent([]);
       setTranslatedLabels({ traps: "Traps", difficulty: "Difficulty" });
+      setTranslatedIntro(null);
       setError("");
       return;
     }
@@ -109,19 +214,44 @@ const Traps = () => {
         traps: trapsLabel,
         difficulty: difficultyLabel
       });
-      // Translate all titles, difficulties, and steps
+      // Translate section intro
+      const [intro, ...warmup] = await Promise.all([
+        translateText(trapsIntro.intro, translateLanguage),
+        ...trapsIntro.warmup.map((item) => translateText(item, translateLanguage))
+      ]);
+      const cooldown = await Promise.all(trapsIntro.cooldown.map((item) => translateText(item, translateLanguage)));
+      setTranslatedIntro({ intro, warmup, cooldown });
+      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
       const translated = await Promise.all(
         trapsContent.map(async (section) => {
-          const [title, difficulty, ...steps] = await Promise.all([
+          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
             translateText(section.title, translateLanguage),
             translateText(section.difficulty, translateLanguage),
+            translateText(section.muscleFocus, translateLanguage),
             ...section.steps.map((step) => translateText(step, translateLanguage))
           ]);
+          const benefits = section.benefits
+            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
+            : [];
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const safetyTips = section.safetyTips
+            ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const commonMistakes = section.commonMistakes
+            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+            : [];
           return {
             ...section,
             title,
             difficulty,
-            steps
+            muscleFocus,
+            steps,
+            benefits,
+            proTips,
+            safetyTips,
+            commonMistakes
           };
         })
       );
@@ -139,10 +269,12 @@ const Traps = () => {
     setTranslateEnabled(false);
     setTranslatedContent([]);
     setTranslatedLabels({ traps: "Traps", difficulty: "Difficulty" });
+    setTranslatedIntro(null);
     setError("");
   };
 
   const contentToRender = translateEnabled ? translatedContent : trapsContent;
+  const introToRender = translateEnabled && translatedIntro ? translatedIntro : trapsIntro;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
@@ -170,6 +302,25 @@ const Traps = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Section Intro */}
+        <div className="mb-8 p-6 bg-white/10 rounded-2xl border border-white/10 shadow-lg animate-fade-in">
+          <h2 className="text-2xl font-bold text-white mb-2">Why Train Your Traps?</h2>
+          <p className="text-white/80 mb-4">{introToRender.intro}</p>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-pink-300 mb-1">Warm-Up</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.warmup.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-purple-300 mb-1">Cool-Down</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.cooldown.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
         {/* Translation Controls - sticky/floating bar */}
         <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
           <div className="flex items-center gap-2">
@@ -234,6 +385,13 @@ const Traps = () => {
                   {section.difficulty}
                 </span>
               </div>
+              {/* Muscle Focus and Benefits */}
+              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
+                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
+                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
+                </ul>
+              </div>
               {/* Images */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 {section.images.map((img, i) => (
@@ -247,13 +405,34 @@ const Traps = () => {
                 ))}
               </div>
               {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
                 {section.steps.map((step, i) => (
                   <li key={i} className="transition-all duration-300 hover:text-pink-300">
                     {step}
                   </li>
                 ))}
               </ol>
+              {/* Pro Tips, Safety Tips, Common Mistakes */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                <div className="bg-purple-900/20 rounded-xl p-3">
+                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-red-900/20 rounded-xl p-3">
+                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-yellow-900/20 rounded-xl p-3">
+                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>

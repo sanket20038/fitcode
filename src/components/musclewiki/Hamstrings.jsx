@@ -4,30 +4,79 @@ import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-reac
 import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
 import { Button } from "../ui/button";
 
+// Section intro and warm-up/cool-down tips
+const hamstringsIntro = {
+  intro: "The hamstrings are essential for hip extension, knee flexion, and lower body power. Training your hamstrings improves athletic performance, injury prevention, and daily movement.",
+  warmup: [
+    "5 minutes of light cardio (e.g., brisk walking, leg swings)",
+    "Dynamic stretches: leg swings, hip hinges, gentle hamstring stretches"
+  ],
+  cooldown: [
+    "Gentle hamstring and hip stretching",
+    "Deep breathing and relaxation for 2-3 minutes"
+  ]
+};
+
 const hamstringsContent = [
   {
     title: "Romanian Deadlift",
     difficulty: "Intermediate",
+    muscleFocus: "Hamstrings, glutes, lower back",
+    benefits: [
+      "Builds posterior chain strength",
+      "Improves hip mobility",
+      "Supports injury prevention"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-barbell-romanian-deadlift-front.gif", alt: "Romanian Deadlift Front" },
-      { src: "/musclewiki/Images/male-barbell-romanian-deadlift-side.gif", alt: "Romanian Deadlift Side" }
+      { src: "/musclewiki/Images/male-barbell-romanian-deadlift-front.gif", alt: "Person performing Romanian deadlift, front view" },
+      { src: "/musclewiki/Images/male-barbell-romanian-deadlift-side.gif", alt: "Person performing Romanian deadlift, side view" }
     ],
     steps: [
       "Stand with your feet hip-width apart, holding a barbell in front of your thighs.",
       "Keeping your knees slightly bent, hinge at your hips to lower the barbell down the front of your legs.",
       "Return to standing by driving your hips forward."
+    ],
+    proTips: [
+      "Keep your back flat and core engaged.",
+      "Push your hips back as far as possible."
+    ],
+    safetyTips: [
+      "Do not round your lower back.",
+      "Use a weight you can control."
+    ],
+    commonMistakes: [
+      "Bending knees too much or too little.",
+      "Letting bar drift away from legs."
     ]
   },
   {
     title: "Lying Leg Curl",
     difficulty: "Beginner",
+    muscleFocus: "Hamstrings, calves",
+    benefits: [
+      "Isolates and strengthens hamstrings",
+      "Improves knee joint health",
+      "Supports running and jumping performance"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-machine-lying-leg-curl-front.gif", alt: "Lying Leg Curl Front" },
-      { src: "/musclewiki/Images/male-machine-lying-leg-curl-side.gif", alt: "Lying Leg Curl Side" }
+      { src: "/musclewiki/Images/male-machine-lying-leg-curl-front.gif", alt: "Person performing lying leg curl, front view" },
+      { src: "/musclewiki/Images/male-machine-lying-leg-curl-side.gif", alt: "Person performing lying leg curl, side view" }
     ],
     steps: [
       "Lie face down on a leg curl machine and place your ankles under the pad.",
       "Curl your legs up as far as possible, then slowly lower them back down."
+    ],
+    proTips: [
+      "Move slowly for maximum muscle activation.",
+      "Squeeze your hamstrings at the top."
+    ],
+    safetyTips: [
+      "Do not hyperextend your knees.",
+      "Use a weight you can control."
+    ],
+    commonMistakes: [
+      "Using momentum to lift the weight.",
+      "Letting hips lift off the bench."
     ]
   }
 ];
@@ -47,6 +96,7 @@ const Hamstrings = () => {
     hamstrings: "Hamstrings",
     difficulty: "Difficulty"
   });
+  const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -56,6 +106,7 @@ const Hamstrings = () => {
       setTranslateLanguage("hi");
       setTranslatedContent([]);
       setTranslatedLabels({ hamstrings: "Hamstrings", difficulty: "Difficulty" });
+      setTranslatedIntro(null);
       setError("");
       return;
     }
@@ -71,19 +122,44 @@ const Hamstrings = () => {
         hamstrings: hamstringsLabel,
         difficulty: difficultyLabel
       });
-      // Translate all titles, difficulties, and steps
+      // Translate section intro
+      const [intro, ...warmup] = await Promise.all([
+        translateText(hamstringsIntro.intro, translateLanguage),
+        ...hamstringsIntro.warmup.map((item) => translateText(item, translateLanguage))
+      ]);
+      const cooldown = await Promise.all(hamstringsIntro.cooldown.map((item) => translateText(item, translateLanguage)));
+      setTranslatedIntro({ intro, warmup, cooldown });
+      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
       const translated = await Promise.all(
         hamstringsContent.map(async (section) => {
-          const [title, difficulty, ...steps] = await Promise.all([
+          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
             translateText(section.title, translateLanguage),
             translateText(section.difficulty, translateLanguage),
+            translateText(section.muscleFocus, translateLanguage),
             ...section.steps.map((step) => translateText(step, translateLanguage))
           ]);
+          const benefits = section.benefits
+            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
+            : [];
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const safetyTips = section.safetyTips
+            ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const commonMistakes = section.commonMistakes
+            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+            : [];
           return {
             ...section,
             title,
             difficulty,
-            steps
+            muscleFocus,
+            steps,
+            benefits,
+            proTips,
+            safetyTips,
+            commonMistakes
           };
         })
       );
@@ -101,10 +177,12 @@ const Hamstrings = () => {
     setTranslateEnabled(false);
     setTranslatedContent([]);
     setTranslatedLabels({ hamstrings: "Hamstrings", difficulty: "Difficulty" });
+    setTranslatedIntro(null);
     setError("");
   };
 
   const contentToRender = translateEnabled ? translatedContent : hamstringsContent;
+  const introToRender = translateEnabled && translatedIntro ? translatedIntro : hamstringsIntro;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
@@ -132,6 +210,25 @@ const Hamstrings = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Section Intro */}
+        <div className="mb-8 p-6 bg-white/10 rounded-2xl border border-white/10 shadow-lg animate-fade-in">
+          <h2 className="text-2xl font-bold text-white mb-2">Why Train Your Hamstrings?</h2>
+          <p className="text-white/80 mb-4">{introToRender.intro}</p>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-pink-300 mb-1">Warm-Up</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.warmup.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-purple-300 mb-1">Cool-Down</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.cooldown.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
         {/* Translation Controls - sticky/floating bar */}
         <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
           <div className="flex items-center gap-2">
@@ -196,6 +293,13 @@ const Hamstrings = () => {
                   {section.difficulty}
                 </span>
               </div>
+              {/* Muscle Focus and Benefits */}
+              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
+                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
+                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
+                </ul>
+              </div>
               {/* Images */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 {section.images.map((img, i) => (
@@ -209,13 +313,34 @@ const Hamstrings = () => {
                 ))}
               </div>
               {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
                 {section.steps.map((step, i) => (
                   <li key={i} className="transition-all duration-300 hover:text-pink-300">
                     {step}
                   </li>
                 ))}
               </ol>
+              {/* Pro Tips, Safety Tips, Common Mistakes */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                <div className="bg-purple-900/20 rounded-xl p-3">
+                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-red-900/20 rounded-xl p-3">
+                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-yellow-900/20 rounded-xl p-3">
+                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>

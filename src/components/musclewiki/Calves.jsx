@@ -4,29 +4,78 @@ import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-reac
 import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
 import { Button } from "../ui/button";
 
+// Section intro and warm-up/cool down tips
+const calvesIntro = {
+  intro: "The calves are vital for walking, running, and jumping. Strong calves improve lower leg power, ankle stability, and overall athletic performance.",
+  warmup: [
+    "5 minutes of light cardio (e.g., brisk walking, jumping jacks)",
+    "Dynamic stretches: ankle circles, toe walks, gentle calf stretches"
+  ],
+  cooldown: [
+    "Gentle calf and ankle stretching",
+    "Deep breathing and relaxation for 2-3 minutes"
+  ]
+};
+
 const calvesContent = [
   {
     title: "Standing Calf Raise",
     difficulty: "Beginner",
+    muscleFocus: "Gastrocnemius, soleus (calf muscles)",
+    benefits: [
+      "Strengthens calf muscles",
+      "Improves ankle stability",
+      "Enhances jumping and running ability"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-bodyweight-standing-calf-raise-front.gif", alt: "Standing Calf Raise Front" },
-      { src: "/musclewiki/Images/male-bodyweight-standing-calf-raise-side.gif", alt: "Standing Calf Raise Side" }
+      { src: "/musclewiki/Images/male-bodyweight-standing-calf-raise-front.gif", alt: "Person performing standing calf raise, front view" },
+      { src: "/musclewiki/Images/male-bodyweight-standing-calf-raise-side.gif", alt: "Person performing standing calf raise, side view" }
     ],
     steps: [
       "Stand with your feet hip-width apart.",
       "Raise your heels as high as possible, then lower back down."
+    ],
+    proTips: [
+      "Pause at the top for a stronger contraction.",
+      "Keep your core engaged and move slowly."
+    ],
+    safetyTips: [
+      "Avoid bouncing at the bottom.",
+      "Hold onto a support if you need balance."
+    ],
+    commonMistakes: [
+      "Letting heels drop too quickly.",
+      "Not using full range of motion."
     ]
   },
   {
     title: "Seated Calf Raise",
     difficulty: "Intermediate",
+    muscleFocus: "Soleus, gastrocnemius (calf muscles)",
+    benefits: [
+      "Targets deeper calf muscles (soleus)",
+      "Improves ankle and lower leg strength",
+      "Supports running and jumping performance"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-machine-seated-calf-raise-front.gif", alt: "Seated Calf Raise Front" },
-      { src: "/musclewiki/Images/male-machine-seated-calf-raise-side.gif", alt: "Seated Calf Raise Side" }
+      { src: "/musclewiki/Images/male-machine-seated-calf-raise-front.gif", alt: "Person performing seated calf raise, front view" },
+      { src: "/musclewiki/Images/male-machine-seated-calf-raise-side.gif", alt: "Person performing seated calf raise, side view" }
     ],
     steps: [
       "Sit on a calf raise machine with the pads resting on your thighs.",
       "Raise your heels as high as possible, then lower back down."
+    ],
+    proTips: [
+      "Move slowly for maximum muscle activation.",
+      "Pause at the top for a stronger contraction."
+    ],
+    safetyTips: [
+      "Do not lock your knees.",
+      "Use a weight you can control."
+    ],
+    commonMistakes: [
+      "Bouncing the weight.",
+      "Not lowering heels fully."
     ]
   }
 ];
@@ -46,6 +95,7 @@ const Calves = () => {
     calves: "Calves",
     difficulty: "Difficulty"
   });
+  const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -55,6 +105,7 @@ const Calves = () => {
       setTranslateLanguage("hi");
       setTranslatedContent([]);
       setTranslatedLabels({ calves: "Calves", difficulty: "Difficulty" });
+      setTranslatedIntro(null);
       setError("");
       return;
     }
@@ -70,19 +121,44 @@ const Calves = () => {
         calves: calvesLabel,
         difficulty: difficultyLabel
       });
-      // Translate all titles, difficulties, and steps
+      // Translate section intro
+      const [intro, ...warmup] = await Promise.all([
+        translateText(calvesIntro.intro, translateLanguage),
+        ...calvesIntro.warmup.map((item) => translateText(item, translateLanguage))
+      ]);
+      const cooldown = await Promise.all(calvesIntro.cooldown.map((item) => translateText(item, translateLanguage)));
+      setTranslatedIntro({ intro, warmup, cooldown });
+      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
       const translated = await Promise.all(
         calvesContent.map(async (section) => {
-          const [title, difficulty, ...steps] = await Promise.all([
+          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
             translateText(section.title, translateLanguage),
             translateText(section.difficulty, translateLanguage),
+            translateText(section.muscleFocus, translateLanguage),
             ...section.steps.map((step) => translateText(step, translateLanguage))
           ]);
+          const benefits = section.benefits
+            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
+            : [];
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const safetyTips = section.safetyTips
+            ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const commonMistakes = section.commonMistakes
+            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+            : [];
           return {
             ...section,
             title,
             difficulty,
-            steps
+            muscleFocus,
+            steps,
+            benefits,
+            proTips,
+            safetyTips,
+            commonMistakes
           };
         })
       );
@@ -100,10 +176,12 @@ const Calves = () => {
     setTranslateEnabled(false);
     setTranslatedContent([]);
     setTranslatedLabels({ calves: "Calves", difficulty: "Difficulty" });
+    setTranslatedIntro(null);
     setError("");
   };
 
   const contentToRender = translateEnabled ? translatedContent : calvesContent;
+  const introToRender = translateEnabled && translatedIntro ? translatedIntro : calvesIntro;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
@@ -131,6 +209,25 @@ const Calves = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Section Intro */}
+        <div className="mb-8 p-6 bg-white/10 rounded-2xl border border-white/10 shadow-lg animate-fade-in">
+          <h2 className="text-2xl font-bold text-white mb-2">Why Train Your Calves?</h2>
+          <p className="text-white/80 mb-4">{introToRender.intro}</p>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-pink-300 mb-1">Warm-Up</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.warmup.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-purple-300 mb-1">Cool-Down</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.cooldown.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
         {/* Translation Controls - sticky/floating bar */}
         <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
           <div className="flex items-center gap-2">
@@ -195,6 +292,13 @@ const Calves = () => {
                   {section.difficulty}
                 </span>
               </div>
+              {/* Muscle Focus and Benefits */}
+              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
+                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
+                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
+                </ul>
+              </div>
               {/* Images */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 {section.images.map((img, i) => (
@@ -208,13 +312,34 @@ const Calves = () => {
                 ))}
               </div>
               {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
                 {section.steps.map((step, i) => (
                   <li key={i} className="transition-all duration-300 hover:text-pink-300">
                     {step}
                   </li>
                 ))}
               </ol>
+              {/* Pro Tips, Safety Tips, Common Mistakes */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                <div className="bg-purple-900/20 rounded-xl p-3">
+                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-red-900/20 rounded-xl p-3">
+                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-yellow-900/20 rounded-xl p-3">
+                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>

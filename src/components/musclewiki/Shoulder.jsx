@@ -4,41 +4,108 @@ import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-reac
 import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
 import { Button } from "../ui/button";
 
+// Section intro and warm-up/cool-down tips
+const shoulderIntro = {
+  intro: "The shoulders are essential for pressing, lifting, and upper body stability. Training your shoulders improves posture, athletic performance, and injury prevention.",
+  warmup: [
+    "5 minutes of light cardio (e.g., arm circles, brisk walking)",
+    "Dynamic stretches: band pull-aparts, shoulder dislocates, gentle shoulder rolls"
+  ],
+  cooldown: [
+    "Gentle shoulder and chest stretching",
+    "Deep breathing and relaxation for 2-3 minutes"
+  ]
+};
+
 const shoulderContent = [
   {
     title: "Pike Push Up",
     difficulty: "Beginner",
+    muscleFocus: "Deltoids, triceps, upper chest",
+    benefits: [
+      "Builds shoulder and upper body strength",
+      "Improves pressing power",
+      "Supports shoulder health"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-bodyweight-pike-pushup-front.gif", alt: "Pike Push Up Front" },
-      { src: "/musclewiki/Images/male-bodyweight-pike-pushup-side.gif", alt: "Pike Push Up Side" }
+      { src: "/musclewiki/Images/male-bodyweight-pike-pushup-front.gif", alt: "Person performing pike push up, front view" },
+      { src: "/musclewiki/Images/male-bodyweight-pike-pushup-side.gif", alt: "Person performing pike push up, side view" }
     ],
     steps: [
       "Start in a push up position, then raise your hips so your body forms an inverted V shape.",
       "Bend your elbows to lower your head towards the ground, then push back up."
+    ],
+    proTips: [
+      "Keep your elbows tucked in as you lower.",
+      "Push through your palms for more power."
+    ],
+    safetyTips: [
+      "Do not let your head touch the floor.",
+      "Stop if you feel shoulder pain."
+    ],
+    commonMistakes: [
+      "Letting elbows flare out.",
+      "Dropping hips too low."
     ]
   },
   {
     title: "Dumbbell Shoulder Press",
     difficulty: "Beginner",
+    muscleFocus: "Deltoids, triceps, upper chest",
+    benefits: [
+      "Builds shoulder and arm strength",
+      "Improves overhead pressing ability",
+      "Enhances upper body stability"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-dumbbell-shoulder-press-front.gif", alt: "Dumbbell Shoulder Press Front" },
-      { src: "/musclewiki/Images/male-dumbbell-shoulder-press-side.gif", alt: "Dumbbell Shoulder Press Side" }
+      { src: "/musclewiki/Images/male-dumbbell-shoulder-press-front.gif", alt: "Person performing dumbbell shoulder press, front view" },
+      { src: "/musclewiki/Images/male-dumbbell-shoulder-press-side.gif", alt: "Person performing dumbbell shoulder press, side view" }
     ],
     steps: [
       "Sit on a bench with back support, hold a dumbbell in each hand at shoulder height.",
       "Press the dumbbells upward until your arms are fully extended, then lower them back down."
+    ],
+    proTips: [
+      "Keep your core tight and feet flat on the floor.",
+      "Exhale as you press up."
+    ],
+    safetyTips: [
+      "Do not arch your back excessively.",
+      "Use a weight you can control."
+    ],
+    commonMistakes: [
+      "Letting elbows drop too low.",
+      "Using momentum to press."
     ]
   },
   {
     title: "Dumbbell Lateral Raise",
     difficulty: "Beginner",
+    muscleFocus: "Deltoids, upper traps",
+    benefits: [
+      "Isolates and strengthens the side delts",
+      "Improves shoulder width",
+      "Enhances upper body aesthetics"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-dumbbell-lateral-raise-front.gif", alt: "Dumbbell Lateral Raise Front" },
-      { src: "/musclewiki/Images/male-dumbbell-lateral-raise-side.gif", alt: "Dumbbell Lateral Raise Side" }
+      { src: "/musclewiki/Images/male-dumbbell-lateral-raise-front.gif", alt: "Person performing dumbbell lateral raise, front view" },
+      { src: "/musclewiki/Images/male-dumbbell-lateral-raise-side.gif", alt: "Person performing dumbbell lateral raise, side view" }
     ],
     steps: [
       "Stand with a dumbbell in each hand at your sides.",
       "Raise your arms out to the sides until they are parallel to the floor, then lower them back down."
+    ],
+    proTips: [
+      "Move slowly for maximum muscle activation.",
+      "Keep a slight bend in your elbows."
+    ],
+    safetyTips: [
+      "Do not swing the weights.",
+      "Stop if you feel shoulder pain."
+    ],
+    commonMistakes: [
+      "Raising weights too high.",
+      "Using momentum instead of muscle."
     ]
   }
 ];
@@ -58,6 +125,7 @@ const Shoulder = () => {
     shoulder: "Shoulder",
     difficulty: "Difficulty"
   });
+  const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -67,6 +135,7 @@ const Shoulder = () => {
       setTranslateLanguage("hi");
       setTranslatedContent([]);
       setTranslatedLabels({ shoulder: "Shoulder", difficulty: "Difficulty" });
+      setTranslatedIntro(null);
       setError("");
       return;
     }
@@ -82,19 +151,44 @@ const Shoulder = () => {
         shoulder: shoulderLabel,
         difficulty: difficultyLabel
       });
-      // Translate all titles, difficulties, and steps
+      // Translate section intro
+      const [intro, ...warmup] = await Promise.all([
+        translateText(shoulderIntro.intro, translateLanguage),
+        ...shoulderIntro.warmup.map((item) => translateText(item, translateLanguage))
+      ]);
+      const cooldown = await Promise.all(shoulderIntro.cooldown.map((item) => translateText(item, translateLanguage)));
+      setTranslatedIntro({ intro, warmup, cooldown });
+      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
       const translated = await Promise.all(
         shoulderContent.map(async (section) => {
-          const [title, difficulty, ...steps] = await Promise.all([
+          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
             translateText(section.title, translateLanguage),
             translateText(section.difficulty, translateLanguage),
+            translateText(section.muscleFocus, translateLanguage),
             ...section.steps.map((step) => translateText(step, translateLanguage))
           ]);
+          const benefits = section.benefits
+            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
+            : [];
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const safetyTips = section.safetyTips
+            ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const commonMistakes = section.commonMistakes
+            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+            : [];
           return {
             ...section,
             title,
             difficulty,
-            steps
+            muscleFocus,
+            steps,
+            benefits,
+            proTips,
+            safetyTips,
+            commonMistakes
           };
         })
       );
@@ -112,10 +206,12 @@ const Shoulder = () => {
     setTranslateEnabled(false);
     setTranslatedContent([]);
     setTranslatedLabels({ shoulder: "Shoulder", difficulty: "Difficulty" });
+    setTranslatedIntro(null);
     setError("");
   };
 
   const contentToRender = translateEnabled ? translatedContent : shoulderContent;
+  const introToRender = translateEnabled && translatedIntro ? translatedIntro : shoulderIntro;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
@@ -143,6 +239,25 @@ const Shoulder = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Section Intro */}
+        <div className="mb-8 p-6 bg-white/10 rounded-2xl border border-white/10 shadow-lg animate-fade-in">
+          <h2 className="text-2xl font-bold text-white mb-2">Why Train Your Shoulders?</h2>
+          <p className="text-white/80 mb-4">{introToRender.intro}</p>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-pink-300 mb-1">Warm-Up</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.warmup.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-purple-300 mb-1">Cool-Down</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.cooldown.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
         {/* Translation Controls - sticky/floating bar */}
         <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
           <div className="flex items-center gap-2">
@@ -207,6 +322,13 @@ const Shoulder = () => {
                   {section.difficulty}
                 </span>
               </div>
+              {/* Muscle Focus and Benefits */}
+              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
+                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
+                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
+                </ul>
+              </div>
               {/* Images */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 {section.images.map((img, i) => (
@@ -220,13 +342,34 @@ const Shoulder = () => {
                 ))}
               </div>
               {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
                 {section.steps.map((step, i) => (
                   <li key={i} className="transition-all duration-300 hover:text-pink-300">
                     {step}
                   </li>
                 ))}
               </ol>
+              {/* Pro Tips, Safety Tips, Common Mistakes */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                <div className="bg-purple-900/20 rounded-xl p-3">
+                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-red-900/20 rounded-xl p-3">
+                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-yellow-900/20 rounded-xl p-3">
+                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>

@@ -4,29 +4,78 @@ import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-reac
 import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
 import { Button } from "../ui/button";
 
+// Section intro and warm-up/cool-down tips
+const chestIntro = {
+  intro: "The chest muscles are essential for pushing strength, posture, and upper body power. Training your chest improves functional movement, athletic performance, and physique.",
+  warmup: [
+    "5 minutes of light cardio (e.g., arm swings, brisk walking)",
+    "Dynamic stretches: arm circles, push-up plus, gentle chest stretches"
+  ],
+  cooldown: [
+    "Gentle chest and shoulder stretching",
+    "Deep breathing and relaxation for 2-3 minutes"
+  ]
+};
+
 const chestContent = [
   {
     title: "Push Up",
     difficulty: "Beginner",
+    muscleFocus: "Pectoralis major, triceps, shoulders",
+    benefits: [
+      "Builds upper body and core strength",
+      "Improves posture",
+      "Enhances functional movement"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-bodyweight-pushup-front.gif", alt: "Push Up Front" },
-      { src: "/musclewiki/Images/male-bodyweight-pushup-side.gif", alt: "Push Up Side" }
+      { src: "/musclewiki/Images/male-bodyweight-pushup-front.gif", alt: "Person performing push up, front view" },
+      { src: "/musclewiki/Images/male-bodyweight-pushup-side.gif", alt: "Person performing push up, side view" }
     ],
     steps: [
       "Start in a plank position with your hands under your shoulders.",
       "Lower your body until your chest nearly touches the floor, then push back up."
+    ],
+    proTips: [
+      "Keep your body in a straight line from head to heels.",
+      "Engage your core and glutes for stability."
+    ],
+    safetyTips: [
+      "Do not let your hips sag or pike up.",
+      "Stop if you feel pain in your shoulders or wrists."
+    ],
+    commonMistakes: [
+      "Flaring elbows out too wide.",
+      "Letting hips drop or rise."
     ]
   },
   {
     title: "Dumbbell Bench Press",
     difficulty: "Beginner",
+    muscleFocus: "Pectoralis major, triceps, shoulders",
+    benefits: [
+      "Builds chest and arm strength",
+      "Improves muscle balance",
+      "Allows for greater range of motion than barbell press"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-dumbbell-bench-press-front.gif", alt: "Dumbbell Bench Press Front" },
-      { src: "/musclewiki/Images/male-dumbbell-bench-press-side.gif", alt: "Dumbbell Bench Press Side" }
+      { src: "/musclewiki/Images/male-dumbbell-bench-press-front.gif", alt: "Person performing dumbbell bench press, front view" },
+      { src: "/musclewiki/Images/male-dumbbell-bench-press-side.gif", alt: "Person performing dumbbell bench press, side view" }
     ],
     steps: [
       "Lie on a bench with a dumbbell in each hand at chest level.",
       "Press the dumbbells upward until your arms are fully extended, then lower them back down."
+    ],
+    proTips: [
+      "Keep your feet flat on the floor for stability.",
+      "Lower the dumbbells slowly for more muscle activation."
+    ],
+    safetyTips: [
+      "Do not arch your back excessively.",
+      "Use a spotter if lifting heavy."
+    ],
+    commonMistakes: [
+      "Letting elbows drop below the bench level.",
+      "Bouncing weights off the chest."
     ]
   }
 ];
@@ -46,6 +95,7 @@ const Chest = () => {
     chest: "Chest",
     difficulty: "Difficulty"
   });
+  const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -55,6 +105,7 @@ const Chest = () => {
       setTranslateLanguage("hi");
       setTranslatedContent([]);
       setTranslatedLabels({ chest: "Chest", difficulty: "Difficulty" });
+      setTranslatedIntro(null);
       setError("");
       return;
     }
@@ -70,19 +121,44 @@ const Chest = () => {
         chest: chestLabel,
         difficulty: difficultyLabel
       });
-      // Translate all titles, difficulties, and steps
+      // Translate section intro
+      const [intro, ...warmup] = await Promise.all([
+        translateText(chestIntro.intro, translateLanguage),
+        ...chestIntro.warmup.map((item) => translateText(item, translateLanguage))
+      ]);
+      const cooldown = await Promise.all(chestIntro.cooldown.map((item) => translateText(item, translateLanguage)));
+      setTranslatedIntro({ intro, warmup, cooldown });
+      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
       const translated = await Promise.all(
         chestContent.map(async (section) => {
-          const [title, difficulty, ...steps] = await Promise.all([
+          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
             translateText(section.title, translateLanguage),
             translateText(section.difficulty, translateLanguage),
+            translateText(section.muscleFocus, translateLanguage),
             ...section.steps.map((step) => translateText(step, translateLanguage))
           ]);
+          const benefits = section.benefits
+            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
+            : [];
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const safetyTips = section.safetyTips
+            ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const commonMistakes = section.commonMistakes
+            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+            : [];
           return {
             ...section,
             title,
             difficulty,
-            steps
+            muscleFocus,
+            steps,
+            benefits,
+            proTips,
+            safetyTips,
+            commonMistakes
           };
         })
       );
@@ -100,10 +176,12 @@ const Chest = () => {
     setTranslateEnabled(false);
     setTranslatedContent([]);
     setTranslatedLabels({ chest: "Chest", difficulty: "Difficulty" });
+    setTranslatedIntro(null);
     setError("");
   };
 
   const contentToRender = translateEnabled ? translatedContent : chestContent;
+  const introToRender = translateEnabled && translatedIntro ? translatedIntro : chestIntro;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
@@ -131,6 +209,25 @@ const Chest = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Section Intro */}
+        <div className="mb-8 p-6 bg-white/10 rounded-2xl border border-white/10 shadow-lg animate-fade-in">
+          <h2 className="text-2xl font-bold text-white mb-2">Why Train Your Chest?</h2>
+          <p className="text-white/80 mb-4">{introToRender.intro}</p>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-pink-300 mb-1">Warm-Up</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.warmup.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-purple-300 mb-1">Cool-Down</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.cooldown.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
         {/* Translation Controls - sticky/floating bar */}
         <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
           <div className="flex items-center gap-2">
@@ -195,6 +292,13 @@ const Chest = () => {
                   {section.difficulty}
                 </span>
               </div>
+              {/* Muscle Focus and Benefits */}
+              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
+                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
+                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
+                </ul>
+              </div>
               {/* Images */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 {section.images.map((img, i) => (
@@ -208,13 +312,34 @@ const Chest = () => {
                 ))}
               </div>
               {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
                 {section.steps.map((step, i) => (
                   <li key={i} className="transition-all duration-300 hover:text-pink-300">
                     {step}
                   </li>
                 ))}
               </ol>
+              {/* Pro Tips, Safety Tips, Common Mistakes */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                <div className="bg-purple-900/20 rounded-xl p-3">
+                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-red-900/20 rounded-xl p-3">
+                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-yellow-900/20 rounded-xl p-3">
+                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>

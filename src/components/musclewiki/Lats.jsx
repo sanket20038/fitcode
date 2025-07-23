@@ -4,31 +4,80 @@ import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-reac
 import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
 import { Button } from "../ui/button";
 
+// Section intro and warm-up/cool-down tips
+const latsIntro = {
+  intro: "The lats (latissimus dorsi) are essential for pulling strength, posture, and upper body width. Training your lats improves back strength, shoulder stability, and overall athleticism.",
+  warmup: [
+    "5 minutes of light cardio (e.g., arm swings, brisk walking)",
+    "Dynamic stretches: band pull-aparts, scapular pull-ups, gentle lat stretches"
+  ],
+  cooldown: [
+    "Gentle lat and shoulder stretching",
+    "Deep breathing and relaxation for 2-3 minutes"
+  ]
+};
+
 const latsContent = [
   {
     title: "Pull-Up",
     difficulty: "Intermediate",
+    muscleFocus: "Latissimus dorsi, biceps, upper back",
+    benefits: [
+      "Builds upper body pulling strength",
+      "Improves grip and back width",
+      "Enhances posture and shoulder health"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-bodyweight-pullup-front.gif", alt: "Pull-Up Front" },
-      { src: "/musclewiki/Images/male-bodyweight-pullup-side.gif", alt: "Pull-Up Side" }
+      { src: "/musclewiki/Images/male-bodyweight-pullup-front.gif", alt: "Person performing pull-up, front view" },
+      { src: "/musclewiki/Images/male-bodyweight-pullup-side.gif", alt: "Person performing pull-up, side view" }
     ],
     steps: [
       "Hang from a pull-up bar with your hands slightly wider than shoulder-width apart.",
       "Pull your chest up towards the bar, keeping your body straight.",
       "Lower yourself back down with control."
+    ],
+    proTips: [
+      "Engage your shoulders before pulling up.",
+      "Pull your elbows down and back for maximum lat activation."
+    ],
+    safetyTips: [
+      "Avoid swinging or kipping.",
+      "Stop if you feel shoulder pain."
+    ],
+    commonMistakes: [
+      "Using momentum instead of muscle strength.",
+      "Letting shoulders shrug up at the top."
     ]
   },
   {
     title: "Lat Pulldown",
     difficulty: "Beginner",
+    muscleFocus: "Latissimus dorsi, biceps, upper back",
+    benefits: [
+      "Strengthens lats and upper back",
+      "Improves posture and shoulder stability",
+      "Accessible for all fitness levels"
+    ],
     images: [
-      { src: "/musclewiki/Images/male-machine-lat-pulldown-front.gif", alt: "Lat Pulldown Front" },
-      { src: "/musclewiki/Images/male-machine-lat-pulldown-side.gif", alt: "Lat Pulldown Side" }
+      { src: "/musclewiki/Images/male-machine-lat-pulldown-front.gif", alt: "Person performing lat pulldown, front view" },
+      { src: "/musclewiki/Images/male-machine-lat-pulldown-side.gif", alt: "Person performing lat pulldown, side view" }
     ],
     steps: [
       "Sit at a lat pulldown machine and grip the bar wider than shoulder-width.",
       "Pull the bar down to your chest, squeezing your shoulder blades together.",
       "Slowly return the bar to the starting position."
+    ],
+    proTips: [
+      "Lean back slightly and keep your chest up.",
+      "Pull with your elbows, not your hands."
+    ],
+    safetyTips: [
+      "Do not use excessive weight.",
+      "Avoid jerking the bar down."
+    ],
+    commonMistakes: [
+      "Letting the bar bounce at the top.",
+      "Using momentum to pull the bar."
     ]
   }
 ];
@@ -48,6 +97,7 @@ const Lats = () => {
     lats: "Lats",
     difficulty: "Difficulty"
   });
+  const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -57,6 +107,7 @@ const Lats = () => {
       setTranslateLanguage("hi");
       setTranslatedContent([]);
       setTranslatedLabels({ lats: "Lats", difficulty: "Difficulty" });
+      setTranslatedIntro(null);
       setError("");
       return;
     }
@@ -72,19 +123,44 @@ const Lats = () => {
         lats: latsLabel,
         difficulty: difficultyLabel
       });
-      // Translate all titles, difficulties, and steps
+      // Translate section intro
+      const [intro, ...warmup] = await Promise.all([
+        translateText(latsIntro.intro, translateLanguage),
+        ...latsIntro.warmup.map((item) => translateText(item, translateLanguage))
+      ]);
+      const cooldown = await Promise.all(latsIntro.cooldown.map((item) => translateText(item, translateLanguage)));
+      setTranslatedIntro({ intro, warmup, cooldown });
+      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
       const translated = await Promise.all(
         latsContent.map(async (section) => {
-          const [title, difficulty, ...steps] = await Promise.all([
+          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
             translateText(section.title, translateLanguage),
             translateText(section.difficulty, translateLanguage),
+            translateText(section.muscleFocus, translateLanguage),
             ...section.steps.map((step) => translateText(step, translateLanguage))
           ]);
+          const benefits = section.benefits
+            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
+            : [];
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const safetyTips = section.safetyTips
+            ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
+            : [];
+          const commonMistakes = section.commonMistakes
+            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+            : [];
           return {
             ...section,
             title,
             difficulty,
-            steps
+            muscleFocus,
+            steps,
+            benefits,
+            proTips,
+            safetyTips,
+            commonMistakes
           };
         })
       );
@@ -102,10 +178,12 @@ const Lats = () => {
     setTranslateEnabled(false);
     setTranslatedContent([]);
     setTranslatedLabels({ lats: "Lats", difficulty: "Difficulty" });
+    setTranslatedIntro(null);
     setError("");
   };
 
   const contentToRender = translateEnabled ? translatedContent : latsContent;
+  const introToRender = translateEnabled && translatedIntro ? translatedIntro : latsIntro;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
@@ -133,6 +211,25 @@ const Lats = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {/* Section Intro */}
+        <div className="mb-8 p-6 bg-white/10 rounded-2xl border border-white/10 shadow-lg animate-fade-in">
+          <h2 className="text-2xl font-bold text-white mb-2">Why Train Your Lats?</h2>
+          <p className="text-white/80 mb-4">{introToRender.intro}</p>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-pink-300 mb-1">Warm-Up</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.warmup.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-purple-300 mb-1">Cool-Down</h3>
+              <ul className="list-disc list-inside text-white/70 text-base">
+                {introToRender.cooldown.map((item, i) => <li key={i}>{item}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
         {/* Translation Controls - sticky/floating bar */}
         <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
           <div className="flex items-center gap-2">
@@ -197,6 +294,13 @@ const Lats = () => {
                   {section.difficulty}
                 </span>
               </div>
+              {/* Muscle Focus and Benefits */}
+              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
+                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
+                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
+                </ul>
+              </div>
               {/* Images */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 {section.images.map((img, i) => (
@@ -210,13 +314,34 @@ const Lats = () => {
                 ))}
               </div>
               {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
                 {section.steps.map((step, i) => (
                   <li key={i} className="transition-all duration-300 hover:text-pink-300">
                     {step}
                   </li>
                 ))}
               </ol>
+              {/* Pro Tips, Safety Tips, Common Mistakes */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                <div className="bg-purple-900/20 rounded-xl p-3">
+                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-red-900/20 rounded-xl p-3">
+                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+                <div className="bg-yellow-900/20 rounded-xl p-3">
+                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
+                  <ul className="list-disc list-inside text-white/80 text-sm">
+                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
+                  </ul>
+                </div>
+              </div>
             </div>
           ))}
         </div>
