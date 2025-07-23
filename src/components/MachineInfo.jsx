@@ -428,10 +428,10 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
             <span className="text-2xl font-black text-white bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
               {machine.name}
             </span>
-            <span className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 px-4 py-2 text-sm font-bold shadow-lg rounded-full">
+            {/* <span className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 px-4 py-2 text-sm font-bold shadow-lg rounded-full">
               {machine.category}
-            </span>
-            <span className="text-white/70 text-sm text-center sm:text-right max-w-xs">{machine.description}</span>
+            </span> */}
+            {/* <span className="text-white/70 text-sm text-center sm:text-right max-w-xs">{machine.description}</span> */}
             
           </div>
         </div>
@@ -461,10 +461,10 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
               </TabsList>
             </div>
             {/* Video Tab */}
-            <TabsContent value="video" className="animate-in fade-in duration-500">
-              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500">
+            <TabsContent value="video" className="animate-in fade-in duration-500 w-full max-w-full">
+              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 w-full max-w-full">
                 <CardHeader>
-                  <div className="flex items-center space-x-3">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 w-full">
                     <div className="p-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg">
                       <Play className="h-5 w-5 text-white" />
                     </div>
@@ -476,7 +476,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                 </CardHeader>
                 <CardContent>
                   {machine.how_to_use_video_url ? (
-                    <div className="aspect-video bg-black/50 rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                    <div className="relative w-full aspect-video bg-black/50 rounded-2xl overflow-hidden shadow-2xl border border-white/10 min-h-[220px] sm:min-h-0" style={{ height: '60', maxHeight: 320 }}>
                       {isYouTubeUrl(machine.how_to_use_video_url) ? (
                         <iframe
                           src={getYouTubeEmbedUrl(machine.how_to_use_video_url)}
@@ -499,7 +499,7 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
+                    <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10 w-full">
                       <div className="p-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full w-fit mx-auto mb-4">
                         <Play className="h-12 w-12 text-white" />
                       </div>
@@ -511,8 +511,8 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
               </Card>
             </TabsContent>
             {/* Instructions Tab */}
-            <TabsContent value="instructions" className="animate-in fade-in duration-500 flex-1 flex flex-col min-h-[350px]">
-              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 flex-1 flex flex-col h-full">
+            <TabsContent value="instructions" className="animate-in fade-in duration-500 flex-1 flex flex-col min-h-[350px] w-full max-w-full">
+              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 flex-1 flex flex-col h-full w-full max-w-full">
                 <CardHeader>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
                     {/* Left: Icon, Title, Description */}
@@ -563,14 +563,14 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="flex-1 flex flex-col h-full">
+                <CardContent className="flex-1 flex flex-col h-full w-full">
                   {translateEnabledInstructions ? (
                     translatingInstructions ? (
                       <div className="flex-1 w-full h-full flex items-center justify-center">
                         <span className="text-white/80 text-base">Translating...</span>
                       </div>
                     ) : translationErrorInstructions ? (
-                      <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20">
+                      <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20 w-full">
                         <AlertTriangle className="h-12 w-12 text-red-400 mx-auto mb-4" />
                         <p className="text-red-100 mb-4">{translationErrorInstructions}</p>
                         <Button 
@@ -590,25 +590,25 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                         </Button>
                       </div>
                     ) : translatedInstructions[translateLanguageInstructions] ? (
-                      <div className="prose prose-invert max-w-none bg-white/5 rounded-2xl p-6 border border-white/10 text-sm sm:text-base md:text-lg">
+                      <div className="prose prose-invert max-w-none bg-white/5 rounded-2xl p-6 border border-white/10 text-sm sm:text-base md:text-lg w-full">
                         <div className="text-white/90 whitespace-pre-wrap leading-relaxed">
                           {translatedInstructions[translateLanguageInstructions]}
                         </div>
                       </div>
                     ) : (
-                      <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
+                      <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10 w-full">
                         <Globe className="h-12 w-12 text-white/40 mx-auto mb-4" />
                         <p className="text-white/70">No translation available for {getLanguageName(translateLanguageInstructions)}</p>
                       </div>
                     )
                   ) : machine?.usage_guide ? (
-                    <div className="prose prose-invert max-w-none bg-white/5 rounded-2xl p-6 border border-white/10 text-sm sm:text-base md:text-lg">
+                    <div className="prose prose-invert max-w-none bg-white/5 rounded-2xl p-6 border border-white/10 text-sm sm:text-base md:text-lg w-full">
                       <div className="text-white/90 whitespace-pre-wrap leading-relaxed">
                         {machine?.usage_guide}
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
+                    <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10 w-full">
                       <BookOpen className="h-12 w-12 text-white/40 mx-auto mb-4" />
                       <h3 className="text-xl font-bold text-white mb-2">No instructions available</h3>
                       <p className="text-white/70">Check the video tab for visual guidance</p>
@@ -618,8 +618,8 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
               </Card>
             </TabsContent>
             {/* Safety Tab */}
-            <TabsContent value="safety" className="animate-in fade-in duration-500 flex-1 flex flex-col min-h-[350px]">
-              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 flex-1 flex flex-col h-full">
+            <TabsContent value="safety" className="animate-in fade-in duration-500 flex-1 flex flex-col min-h-[350px] w-full max-w-full">
+              <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 flex-1 flex flex-col h-full w-full max-w-full">
                 <CardHeader>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
                     {/* Left: Icon, Title, Description */}
@@ -670,14 +670,14 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="flex-1 flex flex-col h-full">
+                <CardContent className="flex-1 flex flex-col h-full w-full">
                   {translateEnabledSafety ? (
                     translatingSafety ? (
                       <div className="flex-1 w-full h-full flex items-center justify-center">
                         <span className="text-white/80 text-base">Translating...</span>
                       </div>
                     ) : translationErrorSafety ? (
-                      <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20">
+                      <div className="text-center py-16 bg-red-500/10 rounded-2xl border border-red-500/20 w-full">
                         <AlertTriangle className="h-12 w-12 text-red-400 mx-auto mb-4" />
                         <p className="text-red-100 mb-4">{translationErrorSafety}</p>
                         <Button 
@@ -697,25 +697,25 @@ const MachineInfo = ({ setAuthenticated, setUserType }) => {
                         </Button>
                       </div>
                     ) : translatedSafety[translateLanguageSafety] ? (
-                      <div className="prose prose-invert max-w-none bg-orange-500/5 rounded-2xl p-6 border border-orange-500/20 text-sm sm:text-base md:text-lg">
+                      <div className="prose prose-invert max-w-none bg-orange-500/5 rounded-2xl p-6 border border-orange-500/20 text-sm sm:text-base md:text-lg w-full">
                         <div className="text-white/90 whitespace-pre-wrap leading-relaxed">
                           {translatedSafety[translateLanguageSafety]}
                         </div>
                       </div>
                     ) : (
-                      <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
+                      <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10 w-full">
                         <Globe className="h-12 w-12 text-white/40 mx-auto mb-4" />
                         <p className="text-white/70">No translation available for {getLanguageName(translateLanguageSafety)}</p>
                       </div>
                     )
                   ) : machine?.safety_tips ? (
-                    <div className="prose prose-invert max-w-none bg-orange-500/5 rounded-2xl p-6 border border-orange-500/20 text-sm sm:text-base md:text-lg">
+                    <div className="prose prose-invert max-w-none bg-orange-500/5 rounded-2xl p-6 border border-orange-500/20 text-sm sm:text-base md:text-lg w-full">
                       <div className="text-white/90 whitespace-pre-wrap leading-relaxed">
                         {machine?.safety_tips}
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
+                    <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10 w-full">
                       <Shield className="h-12 w-12 text-white/40 mx-auto mb-4" />
                       <h3 className="text-xl font-bold text-white mb-2">No safety information available</h3>
                       <p className="text-white/70">Always follow general gym safety guidelines</p>

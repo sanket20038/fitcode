@@ -561,10 +561,10 @@ const exportToPDF = async (aiResponses) => {
           </div>
 
           {/* AI Responses Tab - Now First */}
-          <TabsContent value="airesponses" className="animate-in fade-in duration-500">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+          <TabsContent value="airesponses" className="animate-in fade-in duration-500 w-full max-w-full">
+            <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl w-full max-w-full">
               <CardHeader>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 w-full">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-gradient-to-r from-orange-600 to-red-600 rounded-lg">
                       <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
@@ -574,7 +574,6 @@ const exportToPDF = async (aiResponses) => {
                       <CardDescription className="text-white/70 text-sm sm:text-base">Your personalized AI fitness guidance</CardDescription>
                     </div>
                   </div>
-                  
                   {aiResponses.length > 0 && (
                     <Button
                       onClick={() => exportToPDF(aiResponses)}
@@ -588,11 +587,11 @@ const exportToPDF = async (aiResponses) => {
               </CardHeader>
               <CardContent>
                 {aiResponses.length > 0 ? (
-                  <div className="space-y-4 sm:space-y-6">
+                  <div className="flex flex-col gap-4 sm:gap-6 w-full">
                     {aiResponses.map((response, index) => (
                       <Card 
                         key={index} 
-                        className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300"
+                        className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300 w-full"
                       >
                         <CardHeader className="p-4 sm:p-6">
                           <CardTitle className="text-white text-base sm:text-lg flex items-center space-x-2">
@@ -624,29 +623,31 @@ const exportToPDF = async (aiResponses) => {
           </TabsContent>
 
           {/* Bookmarks Tab - Now Second */}
-          <TabsContent value="bookmarks" className="animate-in fade-in duration-500">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+          <TabsContent value="bookmarks" className="animate-in fade-in duration-500 w-full max-w-full">
+            <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl w-full max-w-full">
               <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg">
-                    <Bookmark className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-white text-lg sm:text-xl md:text-2xl">Bookmarked Machines</CardTitle>
-                    <CardDescription className="text-white/70 text-sm sm:text-base">Your saved machines for quick access</CardDescription>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 w-full">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg">
+                      <Bookmark className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-white text-lg sm:text-xl md:text-2xl">Bookmarked Machines</CardTitle>
+                      <CardDescription className="text-white/70 text-sm sm:text-base">Your saved machines for quick access</CardDescription>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 {bookmarks.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
                     {bookmarks.map((bookmark) => (
                       <Card 
                         key={bookmark.id} 
-                        className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 hover:scale-105 group"
+                        className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 hover:scale-105 group w-full"
                       >
                         <CardContent className="p-4 sm:p-6">
-                          <div className="flex justify-between items-start mb-3 sm:mb-4">
+                          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4 gap-2 w-full">
                             <h3 className="font-bold text-base sm:text-lg text-white group-hover:text-green-400 transition-colors">
                               {bookmark.machine.name}
                             </h3>
@@ -659,9 +660,7 @@ const exportToPDF = async (aiResponses) => {
                               <Heart className="h-4 w-4 fill-current" />
                             </Button>
                           </div>
-                          
                           <p className="text-white/70 text-xs sm:text-sm mb-3 sm:mb-4">{bookmark.gym?.name}</p>
-                          
                           <div className="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
                             {bookmark.machine.how_to_use_video_url && (
                               <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">
@@ -682,11 +681,9 @@ const exportToPDF = async (aiResponses) => {
                               </Badge>
                             )}
                           </div>
-                          
                           <Button
                             className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
-                           onClick={() => navigate(`/machine/${bookmark.machine_id}`)}
-
+                            onClick={() => navigate(`/machine/${bookmark.machine_id}`)}
                           >
                             View Details
                           </Button>
@@ -714,10 +711,10 @@ const exportToPDF = async (aiResponses) => {
           </TabsContent>
 
           {/* Scan History Tab - Now Third with Enhanced Responsive UI */}
-          <TabsContent value="history" className="animate-in fade-in duration-500">
-            <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+          <TabsContent value="history" className="animate-in fade-in duration-500 w-full max-w-full">
+            <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl w-full max-w-full">
               <CardHeader>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 w-full">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg">
                       <History className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
@@ -727,7 +724,6 @@ const exportToPDF = async (aiResponses) => {
                       <CardDescription className="text-white/70 text-sm sm:text-base">Your recent machine scans and activity</CardDescription>
                     </div>
                   </div>
-                  
                   {scanHistory.length > 0 && (
                     <div className="flex items-center space-x-2 text-white/60 text-xs sm:text-sm">
                       <BarChart3 className="h-4 w-4" />
@@ -738,14 +734,14 @@ const exportToPDF = async (aiResponses) => {
               </CardHeader>
               <CardContent>
                 {scanHistory.length > 0 ? (
-                  <div className="space-y-3 sm:space-y-4">
+                  <div className="flex flex-col gap-3 sm:gap-4 w-full">
                     {scanHistory.map((scan, index) => (
                       <Card 
                         key={scan.id} 
-                        className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 hover:scale-[1.02] group"
+                        className="bg-white/5 border-white/10 backdrop-blur-xl hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 hover:scale-[1.02] group w-full"
                       >
                         <CardContent className="p-3 sm:p-4 md:p-6">
-                          <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-start sm:justify-between gap-3">
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 w-full">
                             {/* Left side - Machine info */}
                             <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 flex-1 min-w-0">
                               <div className="relative flex-shrink-0">
@@ -756,57 +752,29 @@ const exportToPDF = async (aiResponses) => {
                                   {index + 1}
                                 </div>
                               </div>
-                              
                               <div className="flex-1 min-w-0 pr-2">
                                 <h3 className="font-bold text-sm sm:text-base lg:text-lg text-white group-hover:text-blue-400 transition-colors mb-1 break-words leading-tight">
                                   {scan.machine.name}
                                 </h3>
                                 <div className="flex flex-col space-y-1 text-white/70 text-xs sm:text-sm">
                                   <div className="flex items-center space-x-1">
-                                    <MapPin className="h-3 w-3 flex-shrink-0" />
-                                    <span className="break-words leading-tight">{scan.gym?.name}</span>
+                                    <MapPin className="h-3 w-3" />
+                                    <span>{scan.gym?.name}</span>
                                   </div>
                                   <div className="flex items-center space-x-1">
-                                    <Clock className="h-3 w-3 flex-shrink-0" />
-                                    <span className="whitespace-nowrap">{getTimeAgo(scan.scanned_at)}</span>
+                                    <Clock className="h-3 w-3" />
+                                    <span>{getTimeAgo(scan.scanned_at)}</span>
                                   </div>
-                                </div>
-                                
-                                <div className="flex flex-wrap gap-1 sm:gap-2 mt-2">
-                                  <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">
-                                    <Activity className="h-3 w-3 mr-1" />
-                                    Scanned
-                                  </Badge>
-                                  {scan.machine.how_to_use_video_url && (
-                                    <Badge className="bg-green-500/20 text-green-300 border-green-500/30 text-xs">
-                                      <Play className="h-3 w-3 mr-1" />
-                                      Video
-                                    </Badge>
-                                  )}
                                 </div>
                               </div>
                             </div>
-                            
-                            {/* Right side - View button */}
-                            <div className="flex-shrink-0 w-full sm:w-auto">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300 hover:scale-105 w-full sm:w-auto text-xs sm:text-sm"
-                                onClick={() => navigate(`/machine/${scan.machine_id}`)}
-                              >
-                                <Target className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                                View
-                              </Button>
-                            </div>
-                          </div>
-                          
-                          {/* Progress indicator */}
-                          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/10">
-                            <div className="flex items-center justify-between text-xs text-white/60">
-                              <span>Scan #{index + 1}</span>
-                              <span className="truncate ml-2">{formatDate(scan.scanned_at)}</span>
-                            </div>
+                            {/* Right side - View Details Button */}
+                            <Button
+                              className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base mt-2 sm:mt-0"
+                              onClick={() => navigate(`/machine/${scan.machine_id}`)}
+                            >
+                              View Details
+                            </Button>
                           </div>
                         </CardContent>
                       </Card>
@@ -814,24 +782,16 @@ const exportToPDF = async (aiResponses) => {
                   </div>
                 ) : (
                   <div className="text-center py-8 sm:py-16">
-                    <div className="relative mb-4 sm:mb-6">
-                      <div className="p-3 sm:p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full w-fit mx-auto">
-                        <History className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
-                      </div>
-                      <div className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 p-1 sm:p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
-                        <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
-                      </div>
+                    <div className="p-3 sm:p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full w-fit mx-auto mb-4">
+                      <History className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
                     </div>
                     <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No scan history yet</h3>
-                    <p className="text-white/70 mb-4 sm:mb-6 max-w-md mx-auto text-sm sm:text-base">
-                      Start scanning machine QR codes to build your workout history and track your fitness journey
-                    </p>
+                    <p className="text-white/70 mb-4 sm:mb-6 text-sm sm:text-base">Start scanning machines to see your activity here</p>
                     <Button
-                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg transition-all duration-300 hover:scale-105 text-sm sm:text-base"
+                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-sm sm:text-base"
                       onClick={() => navigate('/client/scanner')}
                     >
-                      <QrCode className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                      Start Scanning
+                      Scan a Machine
                     </Button>
                   </div>
                 )}
