@@ -32,6 +32,7 @@ import { Html5Qrcode, Html5QrcodeScanner, Html5QrcodeScanType, Html5QrcodeSuppor
 import { clientAPI, qrAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
 import GymLoader from './GymLoader';
+import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
 
 const QRScanner = () => {
   const [scanning, setScanning] = useState(false);
@@ -46,6 +47,9 @@ const QRScanner = () => {
   const scannerRef = useRef(null);
   const html5QrcodeScannerRef = useRef(null);
   const fileInputRef = useRef(null);
+  const videoRef = useRef(null);
+  const [zxingResult, setZxingResult] = useState('');
+  const [zxingError, setZxingError] = useState('');
 
   // Clean up scanner on unmount
   useEffect(() => {
@@ -94,11 +98,57 @@ const QRScanner = () => {
     checkCameraAvailability();
   }, []);
 
-  // Only initialize scanner when scanning is true and DOM is updated
+  // ZXing camera scanner effect
   useEffect(() => {
-    if (scanning && scannerRef.current && cameraPermission === 'granted') {
-      initializeScanner();
+    let codeReader;
+    let active = true;
+    if (scanning && cameraPermission === 'granted') {
+      codeReader = new BrowserMultiFormatReader();
+      codeReader
+        .listVideoInputDevices()
+        .then((videoInputDevices) => {
+          const selectedDeviceId = videoInputDevices[0]?.deviceId;
+          if (!selectedDeviceId) {
+            setZxingError('No camera found');
+            return;
+          }
+          codeReader.decodeFromVideoDevice(
+            selectedDeviceId,
+            videoRef.current,
+            (result, err) => {
+              if (!active) return;
+              if (result) {
+                // Validate QR code with backend
+                stopScanning();
+                setZxingResult(result.getText());
+                setZxingError('');
+                setError('');
+                qrAPI.scanQR(result.getText())
+                  .then((response) => {
+                    const { machine } = response.data;
+                    setSuccess('QR code scanned successfully!');
+                    setTimeout(() => {
+                      navigate(`/machine/${machine.id}`);
+                    }, 1000);
+                  })
+                  .catch((err) => {
+                    setError(err.response?.data?.message || 'Invalid QR code');
+                    setZxingError('Invalid QR code for this platform.');
+                  });
+              }
+              if (err && !(err instanceof NotFoundException)) {
+                setZxingError(err.message || 'Error scanning QR code');
+              }
+            }
+          );
+        })
+        .catch((err) => setZxingError(err.message || 'Error initializing camera'));
     }
+    return () => {
+      active = false;
+      if (codeReader) codeReader.reset();
+    };
+    // eslint-disable-next-line
   }, [scanning, cameraPermission]);
 
   const checkCameraPermission = async () => {
@@ -627,102 +677,51 @@ const QRScanner = () => {
                 </div>
               </div>
             ) : (
-              <div className="space-y-6">
-                <div className="text-center">
-                  <div className="flex items-center justify-center space-x-2 mb-4">
-                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                    <p className="text-white font-medium">Scanning active</p>
-                  </div>
-                  <p className="text-white/70 text-sm mb-6">
-                    Position the QR code within the scanning area below
-                    <br />
-                    <span className="text-xs text-white/50">
-                      {/* selectedCamera ? `Using: ${selectedCamera.label}` : 'Camera automatically selected' */}
-                      Camera will be automatically selected
-                    </span>
-                  </p>
+              <div className="flex flex-col items-center justify-center w-full">
+                <div className="relative flex items-center justify-center" style={{ width: 320, height: 320 }}>
+                  <video
+                    ref={videoRef}
+                    style={{
+                      width: 320,
+                      height: 320,
+                      borderRadius: '1.5rem',
+                      border: '4px solid #38bdf8',
+                      boxShadow: '0 0 24px #38bdf8',
+                      objectFit: 'cover',
+                      background: '#222',
+                    }}
+                    autoPlay
+                    muted
+                  />
+                  {/* Centered loader if isRequestingPermission is true */}
+                  {isRequestingPermission && (
+                    <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/40 rounded-2xl">
+                      <GymLoader variant="video" text="Requesting Camera..." />
+                    </div>
+                  )}
                 </div>
-                
-                {/* Scanner Container with Modern Styling */}
-                <div className="relative">
-                  <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur opacity-20"></div>
-                  <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl">
-                    <div
-                      id="qr-reader"
-                      ref={scannerRef}
-                      className="w-full min-h-[350px] rounded-2xl overflow-hidden"
-                    />
-                    <style>{`
-                      #qr-reader {
-                        border: none !important;
-                        background: transparent !important;
-                      }
-                      #qr-reader__scan_region {
-                        background: transparent !important;
-                        border: 2px solid rgba(59, 130, 246, 0.5) !important;
-                        border-radius: 12px !important;
-                      }
-                      #qr-reader__scan_region > img {
-                        display: none !important;
-                      }
-                      #qr-reader__camera_selection {
-                        display: none !important;
-                      }
-                      #qr-reader__dashboard {
-                        display: none !important;
-                      }
-                      #qr-reader__dashboard_section {
-                        display: none !important;
-                      }
-                      #qr-reader__dashboard_section_csr {
-                        display: none !important;
-                      }
-                      #qr-reader__status_span {
-                        display: none !important;
-                      }
-                      #qr-reader__camera_permission_button {
-                        display: none !important;
-                      }
-                      #qr-reader__scan_region_scan_region_selection {
-                        display: none !important;
-                      }
-                      #qr-reader__scan_region_scan_region_selection_button {
-                        display: none !important;
-                      }
-                      #qr-reader__scan_region_scan_region_selection_dialog {
-                        display: none !important;
-                      }
-                      #qr-reader__scan_region > video {
-                        border-radius: 12px !important;
-                      }
-                    `}</style>
-                  </div>
-                </div>
-                
-                <div className="text-center space-y-3">
-                  <div className="flex justify-center space-x-3">
-                    <Button 
-                      variant="outline" 
-                      onClick={stopScanning}
-                      className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-xl transition-all duration-300 hover:scale-105"
-                    >
-                      <CameraOff className="h-4 w-4 mr-2" />
-                      Stop Scanning
-                    </Button>
-                    
-                    {/* Camera Switch Button - Only show if multiple cameras available */}
-                    {/* Removed as per edit hint */}
-                  </div>
-                  
-                  {/* Current Camera Info */}
-                  {/* selectedCamera && ( // Removed as per edit hint
-                    <p className="text-white/60 text-sm">
-                      Using: {selectedCamera.label}
-                      {selectedCamera.isBackCamera && (
-                        <span className="ml-2 text-blue-400">(Back Camera)</span>
-                      )}
-                    </p>
-                  ) */}
+                {/* Status/Feedback below video */}
+                {zxingResult && (
+                  <div className="text-green-400 font-bold mt-2">Scanned: {zxingResult}</div>
+                )}
+                {zxingError && (
+                  <div className="text-red-400 font-bold mt-2">{zxingError}</div>
+                )}
+                {error && (
+                  <div className="text-red-400 font-bold mt-2">{error}</div>
+                )}
+                {!zxingResult && !zxingError && !error && !isRequestingPermission && (
+                  <div className="text-cyan-300 font-medium mt-2">Scanning...</div>
+                )}
+                <div className="text-center space-y-3 mt-4">
+                  <Button
+                    variant="outline"
+                    onClick={stopScanning}
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-xl transition-all duration-300 hover:scale-105"
+                  >
+                    <CameraOff className="h-4 w-4 mr-2" />
+                    Stop Scanning
+                  </Button>
                 </div>
               </div>
             )}
