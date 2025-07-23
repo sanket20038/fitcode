@@ -107,7 +107,17 @@ const QRScanner = () => {
       codeReader
         .listVideoInputDevices()
         .then((videoInputDevices) => {
-          const selectedDeviceId = videoInputDevices[0]?.deviceId;
+          // Prefer back/environment camera if available
+          let selectedDeviceId = videoInputDevices[0]?.deviceId;
+          for (const device of videoInputDevices) {
+            if (
+              device.label.toLowerCase().includes('back') ||
+              device.label.toLowerCase().includes('environment')
+            ) {
+              selectedDeviceId = device.deviceId;
+              break;
+            }
+          }
           if (!selectedDeviceId) {
             setZxingError('No camera found');
             return;
