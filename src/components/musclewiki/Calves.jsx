@@ -1,9 +1,110 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Dumbbell } from "lucide-react";
+import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-react";
+import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
+import { Button } from "../ui/button";
+
+const calvesContent = [
+  {
+    title: "Standing Calf Raise",
+    difficulty: "Beginner",
+    images: [
+      { src: "/musclewiki/Images/male-bodyweight-standing-calf-raise-front.gif", alt: "Standing Calf Raise Front" },
+      { src: "/musclewiki/Images/male-bodyweight-standing-calf-raise-side.gif", alt: "Standing Calf Raise Side" }
+    ],
+    steps: [
+      "Stand with your feet hip-width apart.",
+      "Raise your heels as high as possible, then lower back down."
+    ]
+  },
+  {
+    title: "Seated Calf Raise",
+    difficulty: "Intermediate",
+    images: [
+      { src: "/musclewiki/Images/male-machine-seated-calf-raise-front.gif", alt: "Seated Calf Raise Front" },
+      { src: "/musclewiki/Images/male-machine-seated-calf-raise-side.gif", alt: "Seated Calf Raise Side" }
+    ],
+    steps: [
+      "Sit on a calf raise machine with the pads resting on your thighs.",
+      "Raise your heels as high as possible, then lower back down."
+    ]
+  }
+];
+
+const DIFFICULTY_COLORS = {
+  Beginner: "bg-green-500/20 text-green-400 border-green-400/30",
+  Intermediate: "bg-orange-500/20 text-orange-400 border-orange-400/30",
+  Advanced: "bg-red-500/20 text-red-400 border-red-400/30"
+};
 
 const Calves = () => {
   const navigate = useNavigate();
+  const [translateEnabled, setTranslateEnabled] = useState(false);
+  const [translateLanguage, setTranslateLanguage] = useState("hi");
+  const [translatedContent, setTranslatedContent] = useState([]);
+  const [translatedLabels, setTranslatedLabels] = useState({
+    calves: "Calves",
+    difficulty: "Difficulty"
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleTranslate = async () => {
+    if (translateEnabled) {
+      setTranslateEnabled(false);
+      setTranslateLanguage("hi");
+      setTranslatedContent([]);
+      setTranslatedLabels({ calves: "Calves", difficulty: "Difficulty" });
+      setError("");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      // Translate static labels
+      const [calvesLabel, difficultyLabel] = await Promise.all([
+        translateText("Calves", translateLanguage),
+        translateText("Difficulty", translateLanguage)
+      ]);
+      setTranslatedLabels({
+        calves: calvesLabel,
+        difficulty: difficultyLabel
+      });
+      // Translate all titles, difficulties, and steps
+      const translated = await Promise.all(
+        calvesContent.map(async (section) => {
+          const [title, difficulty, ...steps] = await Promise.all([
+            translateText(section.title, translateLanguage),
+            translateText(section.difficulty, translateLanguage),
+            ...section.steps.map((step) => translateText(step, translateLanguage))
+          ]);
+          return {
+            ...section,
+            title,
+            difficulty,
+            steps
+          };
+        })
+      );
+      setTranslatedContent(translated);
+      setTranslateEnabled(true);
+    } catch (err) {
+      setError(err.message || "Failed to translate content");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLanguageChange = (e) => {
+    setTranslateLanguage(e.target.value);
+    setTranslateEnabled(false);
+    setTranslatedContent([]);
+    setTranslatedLabels({ calves: "Calves", difficulty: "Difficulty" });
+    setError("");
+  };
+
+  const contentToRender = translateEnabled ? translatedContent : calvesContent;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
       {/* Nav Bar */}
@@ -30,34 +131,92 @@ const Calves = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
-        <div className="bg-white/5 border-white/10 backdrop-blur-xl shadow-xl rounded-2xl p-8">
-          <h1 className="text-4xl font-black text-white mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Calves</h1>
-          {/* Standing Calf Raise */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">Standing Calf Raise</h2>
-            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Beginner</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-bodyweight-standing-calf-raise-front.gif" alt="Standing Calf Raise Front" />
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-bodyweight-standing-calf-raise-side.gif" alt="Standing Calf Raise Side" />
+        {/* Translation Controls - sticky/floating bar */}
+        <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              onClick={handleTranslate}
+              className={`transition-all duration-300 hover:scale-105 ${
+                translateEnabled ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+              }`}
+              disabled={loading}
+            >
+              <Globe className="h-4 w-4 mr-2" />
+              {translateEnabled ? "Original" : "Translate"}
+            </Button>
+            <select
+              className="bg-white/10 border border-white/20 text-white rounded-lg px-3 py-2 text-sm backdrop-blur-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+              value={translateLanguage}
+              onChange={handleLanguageChange}
+              disabled={loading}
+            >
+              {allSupportedLanguages.filter(lang => lang !== 'en').map((lang) => (
+                <option key={lang} value={lang} className="bg-slate-800 text-white">
+                  {getLanguageName(lang)}
+                </option>
+              ))}
+            </select>
+            <span className="ml-2 text-xs text-white/60 hidden sm:inline-block">🌐 Translate this page</span>
+          </div>
+          {loading && <span className="text-white/80 text-sm">Translating...</span>}
+          {error && (
+            <div className="flex items-center gap-2 text-red-400 bg-red-500/10 px-3 py-1 rounded-lg">
+              <AlertTriangle className="h-4 w-4" />
+              <span className="text-sm">{error}</span>
             </div>
-            <ol className="list-decimal list-inside text-white/90 space-y-2">
-              <li>Stand upright with your feet hip-width apart.</li>
-              <li>Push through the balls of your feet to raise your heels as high as possible, then lower back down.</li>
-            </ol>
-          </section>
-          {/* Seated Calf Raise */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">Seated Calf Raise</h2>
-            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Beginner</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-machine-seated-calf-raise-front.gif" alt="Seated Calf Raise Front" />
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-machine-seated-calf-raise-side.gif" alt="Seated Calf Raise Side" />
+          )}
+        </div>
+        {/* Main Title with Icon and Gradient Underline */}
+        <div className="flex items-center gap-3 mb-10 animate-fade-in">
+          <div className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-xl flex items-center justify-center">
+            <Sparkles className="h-7 w-7 text-yellow-300 animate-pulse" />
+          </div>
+          <h1 className="text-5xl font-black text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text drop-shadow-lg">
+            {translateEnabled ? translatedLabels.calves : "Calves"}
+          </h1>
+        </div>
+        {/* Exercise Sections */}
+        <div className="grid gap-8">
+          {contentToRender.map((section, idx) => (
+            <div
+              key={idx}
+              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              style={{ animationDelay: `${idx * 80}ms` }}
+            >
+              {/* Section Title and Difficulty Badge */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+                  {section.title}
+                </h2>
+                <span
+                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
+                >
+                  {section.difficulty}
+                </span>
+              </div>
+              {/* Images */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                {section.images.map((img, i) => (
+                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
+                    <img
+                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
+                      src={img.src}
+                      alt={img.alt}
+                    />
+                  </div>
+                ))}
+              </div>
+              {/* Steps */}
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+                {section.steps.map((step, i) => (
+                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
+                    {step}
+                  </li>
+                ))}
+              </ol>
             </div>
-            <ol className="list-decimal list-inside text-white/90 space-y-2">
-              <li>Sit on a calf raise machine with your feet on the platform and knees under the pad.</li>
-              <li>Push through the balls of your feet to raise your heels, then lower back down.</li>
-            </ol>
-          </section>
+          ))}
         </div>
       </main>
     </div>

@@ -48,6 +48,7 @@ import { getUser, clearAuth } from '../lib/auth';
 import AskAIButton from './AskAIButton';
 import GymLoader from './GymLoader';
 import MuscleMap from './MuscleMap';
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
 
 const ClientDashboard = ({ setAuthenticated, setUserType }) => {
   const [user] = useState(getUser());
@@ -401,13 +402,70 @@ const exportToPDF = async (aiResponses) => {
           </div>
         </div>
 
-        {/* Muscle Map Section */}
-        <div className="mb-16">
-          <h2 className="text-3xl sm:text-4xl font-black text-center mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Click the muscle you want to learn about
-          </h2>
+        <div className="mt-10 mb-20 text-center">
+  <h2 className="text-3xl sm:text-4xl font-semibold text-white/90 tracking-wide mb-2">
+    Want to train smarter?
+  </h2>
+  <p className="text-white/60 max-w-xl mx-auto text-base sm:text-lg mb-6">
+  Explore our interactive muscle map to discover machine-specific exercises, complete with how-to videos, multilingual instructions, and safety tips — designed to guide users of all backgrounds.
+</p>
+
+
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button
+        className="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-3 rounded-full text-lg font-semibold shadow-xl hover:scale-105 transition-transform duration-300"
+      >
+        🔍 Explore Muscle Map
+      </Button>
+    </DialogTrigger>
+
+    <DialogContent
+      className="w-full max-w-[95vw] h-full max-h-[95vh] rounded-2xl p-0 bg-gradient-to-br from-white/80 via-white/60 to-purple-100/80 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-purple-900/80 backdrop-blur-2xl shadow-2xl border-0 animate-fade-in overflow-y-auto overflow-x-hidden grid grid-cols-2 gap-0"
+      style={{
+        alignItems: 'stretch',
+        justifyItems: 'stretch',
+      }}
+    >
+      {/* Left: Muscle Map */}
+      <div className="flex justify-center items-center p-6 bg-gradient-to-b from-purple-50/60 to-white/0 dark:from-purple-900/40 dark:to-gray-900/0">
+        <div className="w-full flex items-center justify-center">
           <MuscleMap />
         </div>
+      </div>
+
+      {/* Right: Info & Tips */}
+      <div className="flex flex-col justify-center items-center p-6 bg-gradient-to-b from-pink-50/60 to-white/0 dark:from-pink-900/40 dark:to-gray-900/0 text-center">
+      <div className="flex items-center gap-3 mb-5 px-4 py-2 rounded-xl bg-white/5 border border-pink-400/30 shadow-inner backdrop-blur-md">
+  <div className="flex items-center justify-center bg-pink-500/20 rounded-full p-1.5">
+    <Sparkles className="h-4 w-4 text-pink-600 animate-pulse" />
+  </div>
+  <p className="text-sm sm:text-base text-pink-600nt-medium">
+    <span className="font-semibold text-pink-400">Pro Tip:</span> Tap any muscle to view exercises, videos, and safety tips.
+  </p>
+</div>
+
+
+
+
+        <DialogTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent mb-2">
+          Muscle Map Overview
+        </DialogTitle>
+
+        <DialogDescription className="text-gray-700 dark:text-gray-300 max-w-lg text-base sm:text-lg mb-4">
+        See all muscle groups and related exercises.
+        </DialogDescription>
+
+        <div className="w-full border-t border-purple-200/60 dark:border-purple-700/40 my-4"></div>
+
+        <p className="text-purple-700 dark:text-purple-200 text-base sm:text-lg font-medium">
+          💪 Every rep has a reason. Explore with purpose!
+        </p>
+      </div>
+    </DialogContent>
+  </Dialog>
+</div>
+
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

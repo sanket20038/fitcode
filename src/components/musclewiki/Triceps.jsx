@@ -1,9 +1,166 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Dumbbell } from "lucide-react";
+import { ArrowLeft, Dumbbell, Globe, AlertTriangle, Sparkles } from "lucide-react";
+import { translateText, getLanguageName, allSupportedLanguages } from "../translationUtils";
+import { Button } from "../ui/button";
+
+const tricepsContent = [
+  {
+    title: "Dips",
+    difficulty: "Intermediate",
+    images: [
+      { src: "/musclewiki/Images/male-bodyweight-dips-front.gif", alt: "Dips Front" },
+      { src: "/musclewiki/Images/male-bodyweight-dips-side.gif", alt: "Dips Side" }
+    ],
+    steps: [
+      "Hold your body with arms locked above the equipment",
+      "Lower your body slowly while leaning forward, flare out your elbows",
+      "Raise your body above the bars until your arms are locked."
+    ]
+  },
+  {
+    title: "Diamond Push Ups",
+    difficulty: "Beginner",
+    images: [
+      { src: "/musclewiki/Images/-bodyweight-diamond-pushup-front.gif", alt: "Diamond Push Up Front" },
+      { src: "/musclewiki/Images/male-bodyweight-diamond-pushup-side.gif", alt: "Diamond Push Up Side" }
+    ],
+    steps: [
+      "Position your index fingers and thumbs so they are touching, forming a diamond shape",
+      "Use a standard push up position",
+      "Lower your chest towards your hands, keep your elbows close to your body",
+      "Stop just before your chest touches the floor, then push back up to the starting position."
+    ]
+  },
+  {
+    title: "Bench Dips",
+    difficulty: "Beginner",
+    images: [
+      { src: "/musclewiki/Images/male-bodyweight-tricep-dips-front.gif", alt: "Bench Dips Front" },
+      { src: "/musclewiki/Images/male-bodyweight-tricep-dips-side.gif", alt: "Bench Dips Side" }
+    ],
+    steps: [
+      "Grip the edge of the bench with your hands, Keep your feet together and legs straight.",
+      "Lower your body straight down.",
+      "Slowly press back up to the starting point.",
+      "TIP: Make this harder by raising your feet off the floor and adding weight."
+    ]
+  },
+  {
+    title: "Seated Overhead Triceps Extension",
+    difficulty: "Intermediate",
+    images: [
+      { src: "/musclewiki/Images/male-dumbbell-overhead-tricep-extension-front.gif", alt: "Overhead Triceps Extension Front" },
+      { src: "/musclewiki/Images/male-dumbbell-overhead-tricep-extension-side.gif", alt: "Overhead Triceps Extension Side" }
+    ],
+    steps: [
+      "Sit on the bench and hold a dumbbell with both hands. Raise the dumbbell overhead at arms length, holding the weight up with the palms of your hands.",
+      "Keep your elbows in while you lower the weight behind your head, your upper arms stationary.",
+      "Raise the weight back to starting position."
+    ]
+  },
+  {
+    title: "Laying Triceps Extension",
+    difficulty: "Intermediate",
+    images: [
+      { src: "/musclewiki/Images/male-barbell-laying-tricep-extensions-front.gif", alt: "Laying Triceps Extension Front" },
+      { src: "/musclewiki/Images/male-barbell-laying-tricep-extensions-side.gif", alt: "Laying Triceps Extension Side" }
+    ],
+    steps: [
+      "Lay on a flat bench while holding a barbell with a shoulder-width grip.",
+      "Fully extend your elbows until the barbell is directly over your chest.",
+      "Begin to flex your elbows and allow the barbell to nearly touch your forehead.",
+      "Extend your elbows back to the starting position and repeat."
+    ]
+  },
+  {
+    title: "Barbell SkullCrusher",
+    difficulty: "Intermediate",
+    images: [
+      { src: "/musclewiki/Images/male-barbell-skullcrusher-front_qpHWUa8.gif", alt: "Barbell SkullCrusher Front" },
+      { src: "/musclewiki/Images/male-barbell-skullcrusher-side_B7Z6225.gif", alt: "Barbell SkullCrusher Side" }
+    ],
+    steps: [
+      "Take a shoulder width grip. Break at the elbows. Try to keep your elbows tucked in. Don't let them flare out.",
+      "Stop the bar a few inches from your forehead and extend your elbows back up."
+    ]
+  }
+];
+
+const DIFFICULTY_COLORS = {
+  Beginner: "bg-green-500/20 text-green-400 border-green-400/30",
+  Intermediate: "bg-orange-500/20 text-orange-400 border-orange-400/30",
+  Advanced: "bg-red-500/20 text-red-400 border-red-400/30"
+};
 
 const Triceps = () => {
   const navigate = useNavigate();
+  const [translateEnabled, setTranslateEnabled] = useState(false);
+  const [translateLanguage, setTranslateLanguage] = useState("hi");
+  const [translatedContent, setTranslatedContent] = useState([]);
+  const [translatedLabels, setTranslatedLabels] = useState({
+    triceps: "Triceps",
+    difficulty: "Difficulty"
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleTranslate = async () => {
+    if (translateEnabled) {
+      setTranslateEnabled(false);
+      setTranslateLanguage("hi");
+      setTranslatedContent([]);
+      setTranslatedLabels({ triceps: "Triceps", difficulty: "Difficulty" });
+      setError("");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      // Translate static labels
+      const [tricepsLabel, difficultyLabel] = await Promise.all([
+        translateText("Triceps", translateLanguage),
+        translateText("Difficulty", translateLanguage)
+      ]);
+      setTranslatedLabels({
+        triceps: tricepsLabel,
+        difficulty: difficultyLabel
+      });
+      // Translate all titles, difficulties, and steps
+      const translated = await Promise.all(
+        tricepsContent.map(async (section) => {
+          const [title, difficulty, ...steps] = await Promise.all([
+            translateText(section.title, translateLanguage),
+            translateText(section.difficulty, translateLanguage),
+            ...section.steps.map((step) => translateText(step, translateLanguage))
+          ]);
+          return {
+            ...section,
+            title,
+            difficulty,
+            steps
+          };
+        })
+      );
+      setTranslatedContent(translated);
+      setTranslateEnabled(true);
+    } catch (err) {
+      setError(err.message || "Failed to translate content");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLanguageChange = (e) => {
+    setTranslateLanguage(e.target.value);
+    setTranslateEnabled(false);
+    setTranslatedContent([]);
+    setTranslatedLabels({ triceps: "Triceps", difficulty: "Difficulty" });
+    setError("");
+  };
+
+  const contentToRender = translateEnabled ? translatedContent : tricepsContent;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
       {/* Nav Bar */}
@@ -30,94 +187,92 @@ const Triceps = () => {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-8">
-        <div className="bg-white/5 border-white/10 backdrop-blur-xl shadow-xl rounded-2xl p-8">
-          <h1 className="text-4xl font-black text-white mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Triceps</h1>
-          {/* Dips */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">Dips</h2>
-            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Intermediate</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-bodyweight-dips-front.gif" alt="Dips Front" />
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-bodyweight-dips-side.gif" alt="Dips Side" />
+        {/* Translation Controls - sticky/floating bar */}
+        <div className="sticky top-4 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-3 border border-white/10 shadow-lg">
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              onClick={handleTranslate}
+              className={`transition-all duration-300 hover:scale-105 ${
+                translateEnabled ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+              }`}
+              disabled={loading}
+            >
+              <Globe className="h-4 w-4 mr-2" />
+              {translateEnabled ? "Original" : "Translate"}
+            </Button>
+            <select
+              className="bg-white/10 border border-white/20 text-white rounded-lg px-3 py-2 text-sm backdrop-blur-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+              value={translateLanguage}
+              onChange={handleLanguageChange}
+              disabled={loading}
+            >
+              {allSupportedLanguages.filter(lang => lang !== 'en').map((lang) => (
+                <option key={lang} value={lang} className="bg-slate-800 text-white">
+                  {getLanguageName(lang)}
+                </option>
+              ))}
+            </select>
+            <span className="ml-2 text-xs text-white/60 hidden sm:inline-block">🌐 Translate this page</span>
+          </div>
+          {loading && <span className="text-white/80 text-sm">Translating...</span>}
+          {error && (
+            <div className="flex items-center gap-2 text-red-400 bg-red-500/10 px-3 py-1 rounded-lg">
+              <AlertTriangle className="h-4 w-4" />
+              <span className="text-sm">{error}</span>
             </div>
-            <ol className="list-decimal list-inside text-white/90 space-y-2">
-              <li>Hold your body with arms locked above the equipment</li>
-              <li>Lower your body slowly while leaning forward, flare out your elbows</li>
-              <li>Raise your body above the bars until your arms are locked.</li>
-            </ol>
-          </section>
-          {/* Diamond Push Ups */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">Diamond Push Ups</h2>
-            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Beginner</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <img className="w-full rounded-xl" src="/musclewiki/Images/-bodyweight-diamond-pushup-front.gif" alt="Diamond Push Up Front" />
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-bodyweight-diamond-pushup-side.gif" alt="Diamond Push Up Side" />
+          )}
+        </div>
+        {/* Main Title with Icon and Gradient Underline */}
+        <div className="flex items-center gap-3 mb-10 animate-fade-in">
+          <div className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-xl flex items-center justify-center">
+            <Sparkles className="h-7 w-7 text-yellow-300 animate-pulse" />
+          </div>
+          <h1 className="text-5xl font-black text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text drop-shadow-lg">
+            {translateEnabled ? translatedLabels.triceps : "Triceps"}
+          </h1>
+        </div>
+        {/* Exercise Sections */}
+        <div className="grid gap-8">
+          {contentToRender.map((section, idx) => (
+            <div
+              key={idx}
+              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              style={{ animationDelay: `${idx * 80}ms` }}
+            >
+              {/* Section Title and Difficulty Badge */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+                  {section.title}
+                </h2>
+                <span
+                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
+                >
+                  {section.difficulty}
+                </span>
+              </div>
+              {/* Images */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                {section.images.map((img, i) => (
+                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
+                    <img
+                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
+                      src={img.src}
+                      alt={img.alt}
+                    />
+                  </div>
+                ))}
+              </div>
+              {/* Steps */}
+              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4">
+                {section.steps.map((step, i) => (
+                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
+                    {step}
+                  </li>
+                ))}
+              </ol>
             </div>
-            <ol className="list-decimal list-inside text-white/90 space-y-2">
-              <li>Position your index fingers and thumbs so they are touching, forming a diamond shape</li>
-              <li>Use a standard push up position</li>
-              <li>Lower your chest towards your hands, keep your elbows close to your body</li>
-              <li>Stop just before your chest touches the floor, then push back up to the starting position.</li>
-            </ol>
-          </section>
-          {/* Bench Dips */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">Bench Dips</h2>
-            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Beginner</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-bodyweight-tricep-dips-front.gif" alt="Bench Dips Front" />
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-bodyweight-tricep-dips-side.gif" alt="Bench Dips Side" />
-            </div>
-            <ol className="list-decimal list-inside text-white/90 space-y-2">
-              <li>Grip the edge of the bench with your hands, Keep your feet together and legs straight.</li>
-              <li>Lower your body straight down.</li>
-              <li>Slowly press back up to the starting point.</li>
-              <li>TIP: Make this harder by raising your feet off the floor and adding weight.</li>
-            </ol>
-          </section>
-          {/* Seated Overhead Triceps Extension */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">Seated Overhead Triceps Extension</h2>
-            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Intermediate</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-dumbbell-overhead-tricep-extension-front.gif" alt="Overhead Triceps Extension Front" />
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-dumbbell-overhead-tricep-extension-side.gif" alt="Overhead Triceps Extension Side" />
-            </div>
-            <ol className="list-decimal list-inside text-white/90 space-y-2">
-              <li>Sit on the bench and hold a dumbbell with both hands. Raise the dumbbell overhead at arms length, holding the weight up with the palms of your hands.</li>
-              <li>Keep your elbows in while you lower the weight behind your head, your upper arms stationary.</li>
-              <li>Raise the weight back to starting position.</li>
-            </ol>
-          </section>
-          {/* Laying Triceps Extension */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">Laying Triceps Extension</h2>
-            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Intermediate</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-barbell-laying-tricep-extensions-front.gif" alt="Laying Triceps Extension Front" />
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-barbell-laying-tricep-extensions-side.gif" alt="Laying Triceps Extension Side" />
-            </div>
-            <ol className="list-decimal list-inside text-white/90 space-y-2">
-              <li>Lay on a flat bench while holding a barbell with a shoulder-width grip.</li>
-              <li>Fully extend your elbows until the barbell is directly over your chest.</li>
-              <li>Begin to flex your elbows and allow the barbell to nearly touch your forehead.</li>
-              <li>Extend your elbows back to the starting position and repeat.</li>
-            </ol>
-          </section>
-          {/* Barbell SkullCrusher */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-2">Barbell SkullCrusher</h2>
-            <p className="text-white/80 mb-2"><strong>Difficulty</strong>: Intermediate</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-barbell-skullcrusher-front_qpHWUa8.gif" alt="Barbell SkullCrusher Front" />
-              <img className="w-full rounded-xl" src="/musclewiki/Images/male-barbell-skullcrusher-side_B7Z6225.gif" alt="Barbell SkullCrusher Side" />
-            </div>
-            <ol className="list-decimal list-inside text-white/90 space-y-2">
-              <li>Take a shoulder width grip. Break at the elbows. Try to keep your elbows tucked in. Don't let them flare out.</li>
-              <li>Stop the bar a few inches from your forehead and extend your elbows back up.</li>
-            </ol>
-          </section>
+          ))}
         </div>
       </main>
     </div>
