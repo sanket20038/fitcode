@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import { GoogleGenAI } from '@google/genai';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { 
   User, 
   Venus, 
@@ -22,6 +23,17 @@ import {
   TrendingUp
 } from 'lucide-react';
 
+// Simple mobile detection hook
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  return isMobile;
+}
+
 const AskAIButton = ({ onResponse }) => {
   const [open, setOpen] = useState(false);
   const [age, setAge] = useState('');
@@ -31,18 +43,24 @@ const AskAIButton = ({ onResponse }) => {
   const [activityLevel, setActivityLevel] = useState('');
   const [medicalConditions, setMedicalConditions] = useState('');
   const [allergies, setAllergies] = useState('');
-  const [dietaryRestrictions, setDietaryRestrictions] = useState('');
+  const [mealsPerDay, setMealsPerDay] = useState('');
   const [dailyRoutine, setDailyRoutine] = useState('');
   const [dietGoal, setDietGoal] = useState('');
   const [workoutGoal, setWorkoutGoal] = useState('');
   const [workoutPlan, setWorkoutPlan] = useState('');
   const [workoutToday, setWorkoutToday] = useState('');
   const [dietType, setDietType] = useState('');
+  const [fitnessLevel, setFitnessLevel] = useState('');
+  const [availableEquipment, setAvailableEquipment] = useState('');
+  const [workoutDaysTimes, setWorkoutDaysTimes] = useState('');
+  const [injuriesLimitations, setInjuriesLimitations] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [tabValue, setTabValue] = useState('diet');
   const [language, setLanguage] = useState('en');
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleSubmit = async () => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -88,7 +106,6 @@ const AskAIButton = ({ onResponse }) => {
 - All responses must be in ${language}
 - Focus on Indian cuisine, ingredients, and eating patterns
 
-
 ## User Profile:
 - **Age**: ${age} years
 - **Gender**: ${gender}
@@ -96,6 +113,11 @@ const AskAIButton = ({ onResponse }) => {
 - **Weight**: ${weight} kg
 - **Diet Goal**: ${dietGoal}
 - **Diet Type**: ${dietType}
+- **Activity Level**: ${activityLevel}
+- **Medical Conditions**: ${medicalConditions}
+- **Allergies**: ${allergies}
+- **Meals per Day**: ${mealsPerDay}
+- **Daily Routine**: ${dailyRoutine}
 - **Location**: India
 
 ## Required Diet Plan Components:
@@ -181,6 +203,10 @@ You are a specialized AI fitness assistant focused exclusively on creating perso
 - **Workout Goal**: ${workoutGoal}
 - **Workout Plan Type**: ${workoutPlan}
 - **Today's Focus**: ${workoutToday}
+- **Fitness Level**: ${fitnessLevel}
+- **Available Equipment**: ${availableEquipment}
+- **Workout Days/Times**: ${workoutDaysTimes}
+- **Injuries or Limitations**: ${injuriesLimitations}
 
 ## Required Workout Plan Structure:
 
@@ -336,67 +362,77 @@ Remember: Always emphasize that users should consult with healthcare providers b
       <div className="fixed bottom-6 right-6 z-50">
         <div className="relative group">
           {/* Animated energy aura */}
-          <div className="absolute -inset-2 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl blur-xl opacity-60 group-hover:opacity-90 animate-pulse transition duration-1000"></div>
+          <div className={`absolute ${isMobile ? '-inset-1' : '-inset-2'} bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl blur-xl opacity-60 group-hover:opacity-90 animate-pulse transition duration-1000`}></div>
           
           {/* Main button container */}
-          <button 
-            onClick={() => setOpen(true)}
-            className="relative flex items-center space-x-3 px-5 py-4 bg-gradient-to-r from-orange-600 via-red-600 to-yellow-600 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-2 group-hover:shadow-orange-500/50 backdrop-blur-xl border border-orange-400/30"
+          <button
+            onClick={() => {
+              setOpen(true);
+              if (isMobile) setShowTooltip(true);
+            }}
+            className={`relative flex items-center space-x-3 bg-gradient-to-r from-orange-600 via-red-600 to-yellow-600 rounded-2xl shadow-2xl transition-all duration-300 group-hover:shadow-orange-500/50 backdrop-blur-xl border border-orange-400/30
+              ${isMobile ? 'px-3 py-2 text-xs' : 'px-5 py-4 text-base'}
+              ${isMobile ? '' : 'hover:scale-105 hover:-translate-y-2'}`}
             aria-label="Ask AI for Diet & Workout Plan"
+            onMouseEnter={() => !isMobile && setShowTooltip(true)}
+            onMouseLeave={() => !isMobile && setShowTooltip(false)}
           >
             
             {/* Gym icon with power effect */}
             <div className="relative">
-              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm border border-white/30 group-hover:bg-white/30 transition-all duration-300">
-                <Bot className="h-7 w-7 text-white transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" />
+              <div className={`bg-white/20 rounded-xl backdrop-blur-sm border border-white/30 group-hover:bg-white/30 transition-all duration-300 ${isMobile ? 'p-1' : 'p-3'}`}>
+                <Bot className={`text-white transition-all duration-300 ${isMobile ? 'h-5 w-5' : 'h-7 w-7'} group-hover:scale-110 group-hover:rotate-12`} />
               </div>
               
               {/* Power indicator */}
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-lime-400 rounded-full animate-ping"></div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-lime-400 rounded-full flex items-center justify-center">
-                <Zap className="h-2 w-2 text-white" />
+              <div className={`absolute -top-1 -right-1 ${isMobile ? 'w-2 h-2' : 'w-4 h-4'} bg-gradient-to-r from-green-400 to-lime-400 rounded-full animate-ping`}></div>
+              <div className={`absolute -top-1 -right-1 ${isMobile ? 'w-2 h-2' : 'w-4 h-4'} bg-gradient-to-r from-green-400 to-lime-400 rounded-full flex items-center justify-center`}>
+                <Zap className={`${isMobile ? 'h-1 w-1' : 'h-2 w-2'} text-white`} />
               </div>
             </div>
             
             {/* Motivational text */}
             <div className="text-left">
-              <div className="text-white font-black text-sm tracking-wide flex items-center space-x-1">
-                <Dumbbell className="h-4 w-4" />
+              <div className={`text-white font-black tracking-wide flex items-center space-x-1 ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                <Dumbbell className={isMobile ? 'h-3 w-3' : 'h-4 w-4'} />
                 <span>AI TRAINER</span>
               </div>
-              <div className="text-orange-100 text-xs font-bold">GET FIT NOW!</div>
+              <div className={`text-orange-100 font-bold ${isMobile ? 'text-[10px]' : 'text-xs'}`}>GET FIT NOW!</div>
             </div>
             
             {/* Energy particles */}
             <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-              <div className="absolute top-2 left-4 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-ping" style={{ animationDelay: '0s' }}></div>
-              <div className="absolute top-5 right-5 w-1 h-1 bg-orange-300 rounded-full animate-ping" style={{ animationDelay: '0.3s' }}></div>
-              <div className="absolute bottom-4 left-7 w-1.5 h-1.5 bg-red-300 rounded-full animate-ping" style={{ animationDelay: '0.6s' }}></div>
-              <div className="absolute bottom-2 right-8 w-1 h-1 bg-yellow-400 rounded-full animate-ping" style={{ animationDelay: '0.9s' }}></div>
-              <div className="absolute top-3 left-12 w-1 h-1 bg-orange-400 rounded-full animate-ping" style={{ animationDelay: '1.2s' }}></div>
+              <div className={`absolute top-2 left-4 ${isMobile ? 'w-1 h-1' : 'w-1.5 h-1.5'} bg-yellow-300 rounded-full animate-ping`} style={{ animationDelay: '0s' }}></div>
+              <div className={`absolute top-5 right-5 ${isMobile ? 'w-0.5 h-0.5' : 'w-1 h-1'} bg-orange-300 rounded-full animate-ping`} style={{ animationDelay: '0.3s' }}></div>
+              <div className={`absolute bottom-4 left-7 ${isMobile ? 'w-1 h-1' : 'w-1.5 h-1.5'} bg-red-300 rounded-full animate-ping`} style={{ animationDelay: '0.6s' }}></div>
+              <div className={`absolute bottom-2 right-8 ${isMobile ? 'w-0.5 h-0.5' : 'w-1 h-1'} bg-yellow-400 rounded-full animate-ping`} style={{ animationDelay: '0.9s' }}></div>
+              <div className={`absolute top-3 left-12 ${isMobile ? 'w-0.5 h-0.5' : 'w-1 h-1'} bg-orange-400 rounded-full animate-ping`} style={{ animationDelay: '1.2s' }}></div>
             </div>
             
             {/* Strength bars animation */}
             <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-0.5">
-              <div className="w-0.5 h-3 bg-white/60 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
-              <div className="w-0.5 h-4 bg-white/70 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-              <div className="w-0.5 h-5 bg-white/80 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-              <div className="w-0.5 h-4 bg-white/70 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
-              <div className="w-0.5 h-3 bg-white/60 rounded-full animate-pulse" style={{ animationDelay: '0.8s' }}></div>
+              <div className={`${isMobile ? 'w-0.5 h-2' : 'w-0.5 h-3'} bg-white/60 rounded-full animate-pulse`} style={{ animationDelay: '0s' }}></div>
+              <div className={`${isMobile ? 'w-0.5 h-2.5' : 'w-0.5 h-4'} bg-white/70 rounded-full animate-pulse`} style={{ animationDelay: '0.2s' }}></div>
+              <div className={`${isMobile ? 'w-0.5 h-3' : 'w-0.5 h-5'} bg-white/80 rounded-full animate-pulse`} style={{ animationDelay: '0.4s' }}></div>
+              <div className={`${isMobile ? 'w-0.5 h-2.5' : 'w-0.5 h-4'} bg-white/70 rounded-full animate-pulse`} style={{ animationDelay: '0.6s' }}></div>
+              <div className={`${isMobile ? 'w-0.5 h-2' : 'w-0.5 h-3'} bg-white/60 rounded-full animate-pulse`} style={{ animationDelay: '0.8s' }}></div>
             </div>
           </button>
           
           {/* Motivational tooltip */}
-          <div className="absolute bottom-full right-0 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-            <div className="bg-gradient-to-r from-orange-600 to-red-600 backdrop-blur-xl border border-orange-400/30 rounded-xl px-4 py-3 text-white text-sm font-bold whitespace-nowrap shadow-2xl">
-              <div className="flex items-center space-x-2">
-                <Target className="h-4 w-4 text-yellow-300" />
-                <span>Your AI Fitness Coach</span>
+          {(showTooltip || isMobile) && (
+            <div className="absolute bottom-full right-0 mb-3 opacity-100 transition-all duration-300 transform translate-y-0">
+              <div className={`bg-gradient-to-r from-orange-600 to-red-600 backdrop-blur-xl border border-orange-400/30 rounded-xl shadow-2xl text-white font-bold whitespace-nowrap
+                ${isMobile ? 'px-2 py-1 text-[10px] min-w-[120px]' : 'px-4 py-3 text-sm'}`}>
+                <div className={`flex items-center space-x-1 ${isMobile ? '' : 'space-x-2'}`}>
+                  <Target className={`${isMobile ? 'h-2 w-2' : 'h-4 w-4'} text-yellow-300`} />
+                  <span className={`${isMobile ? 'text-[10px]' : ''}`}>Your AI Fitness Coach</span>
+                </div>
+                <div className={`text-orange-200 mt-1 ${isMobile ? 'text-[9px]' : 'text-xs'}`}>Ready to transform your body? 🔥</div>
+                <div className={`absolute top-full right-6 w-0 h-0 border-l-4 border-r-4 border-t-6 border-transparent border-t-orange-600 ${isMobile ? 'scale-75' : ''}`}></div>
               </div>
-              <div className="text-orange-200 text-xs mt-1">Ready to transform your body? 🔥</div>
-              <div className="absolute top-full right-6 w-0 h-0 border-l-4 border-r-4 border-t-6 border-transparent border-t-orange-600"></div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -491,6 +527,72 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   <SelectItem value="vegan">🌱 Vegan</SelectItem>
                 </SelectContent>
               </Select>
+              {/* Activity Level */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-green-600 to-teal-600 rounded-lg">
+                  <Zap className="text-white h-4 w-4" />
+                </div>
+                <Select onValueChange={setActivityLevel} value={activityLevel}>
+                  <SelectTrigger className="bg-white/10 border border-white/20 rounded-lg p-4 text-white">
+                    <SelectValue placeholder="Activity Level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sedentary">Sedentary</SelectItem>
+                    <SelectItem value="lightly active">Lightly Active</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="very active">Very Active</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {/* Medical Conditions */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-pink-600 to-red-600 rounded-lg">
+                  <Flame className="text-white h-4 w-4" />
+                </div>
+                <Input
+                  placeholder="Medical Conditions (e.g. diabetes)"
+                  value={medicalConditions}
+                  onChange={(e) => setMedicalConditions(e.target.value)}
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                />
+              </div>
+              {/* Allergies */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg">
+                  <Sparkles className="text-white h-4 w-4" />
+                </div>
+                <Input
+                  placeholder="Allergies"
+                  value={allergies}
+                  onChange={(e) => setAllergies(e.target.value)}
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                />
+              </div>
+              {/* Meals per Day */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg">
+                  <Venus className="text-white h-4 w-4" />
+                </div>
+                <Input
+                  placeholder="Meals per Day"
+                  value={mealsPerDay}
+                  onChange={(e) => setMealsPerDay(e.target.value)}
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                />
+              </div>
+              {/* Daily Routine */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg">
+                  <TrendingUp className="text-white h-4 w-4" />
+                </div>
+                <Input
+                  placeholder="Daily Routine (e.g. work schedule, sleep time)"
+                  value={dailyRoutine}
+                  onChange={(e) => setDailyRoutine(e.target.value)}
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                />
+              </div>
+              {/* Move Language selection to the end */}
               <Select onValueChange={setLanguage} value={language}>
                 <SelectTrigger className="bg-white/10 border border-white/20 rounded-lg p-4 mt-3 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl text-white">
                   <SelectValue placeholder="Select Language" />
@@ -541,6 +643,59 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
                 />
               </div>
+              {/* Fitness Level */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-green-600 to-teal-600 rounded-lg">
+                  <Zap className="text-white h-4 w-4" />
+                </div>
+                <Select onValueChange={setFitnessLevel} value={fitnessLevel}>
+                  <SelectTrigger className="bg-white/10 border border-white/20 rounded-lg p-4 text-white">
+                    <SelectValue placeholder="Fitness Level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="beginner">Beginner</SelectItem>
+                    <SelectItem value="intermediate">Intermediate</SelectItem>
+                    <SelectItem value="advanced">Advanced</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {/* Available Equipment */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg">
+                  <Dumbbell className="text-white h-4 w-4" />
+                </div>
+                <Input
+                  placeholder="Available Equipment (e.g. dumbbells, bands, gym)"
+                  value={availableEquipment}
+                  onChange={(e) => setAvailableEquipment(e.target.value)}
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                />
+              </div>
+              {/* Workout Days/Times */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-pink-600 to-red-600 rounded-lg">
+                  <Flame className="text-white h-4 w-4" />
+                </div>
+                <Input
+                  placeholder="Workout Days/Times"
+                  value={workoutDaysTimes}
+                  onChange={(e) => setWorkoutDaysTimes(e.target.value)}
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                />
+              </div>
+              {/* Injuries or Limitations */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg">
+                  <Sparkles className="text-white h-4 w-4" />
+                </div>
+                <Input
+                  placeholder="Injuries or Limitations"
+                  value={injuriesLimitations}
+                  onChange={(e) => setInjuriesLimitations(e.target.value)}
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                />
+              </div>
+              {/* Move Language selection to the end */}
               <Select onValueChange={setLanguage} value={language}>
                 <SelectTrigger className="bg-white/10 border border-white/20 rounded-lg p-4 mt-3 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl text-white">
                   <SelectValue placeholder="Select Language" />
