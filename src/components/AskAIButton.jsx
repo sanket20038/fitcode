@@ -437,7 +437,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-lg rounded-xl shadow-2xl border border-gray-300 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+        <DialogContent className="w-full max-w-lg sm:max-w-md md:max-w-lg rounded-xl shadow-2xl border border-gray-300 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-2 sm:p-4 md:p-6 overflow-y-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle className="text-2xl font-extrabold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent flex items-center space-x-2">
               <Flame className="h-6 w-6 text-orange-400" />
@@ -461,7 +461,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="diet" className="mt-4 space-y-4">
+            <TabsContent value="diet" className="mt-4 space-y-3 sm:space-y-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg">
                   <User className="text-white h-4 w-4" />
@@ -517,32 +517,37 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
                 />
               </div>
-              <Select onValueChange={setDietType} value={dietType}>
-                <SelectTrigger className="bg-white/10 border border-white/20 rounded-lg p-4 mt-3 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl text-white">
-                  <SelectValue placeholder="Select Diet Type" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border border-white/20 text-white">
-                  <SelectItem value="veg">🥬 Vegetarian</SelectItem>
-                  <SelectItem value="non-veg">🍗 Non-Vegetarian</SelectItem>
-                  <SelectItem value="vegan">🌱 Vegan</SelectItem>
-                </SelectContent>
-              </Select>
-              {/* Activity Level */}
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-r from-green-600 to-teal-600 rounded-lg">
-                  <Zap className="text-white h-4 w-4" />
+              <div className="flex gap-3 w-full flex-col sm:flex-row">
+                {/* Activity Level */}
+                <div className="flex items-center gap-3 w-full sm:w-1/2">
+                  <div className="p-2 bg-gradient-to-r from-green-600 to-teal-600 rounded-lg">
+                    <Zap className="text-white h-4 w-4" />
+                  </div>
+                  <Select onValueChange={setActivityLevel} value={activityLevel}>
+                    <SelectTrigger className="bg-white/10 border border-white/20 rounded-lg p-3 sm:p-4 text-white w-full text-xs sm:text-base">
+                      <SelectValue placeholder="Activity Level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sedentary">Sedentary</SelectItem>
+                      <SelectItem value="lightly active">Lightly Active</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="very active">Very Active</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Select onValueChange={setActivityLevel} value={activityLevel}>
-                  <SelectTrigger className="bg-white/10 border border-white/20 rounded-lg p-4 text-white">
-                    <SelectValue placeholder="Activity Level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="sedentary">Sedentary</SelectItem>
-                    <SelectItem value="lightly active">Lightly Active</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="very active">Very Active</SelectItem>
-                  </SelectContent>
-                </Select>
+                {/* Diet Type */}
+                <div className="flex items-center gap-3 w-full sm:w-1/2">
+                  <Select onValueChange={setDietType} value={dietType}>
+                    <SelectTrigger className="bg-white/10 border border-white/20 rounded-lg p-3 sm:p-4 text-white w-full text-xs sm:text-base">
+                      <SelectValue placeholder="Select Diet Type" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-800 border border-white/20 text-white">
+                      <SelectItem value="veg">🥬 Vegetarian</SelectItem>
+                      <SelectItem value="non-veg">🍗 Non-Vegetarian</SelectItem>
+                      <SelectItem value="vegan">🌱 Vegan</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               {/* Medical Conditions */}
               <div className="flex items-center gap-3">
