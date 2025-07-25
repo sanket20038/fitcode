@@ -19,64 +19,19 @@ const glutesIntro = {
 
 const glutesContent = [
   {
-    title: "Hip Thrust",
-    difficulty: "Intermediate",
-    muscleFocus: "Gluteus maximus, hamstrings, lower back",
-    benefits: [
-      "Builds glute and hip strength",
-      "Improves posture and athletic power",
-      "Supports lower back health"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-barbell-hip-thrust-front.gif", alt: "Person performing hip thrust, front view" },
-      { src: "/musclewiki/Images/male-barbell-hip-thrust-side.gif", alt: "Person performing hip thrust, side view" }
-    ],
-    steps: [
-      "Sit on the ground with your upper back against a bench and a barbell over your hips.",
-      "Drive through your heels to lift your hips until your thighs are parallel to the ground.",
-      "Lower your hips back down and repeat."
-    ],
-    proTips: [
-      "Keep your chin tucked and ribs down.",
-      "Pause at the top for maximum glute activation."
+    title: " Band Standing Hip Extension",
+    video: "https://youtu.be/dcEJcTGl8ws?si=IlNUIK5pAnEamXnp",
+    instructions: [
+      "Anchor a resistance band low and loop it around your ankle.",
+      "Stand tall, hold onto a support, and extend your leg straight back against the band’s resistance.",
+      "Pause, squeeze your glute, then return slowly. Repeat for reps, then switch legs."
     ],
     safetyTips: [
-      "Do not overextend your lower back.",
-      "Use a pad for comfort if needed."
-    ],
-    commonMistakes: [
-      "Letting knees cave inward.",
-      "Using momentum instead of muscle control."
-    ]
-  },
-  {
-    title: "Glute Bridge",
-    difficulty: "Beginner",
-    muscleFocus: "Gluteus maximus, hamstrings, core",
-    benefits: [
-      "Strengthens glutes and core",
-      "Improves hip mobility",
-      "Supports lower back health"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-glute-bridge-front.gif", alt: "Person performing glute bridge, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-glute-bridge-side.gif", alt: "Person performing glute bridge, side view" }
-    ],
-    steps: [
-      "Lie on your back with your knees bent and feet flat on the floor.",
-      "Lift your hips to create a straight line from your knees to your shoulders, then lower back down."
+      "Keep your core braced and avoid arching your lower back.",
+      "Control the movement — don’t let the band snap your leg forward."
     ],
     proTips: [
-      "Squeeze your glutes at the top of the movement.",
-      "Keep your feet flat and avoid pushing through your toes."
-    ],
-    safetyTips: [
-      "Do not arch your lower back excessively.",
-      "Stop if you feel pain in your hips or back."
-    ],
-    commonMistakes: [
-      "Pushing through toes instead of heels.",
-      "Letting knees flare outward or inward."
+      "Hold the contraction for 1–2 seconds at the top for extra glute activation."
     ]
   }
 ];
@@ -105,7 +60,7 @@ const Glutes = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ glutes: "Glutes", difficulty: "Difficulty" });
+      setTranslatedLabels({ glutes: "Glutes" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -114,14 +69,8 @@ const Glutes = () => {
     setError("");
     try {
       // Translate static labels
-      const [glutesLabel, difficultyLabel] = await Promise.all([
-        translateText("Glutes", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        glutes: glutesLabel,
-        difficulty: difficultyLabel
-      });
+      const glutesLabel = await translateText("Glutes", translateLanguage);
+      setTranslatedLabels({ glutes: glutesLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(glutesIntro.intro, translateLanguage),
@@ -129,37 +78,25 @@ const Glutes = () => {
       ]);
       const cooldown = await Promise.all(glutesIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         glutesContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -279,67 +216,68 @@ const Glutes = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video.replace('youtu.be/', 'www.youtube.com/embed/').replace('watch?v=', 'embed/').split('?')[0]}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}

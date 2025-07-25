@@ -19,65 +19,85 @@ const lowerBackIntro = {
 
 const lowerBackContent = [
   {
-    title: "Back Extension",
-    difficulty: "Beginner",
-    muscleFocus: "Erector spinae, glutes, hamstrings",
-    benefits: [
-      "Strengthens lower back and posterior chain",
-      "Improves posture and spinal health",
-      "Supports injury prevention"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-back-extension-front.gif", alt: "Person performing back extension, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-back-extension-side.gif", alt: "Person performing back extension, side view" }
-    ],
-    steps: [
-      "Lie face down on a back extension bench, securing your feet.",
-      "Bend at the waist to lower your upper body, then raise it back up until your body is in a straight line.",
-      "Do not overextend your back at the top."
-    ],
-    proTips: [
-      "Move slowly and with control.",
-      "Squeeze your glutes at the top."
+    title: "🧍‍♂️ Hyperextensions (Back Extensions)",
+    video: "https://youtu.be/JiC2u0vSHnA?si=6cqYIN_mDFM5QByo",
+    instructions: [
+      "Set yourself on a back extension bench with hips just above the pad.",
+      "Cross arms over chest or hold a plate for resistance.",
+      "Lower your torso until your body forms a 90° angle.",
+      "Raise back up by contracting your lower back, stop at a straight line — don’t overextend."
     ],
     safetyTips: [
-      "Do not hyperextend your spine.",
-      "Stop if you feel pain in your lower back."
+      "Avoid swinging up — use a slow and controlled movement.",
+      "Don’t hyperextend your spine — stop when your body is in line."
     ],
-    commonMistakes: [
-      "Using momentum to lift up.",
-      "Letting feet slip out of the pads."
+    proTips: [
+      "Squeeze your glutes and hamstrings along with lower back for full posterior activation."
     ]
   },
   {
-    title: "Good Morning",
-    difficulty: "Intermediate",
-    muscleFocus: "Erector spinae, glutes, hamstrings",
-    benefits: [
-      "Builds lower back and hip strength",
-      "Improves hip hinge mechanics",
-      "Supports safe lifting technique"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-barbell-good-morning-front.gif", alt: "Person performing good morning, front view" },
-      { src: "/musclewiki/Images/male-barbell-good-morning-side.gif", alt: "Person performing good morning, side view" }
-    ],
-    steps: [
-      "Stand with feet shoulder-width apart, barbell resting on your upper back.",
-      "Keeping your back straight, hinge at the hips to lower your torso forward.",
-      "Return to standing by driving your hips forward."
-    ],
-    proTips: [
-      "Keep your core braced and back flat.",
-      "Push hips back as far as possible."
+    title: "🧍‍♂️ Superman Hold / Reps",
+    video: "https://youtu.be/z6PJMT2y8GQ?si=U7mF7i0zBe3lmwv9",
+    instructions: [
+      "Lie face down on a mat with arms and legs extended.",
+      "Raise your chest, arms, and legs off the floor simultaneously.",
+      "Hold for 2–5 seconds, then lower and repeat."
     ],
     safetyTips: [
-      "Do not round your lower back.",
-      "Use a light weight until you master the form."
+      "Don’t jerk upward — lift with muscle control.",
+      "Keep your neck neutral, don’t look up or strain."
     ],
-    commonMistakes: [
-      "Letting knees bend too much.",
-      "Letting bar roll up your neck."
+    proTips: [
+      "Focus on squeezing your glutes and lower back at the top for maximum benefit."
+    ]
+  },
+  {
+    title: "🧍‍♂️ Bird-Dog (Core + Lower Back Stability)",
+    video: "https://youtu.be/wiFNA3sqjCA?si=tMoUt2xP8Xc5Thku",
+    instructions: [
+      "Start on hands and knees in a tabletop position.",
+      "Extend one arm forward and the opposite leg backward.",
+      "Keep hips level, hold briefly, and return to start.",
+      "Alternate sides."
+    ],
+    safetyTips: [
+      "Don't twist your hips — aim for a straight line.",
+      "Move slowly and deliberately to avoid losing balance."
+    ],
+    proTips: [
+      "Great warm-up for back day to improve core control and lumbar stability."
+    ]
+  },
+  {
+    title: "🧍‍♂️ Romanian Deadlift (RDL)",
+    video: "https://youtu.be/2SHsk9AzdjA?si=BNEM9NlOPQq5aJgV",
+    instructions: [
+      "Stand with feet shoulder-width apart, holding a barbell or dumbbells.",
+      "Slightly bend knees and hinge at hips, lowering the weights along your legs.",
+      "Stop when you feel a stretch in hamstrings and return by squeezing glutes."
+    ],
+    safetyTips: [
+      "Never round your lower back — keep it neutral throughout.",
+      "Don’t go too low if flexibility is lacking — depth isn’t everything."
+    ],
+    proTips: [
+      "Slight pause at the bottom builds time under tension and better posterior chain activation."
+    ]
+  },
+  {
+    title: "🧍‍♂️ Good Mornings (Advanced)",
+    video: "https://youtu.be/vxM6_9j85-A?si=5weIHVZqBaNIGY7H",
+    instructions: [
+      "Place a barbell on your upper traps like in a squat.",
+      "With a soft knee bend, hinge forward at the hips while keeping your back flat.",
+      "Lower until your torso is almost parallel to the ground, then return upright."
+    ],
+    safetyTips: [
+      "Start very light and build up — this is a high-risk, high-reward lift.",
+      "Always engage your core and glutes to protect your spine."
+    ],
+    proTips: [
+      "Best performed in power rack with safety pins — use slow tempo for maximum control."
     ]
   }
 ];
@@ -106,7 +126,7 @@ const LowerBack = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ lowerBack: "Lower Back", difficulty: "Difficulty" });
+      setTranslatedLabels({ lowerBack: "Lower Back" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -115,14 +135,8 @@ const LowerBack = () => {
     setError("");
     try {
       // Translate static labels
-      const [lowerBackLabel, difficultyLabel] = await Promise.all([
-        translateText("Lower Back", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        lowerBack: lowerBackLabel,
-        difficulty: difficultyLabel
-      });
+      const lowerBackLabel = await translateText("Lower Back", translateLanguage);
+      setTranslatedLabels({ lowerBack: lowerBackLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(lowerBackIntro.intro, translateLanguage),
@@ -130,37 +144,25 @@ const LowerBack = () => {
       ]);
       const cooldown = await Promise.all(lowerBackIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         lowerBackContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -280,67 +282,68 @@ const LowerBack = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video.replace('youtu.be/', 'www.youtube.com/embed/').replace('watch?v=', 'embed/').split('?')[0]}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}

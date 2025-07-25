@@ -19,135 +19,19 @@ const abdominalsIntro = {
 
 const abdominalsContent = [
   {
-    title: "Crunches",
-    difficulty: "Beginner",
-    muscleFocus: "Rectus abdominis (front abs)",
-    benefits: [
-      "Strengthens core muscles",
-      "Improves posture",
-      "Enhances stability"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-crunch-front.gif", alt: "Person performing a crunch, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-crunch-side.gif", alt: "Person performing a crunch, side view" }
-    ],
-    steps: [
-      "Lie flat on your back with your knees bent and feet flat on the floor, hip-width apart.",
-      "Place your fingertips lightly behind your ears. Avoid pulling on your neck.",
-      "Engage your core by drawing your belly button toward your spine.",
-      "Exhale as you lift your head, neck, and shoulders off the ground, keeping your lower back pressed to the floor.",
-      "Pause briefly at the top, then slowly lower back down with control.",
-      "Repeat for the desired number of repetitions."
-    ],
-    proTips: [
-      "Keep your chin slightly tucked to avoid neck strain.",
-      "Focus on using your abdominal muscles rather than pulling with your hands."
+    title: "💪 Demo Abdominal Exercise",
+    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    instructions: [
+      "Lie flat on your back with your knees bent and feet flat on the floor.",
+      "Place your hands behind your head and crunch your upper body toward your knees.",
+      "Lower back down slowly and repeat."
     ],
     safetyTips: [
-      "Do not jerk your head forward.",
-      "Stop if you feel any pain in your neck or lower back."
-    ],
-    commonMistakes: [
-      "Using momentum instead of muscle control.",
-      "Lifting too high and rounding the lower back."
-    ]
-  },
-  {
-    title: "Leg Raises",
-    difficulty: "Beginner",
-    muscleFocus: "Lower abdominals, hip flexors",
-    benefits: [
-      "Targets lower abdominal muscles",
-      "Improves hip flexibility",
-      "Strengthens core and lower back"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-leg-raises-front.gif", alt: "Person performing leg raises, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-leg-raises-side.gif", alt: "Person performing leg raises, side view" }
-    ],
-    steps: [
-      "Lie on your back with your arms at your sides, palms facing down.",
-      "Keep your legs together and as straight as possible.",
-      "Slowly raise your legs to a 90° angle, keeping your lower back pressed to the floor.",
-      "Pause at the top, then lower your legs back down with control. Do not let your heels touch the ground between reps.",
-      "Repeat for the desired number of repetitions."
+      "Do not pull on your neck with your hands.",
+      "Keep your lower back pressed to the floor."
     ],
     proTips: [
-      "Engage your core throughout the movement.",
-      "Move slowly to maximize muscle activation."
-    ],
-    safetyTips: [
-      "Avoid arching your lower back.",
-      "Stop if you feel discomfort in your lower back."
-    ],
-    commonMistakes: [
-      "Using momentum to swing legs up.",
-      "Letting heels rest on the ground between reps."
-    ]
-  },
-  {
-    title: "Plank",
-    difficulty: "Beginner",
-    muscleFocus: "Entire core, shoulders, glutes",
-    benefits: [
-      "Builds core endurance",
-      "Improves posture and balance",
-      "Strengthens shoulders and glutes"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-forearm-plank-front.gif", alt: "Person holding a forearm plank, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-forarm-plank-side.gif", alt: "Person holding a forearm plank, side view" }
-    ],
-    steps: [
-      "Place your forearms on the ground with elbows under your shoulders, arms parallel.",
-      "Extend your legs behind you, feet together, toes on the floor.",
-      "Lift your body to form a straight line from head to heels, engaging your core and glutes.",
-      "Hold this position, breathing steadily, for as long as you can maintain good form."
-    ],
-    proTips: [
-      "Keep your hips level; avoid letting them sag or pike up.",
-      "Look slightly ahead to keep your neck neutral."
-    ],
-    safetyTips: [
-      "Stop if you feel pain in your lower back or shoulders.",
-      "Maintain a straight line—do not let your hips drop."
-    ],
-    commonMistakes: [
-      "Holding your breath.",
-      "Letting hips sag or rise too high."
-    ]
-  },
-  {
-    title: "Russian Twist",
-    difficulty: "Intermediate",
-    muscleFocus: "Obliques, rectus abdominis",
-    benefits: [
-      "Strengthens obliques and rotational core muscles",
-      "Improves balance and coordination",
-      "Enhances functional movement"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-dumbbell-russian-twist-front.gif", alt: "Person performing Russian twist, front view" },
-      { src: "/musclewiki/Images/male-dumbbell-russian-twist-side.gif", alt: "Person performing Russian twist, side view" }
-    ],
-    steps: [
-      "Sit on the floor with knees bent and feet lifted off the ground (or heels down for easier version).",
-      "Lean back slightly, keeping your back straight and core engaged.",
-      "Hold your hands together or a weight in front of your chest.",
-      "Rotate your torso to the right, then to the left, moving your hands across your body each time.",
-      "Repeat for the desired number of repetitions."
-    ],
-    proTips: [
-      "Move slowly and with control for maximum benefit.",
-      "Keep your chest lifted and back straight."
-    ],
-    safetyTips: [
-      "Avoid rounding your lower back.",
-      "Stop if you feel discomfort in your spine."
-    ],
-    commonMistakes: [
-      "Using momentum instead of muscle control.",
-      "Letting feet drop to the floor (unless modifying for difficulty)."
+      "Exhale as you crunch up for better core engagement."
     ]
   }
 ];
@@ -176,7 +60,7 @@ const Abdominals = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ abdominals: "Abdominals", difficulty: "Difficulty" });
+      setTranslatedLabels({ abdominals: "Abdominals" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -185,14 +69,8 @@ const Abdominals = () => {
     setError("");
     try {
       // Translate static labels
-      const [abdominalsLabel, difficultyLabel] = await Promise.all([
-        translateText("Abdominals", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        abdominals: abdominalsLabel,
-        difficulty: difficultyLabel
-      });
+      const abdominalsLabel = await translateText("Abdominals", translateLanguage);
+      setTranslatedLabels({ abdominals: abdominalsLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(abdominalsIntro.intro, translateLanguage),
@@ -200,37 +78,25 @@ const Abdominals = () => {
       ]);
       const cooldown = await Promise.all(abdominalsIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         abdominalsContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -350,67 +216,68 @@ const Abdominals = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}

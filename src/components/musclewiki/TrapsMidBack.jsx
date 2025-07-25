@@ -19,63 +19,35 @@ const trapsMidBackIntro = {
 
 const trapsMidBackContent = [
   {
-    title: "Barbell Shrug",
-    difficulty: "Beginner",
-    muscleFocus: "Trapezius, upper back, forearms",
-    benefits: [
-      "Builds upper trap and grip strength",
-      "Improves posture and shoulder health",
-      "Supports neck and upper back stability"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-barbell-shrug-front.gif", alt: "Person performing barbell shrug, front view" },
-      { src: "/musclewiki/Images/male-barbell-shrug-side.gif", alt: "Person performing barbell shrug, side view" }
-    ],
-    steps: [
-      "Stand with your feet shoulder-width apart, holding a barbell in front of your thighs.",
-      "Shrug your shoulders up towards your ears, then lower back down."
-    ],
-    proTips: [
-      "Keep your arms straight throughout.",
-      "Squeeze at the top for maximum benefit."
+    title: "💪 Barbell Bent-Over Row",
+    video: "https://youtu.be/2OJOOmX6Wuw?si=psEIUtt0A03VUkyq",
+    instructions: [
+      "Hold a barbell with an overhand grip, bend at the hips until torso is ~45°.",
+      "Row the bar into your lower chest, squeezing shoulder blades together.",
+      "Lower with control and repeat."
     ],
     safetyTips: [
-      "Do not roll your shoulders.",
-      "Stop if you feel neck pain."
+      "Keep your back flat and core braced to protect your spine.",
+      "Avoid jerking the weight or using momentum."
     ],
-    commonMistakes: [
-      "Shrugging with bent arms.",
-      "Using momentum instead of muscle."
+    proTips: [
+      "Use a slightly underhand grip if you want more lat activation; overhand hits more upper back."
     ]
   },
   {
-    title: "Seated Cable Row",
-    difficulty: "Intermediate",
-    muscleFocus: "Rhomboids, middle traps, lats, biceps",
-    benefits: [
-      "Builds mid back and arm strength",
-      "Improves posture and scapular control",
-      "Supports pulling movements"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-machine-seated-cable-row-front.gif", alt: "Person performing seated cable row, front view" },
-      { src: "/musclewiki/Images/male-machine-seated-cable-row-side.gif", alt: "Person performing seated cable row, side view" }
-    ],
-    steps: [
-      "Sit at a cable row machine and grip the handle with both hands.",
-      "Pull the handle towards your torso, squeezing your shoulder blades together, then return with control."
-    ],
-    proTips: [
-      "Keep your chest up and back straight.",
-      "Pull with your elbows, not your hands."
+    title: "💪 Lever T-Bar Row",
+    video: "https://youtu.be/AleqQsqjyCg?si=TwQRd1AqQKfGwEvi",
+    instructions: [
+      "Stand over a T-bar row machine and grab the handles.",
+      "With a flat back, pull the handles to your chest, elbows tucked.",
+      "Slowly return to the starting position and repeat."
     ],
     safetyTips: [
-      "Do not round your lower back.",
-      "Use a weight you can control."
+      "Don't round your lower back — keep a strong hinge and controlled pull.",
+      "Avoid bouncing at the bottom — this strains your spine."
     ],
-    commonMistakes: [
-      "Leaning too far back.",
-      "Using momentum to pull the handle."
+    proTips: [
+      "Try narrow grip for mid back, and wide grip to shift focus to upper back and rear delts."
     ]
   }
 ];
@@ -104,7 +76,7 @@ const TrapsMidBack = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ trapsMidBack: "Traps & Mid Back", difficulty: "Difficulty" });
+      setTranslatedLabels({ trapsMidBack: "Traps & Mid Back" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -113,14 +85,8 @@ const TrapsMidBack = () => {
     setError("");
     try {
       // Translate static labels
-      const [trapsMidBackLabel, difficultyLabel] = await Promise.all([
-        translateText("Traps & Mid Back", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        trapsMidBack: trapsMidBackLabel,
-        difficulty: difficultyLabel
-      });
+      const trapsMidBackLabel = await translateText("Traps & Mid Back", translateLanguage);
+      setTranslatedLabels({ trapsMidBack: trapsMidBackLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(trapsMidBackIntro.intro, translateLanguage),
@@ -128,37 +94,25 @@ const TrapsMidBack = () => {
       ]);
       const cooldown = await Promise.all(trapsMidBackIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         trapsMidBackContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -278,67 +232,68 @@ const TrapsMidBack = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video.replace('youtu.be/', 'www.youtube.com/embed/').replace('watch?v=', 'embed/').split('?')[0]}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}

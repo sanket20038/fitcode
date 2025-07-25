@@ -19,64 +19,51 @@ const quadsIntro = {
 
 const quadsContent = [
   {
-    title: "Barbell Squat",
-    difficulty: "Intermediate",
-    muscleFocus: "Quadriceps, glutes, hamstrings, core",
-    benefits: [
-      "Builds lower body and core strength",
-      "Improves balance and mobility",
-      "Supports athletic performance"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-barbell-squat-front.gif", alt: "Person performing barbell squat, front view" },
-      { src: "/musclewiki/Images/male-barbell-squat-side.gif", alt: "Person performing barbell squat, side view" }
-    ],
-    steps: [
-      "Stand with your feet shoulder-width apart, barbell resting on your upper back.",
-      "Squat down by bending your knees and hips, keeping your chest up.",
-      "Push through your heels to return to standing."
-    ],
-    proTips: [
-      "Keep your knees tracking over your toes.",
-      "Brace your core throughout the movement."
+    title: "💪 Sled 45-Degree Leg Press (Wide Stance)",
+    video: "https://youtu.be/O6VPCg2gmfc?si=nyQhItsYSecDgkvk",
+    instructions: [
+      "Sit on the leg press machine with feet wide on the platform, toes slightly out.",
+      "Lower the sled until your knees are at 90°, keeping your knees tracking over your toes.",
+      "Press the sled back up without locking your knees."
     ],
     safetyTips: [
-      "Do not let your knees cave inward.",
-      "Use a spotter or safety bars if lifting heavy."
+      "Don’t let your lower back round off the pad — keep your hips down.",
+      "Control the descent and avoid bouncing at the bottom."
     ],
-    commonMistakes: [
-      "Letting heels lift off the ground.",
-      "Rounding your back at the bottom."
+    proTips: [
+      "Wide stance targets inner quads and adductors more."
     ]
   },
   {
-    title: "Leg Extension",
-    difficulty: "Beginner",
-    muscleFocus: "Quadriceps",
-    benefits: [
-      "Isolates and strengthens the quads",
-      "Improves knee joint health",
-      "Accessible for all fitness levels"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-machine-leg-extension-front.gif", alt: "Person performing leg extension, front view" },
-      { src: "/musclewiki/Images/male-machine-leg-extension-side.gif", alt: "Person performing leg extension, side view" }
-    ],
-    steps: [
-      "Sit on a leg extension machine with your ankles under the pad.",
-      "Extend your legs until they are straight, then lower back down."
-    ],
-    proTips: [
-      "Pause at the top for a stronger contraction.",
-      "Move slowly for maximum muscle activation."
+    title: "💪 Dumbbell Lunges",
+    video: "https://youtu.be/SDtTB8o3jPQ?si=5xDKleJtUsj3IS7P",
+    instructions: [
+      "Stand tall holding dumbbells at your sides.",
+      "Step forward and lower your back knee toward the floor, keeping your front knee over your ankle.",
+      "Push back to the starting position and alternate legs."
     ],
     safetyTips: [
-      "Do not lock your knees at the top.",
-      "Use a weight you can control."
+      "Don’t let your front knee travel past your toes.",
+      "Keep your torso upright and core engaged."
     ],
-    commonMistakes: [
-      "Swinging the weight up.",
-      "Not lowering legs fully."
+    proTips: [
+      "Take a longer step for more glute/hamstring, shorter for more quad focus."
+    ]
+  },
+  {
+    title: "💪 Dumbbell Front Squat",
+    video: "https://youtu.be/XrINmexhx7w?si=NfAEb4_sHO4TAkfQ",
+    instructions: [
+      "Hold dumbbells at your shoulders, elbows high.",
+      "Squat down, keeping your chest up and knees tracking over your toes.",
+      "Push through your heels to return to standing."
+    ],
+    safetyTips: [
+      "Keep your elbows up to prevent the dumbbells from pulling you forward.",
+      "Don’t let your heels come off the ground."
+    ],
+    proTips: [
+      "Pause at the bottom for extra quad activation."
     ]
   }
 ];
@@ -105,7 +92,7 @@ const Quads = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ quads: "Quads", difficulty: "Difficulty" });
+      setTranslatedLabels({ quads: "Quads" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -114,14 +101,8 @@ const Quads = () => {
     setError("");
     try {
       // Translate static labels
-      const [quadsLabel, difficultyLabel] = await Promise.all([
-        translateText("Quads", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        quads: quadsLabel,
-        difficulty: difficultyLabel
-      });
+      const quadsLabel = await translateText("Quads", translateLanguage);
+      setTranslatedLabels({ quads: quadsLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(quadsIntro.intro, translateLanguage),
@@ -129,37 +110,25 @@ const Quads = () => {
       ]);
       const cooldown = await Promise.all(quadsIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         quadsContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -279,67 +248,68 @@ const Quads = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video.replace('youtu.be/', 'www.youtube.com/embed/').replace('watch?v=', 'embed/').split('?')[0]}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}

@@ -19,33 +19,35 @@ const forearmsIntro = {
 
 const forearmsContent = [
   {
-    title: "Wrist Curl",
-    difficulty: "Beginner",
-    muscleFocus: "Forearm flexors, wrists",
-    benefits: [
-      "Strengthens forearm muscles",
-      "Improves grip and wrist stability",
-      "Supports daily activities and sports"
-    ],
-    images: [
-      { src: "/musclewiki/Images/barbell-wristcurl-male-front.gif", alt: "Person performing wrist curl, front view" },
-      { src: "/musclewiki/Images/barbell-wristcurl-male-side.gif", alt: "Person performing wrist curl, side view" }
-    ],
-    steps: [
-      "Sit on a bench with your forearms resting on your thighs, holding a barbell with an underhand grip.",
-      "Curl your wrists upward, then lower back down."
-    ],
-    proTips: [
-      "Move slowly for maximum muscle activation.",
-      "Keep your forearms flat on your thighs throughout."
+    title: "💪 Barbell Standing Back Wrist Curl (Forearms)",
+    video: "https://youtu.be/TYqamR464cQ?si=4I3_iED694ek7IsY",
+    instructions: [
+      "Sit or stand and hold a barbell behind your back with palms facing away.",
+      "Let the bar roll down to your fingertips, then curl it back using your wrists.",
+      "Squeeze at the top and repeat."
     ],
     safetyTips: [
-      "Do not use excessive weight.",
-      "Stop if you feel wrist pain."
+      "Start with light weight to avoid wrist strain.",
+      "Keep your arms extended but not locked."
     ],
-    commonMistakes: [
-      "Letting forearms lift off thighs.",
-      "Using momentum instead of muscle control."
+    proTips: [
+      "Hold the contraction at the top for 2–3 seconds to build grip strength and forearm size."
+    ]
+  },
+  {
+    title: "💪 Barbell Reverse Wrist Curl (Forearms)",
+    video: "https://youtu.be/fBPiGbrH-z8?si=qhqgXlea3s1d99WY",
+    instructions: [
+      "Sit and rest your forearms on your thighs, holding a barbell with palms down.",
+      "Let the bar roll to your fingertips, then curl your wrists upward.",
+      "Lower slowly and repeat."
+    ],
+    safetyTips: [
+      "Don’t use momentum — let your forearms and wrists do all the work.",
+      "Use a padded surface to avoid arm bruising."
+    ],
+    proTips: [
+      "Add this at the end of your workout for an intense forearm finisher."
     ]
   }
 ];
@@ -62,8 +64,7 @@ const Forearms = () => {
   const [translateLanguage, setTranslateLanguage] = useState("hi");
   const [translatedContent, setTranslatedContent] = useState([]);
   const [translatedLabels, setTranslatedLabels] = useState({
-    forearms: "Forearms",
-    difficulty: "Difficulty"
+    forearms: "Forearms"
   });
   const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -74,7 +75,7 @@ const Forearms = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ forearms: "Forearms", difficulty: "Difficulty" });
+      setTranslatedLabels({ forearms: "Forearms" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -83,14 +84,8 @@ const Forearms = () => {
     setError("");
     try {
       // Translate static labels
-      const [forearmsLabel, difficultyLabel] = await Promise.all([
-        translateText("Forearms", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        forearms: forearmsLabel,
-        difficulty: difficultyLabel
-      });
+      const forearmsLabel = await translateText("Forearms", translateLanguage);
+      setTranslatedLabels({ forearms: forearmsLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(forearmsIntro.intro, translateLanguage),
@@ -98,37 +93,25 @@ const Forearms = () => {
       ]);
       const cooldown = await Promise.all(forearmsIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         forearmsContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -145,7 +128,7 @@ const Forearms = () => {
     setTranslateLanguage(e.target.value);
     setTranslateEnabled(false);
     setTranslatedContent([]);
-    setTranslatedLabels({ forearms: "Forearms", difficulty: "Difficulty" });
+    setTranslatedLabels({ forearms: "Forearms" });
     setTranslatedIntro(null);
     setError("");
   };
@@ -248,67 +231,68 @@ const Forearms = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video.replace('youtu.be/', 'www.youtube.com/embed/').replace('watch?v=', 'embed/').split('?')[0]}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}

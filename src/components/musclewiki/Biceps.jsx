@@ -19,188 +19,67 @@ const bicepsIntro = {
 
 const bicepsContent = [
   {
-    title: "Chin Ups",
-    difficulty: "Intermediate",
-    muscleFocus: "Biceps brachii, forearms, back",
-    benefits: [
-      "Builds upper body and arm strength",
-      "Improves grip strength",
-      "Engages multiple muscle groups"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-chinup-front.gif", alt: "Person performing chin up, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-chinup-side.gif", alt: "Person performing chin up, side view" }
-    ],
-    steps: [
-      "Grab the bar shoulder width apart with a supinated grip (palms facing you).",
-      "With your body hanging and arms fully extended, pull yourself up until your chin is past the bar.",
-      "Slowly return to starting position. Repeat."
-    ],
-    proTips: [
-      "Engage your core to prevent swinging.",
-      "Pull your chest toward the bar for better biceps activation."
+    title: "💪 Weighted Standing Curl (With Plate)",
+    video: "https://youtu.be/PoWOEi42wHo?si=0wABgpZnXghs4BSE",
+    instructions: [
+      "Stand tall holding a weight plate with both hands from the sides.",
+      "Keep elbows close to your body and curl the plate up toward your chest.",
+      "Squeeze your biceps at the top, then slowly lower the plate back down."
     ],
     safetyTips: [
-      "Avoid jerking or kipping movements.",
-      "Lower yourself with control to protect your elbows."
+      "Don’t swing your back — use controlled motion to avoid injury.",
+      "Keep your wrists neutral to prevent strain."
     ],
-    commonMistakes: [
-      "Using momentum instead of muscle strength.",
-      "Letting shoulders shrug up toward ears."
+    proTips: [
+      "Pause for a second at the top of the curl for maximum biceps contraction."
     ]
   },
   {
-    title: "Dumbbells Curl",
-    difficulty: "Beginner",
-    muscleFocus: "Biceps brachii, brachialis, forearms",
-    benefits: [
-      "Isolates and strengthens the biceps",
-      "Improves arm definition",
-      "Enhances grip strength"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-dumbbell-curl-front.gif", alt: "Person performing dumbbell curl, front view" },
-      { src: "/musclewiki/Images/male-dumbbell-curl-side.gif", alt: "Person performing dumbbell curl, side view" }
-    ],
-    steps: [
-      "Stand up straight with a dumbbell in each hand at arm's length.",
-      "Raise one dumbbell and twist your forearm until it is vertical and your palm faces the shoulder.",
-      "Lower to original position and repeat with opposite arm."
-    ],
-    proTips: [
-      "Keep your elbows close to your torso.",
-      "Squeeze your biceps at the top of the movement."
+    title: "💪 Incline Dumbbell Curl",
+    video: "https://youtu.be/wSAP_kGQ_WQ?si=wu445F_KI5XY1_oo",
+    instructions: [
+      "Sit back on an incline bench with a dumbbell in each hand.",
+      "Let your arms hang straight down and curl the dumbbells up without moving your upper arms.",
+      "Lower back slowly and repeat."
     ],
     safetyTips: [
-      "Avoid swinging your body or using momentum.",
-      "Keep your wrists straight to prevent strain."
+      "Don't let the dumbbells drop — control the negative (lowering phase) to avoid elbow strain.",
+      "Adjust the bench to a safe incline (~45–60°) to avoid excessive shoulder stretch."
     ],
-    commonMistakes: [
-      "Letting elbows drift forward or outward.",
-      "Not fully extending arms at the bottom."
+    proTips: [
+      "This position places your biceps in a fully stretched position, so keep your form strict for deep activation."
     ]
   },
   {
-    title: "Dumbbells Hammer Curls",
-    difficulty: "Beginner",
-    muscleFocus: "Brachialis, biceps brachii, forearms",
-    benefits: [
-      "Targets both biceps and forearms",
-      "Improves grip and arm strength",
-      "Reduces risk of muscle imbalances"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-dumbbell-hammer-curl-front_JbvhNLU.gif", alt: "Person performing hammer curl, front view" },
-      { src: "/musclewiki/Images/male-dumbbell-hammer-curl-side_io6oHN7.gif", alt: "Person performing hammer curl, side view" }
-    ],
-    steps: [
-      "Hold the dumbbells with a neutral grip (thumbs facing the ceiling).",
-      "Slowly lift the dumbbell up to chest height.",
-      "Return to starting position and repeat."
-    ],
-    proTips: [
-      "Keep your upper arms stationary.",
-      "Move slowly for maximum muscle engagement."
+    title: "💪 Dumbbell Concentration Curl",
+    video: "https://youtu.be/JnefPGaLLSs?si=qrsUbOyXmKVnsrPu",
+    instructions: [
+      "Sit on a bench, lean forward, and rest one elbow against your inner thigh.",
+      "Curl the dumbbell up while keeping your upper arm stationary.",
+      "Squeeze at the top and slowly lower the weight."
     ],
     safetyTips: [
-      "Avoid swinging the weights.",
-      "Keep your wrists neutral."
+      "Avoid using your back or swinging the dumbbell — isolate the biceps fully.",
+      "Don’t lock your elbow at the bottom."
     ],
-    commonMistakes: [
-      "Using momentum to lift the weights.",
-      "Letting elbows flare out."
+    proTips: [
+      "Twist your wrist slightly inward at the top (supination) for a peak contraction."
     ]
   },
   {
-    title: "Dumbbells Reverse Curls",
-    difficulty: "Intermediate",
-    muscleFocus: "Brachioradialis, biceps brachii, forearms",
-    benefits: [
-      "Strengthens forearms and biceps",
-      "Improves grip strength",
-      "Targets different arm muscles than standard curls"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-dumbbell-reverse-curl-front.gif", alt: "Person performing reverse curl, front view" },
-      { src: "/musclewiki/Images/male-dumbbell-reverse-curl-side.gif", alt: "Person performing reverse curl, side view" }
-    ],
-    steps: [
-      "Grab the dumbbells with a pronated (overhand) grip. You can do this exercise thumbless if it's more comfortable on your wrists.",
-      "Flex at the elbows until your biceps touch your forearms. Try not to let your elbows flare outward."
-    ],
-    proTips: [
-      "Keep your wrists straight throughout the movement.",
-      "Lower the weights slowly for extra control."
+    title: "💪 Barbell Curl",
+    video: "https://youtu.be/45iriPT8oEI?si=belbObUxq5c-ZCV-",
+    instructions: [
+      "Hold a barbell with an underhand grip, shoulder-width apart.",
+      "Keep your elbows tucked in and curl the bar up to your chest.",
+      "Lower under control without swinging."
     ],
     safetyTips: [
-      "Avoid using too much weight.",
-      "Stop if you feel wrist pain."
-    ],
-    commonMistakes: [
-      "Letting wrists bend excessively.",
-      "Using momentum to lift the weights."
-    ]
-  },
-  {
-    title: "Barbell Curl",
-    difficulty: "Beginner",
-    muscleFocus: "Biceps brachii, brachialis, forearms",
-    benefits: [
-      "Builds overall arm strength",
-      "Improves muscle definition",
-      "Allows for progressive overload"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-barbell-curl-front_uKPCb8P.gif", alt: "Person performing barbell curl, front view" },
-      { src: "/musclewiki/Images/male-barbell-curl-side_NN1ZFmi.gif", alt: "Person performing barbell curl, side view" }
-    ],
-    steps: [
-      "While holding the upper arms stationary, curl the weights forward while contracting the biceps as you breathe out.",
-      "Continue the movement until your biceps are fully contracted and the bar is at shoulder level.",
-      "Hold the contracted position for a second and squeeze the biceps hard.",
-      "Slowly bring the weight back down to the starting position."
+      "Avoid rocking your body or using momentum — keep the movement slow and controlled.",
+      "Don’t let the bar roll your wrists forward."
     ],
     proTips: [
-      "Keep your elbows tucked in at your sides.",
-      "Exhale as you lift the bar."
-    ],
-    safetyTips: [
-      "Do not arch your back.",
-      "Use a weight you can control."
-    ],
-    commonMistakes: [
-      "Swinging the bar or using momentum.",
-      "Not fully extending arms at the bottom."
-    ]
-  },
-  {
-    title: "Reverse Barbell Curl",
-    difficulty: "Advanced",
-    muscleFocus: "Brachioradialis, biceps brachii, forearms",
-    benefits: [
-      "Targets forearms and biceps",
-      "Improves grip and wrist strength",
-      "Adds variety to arm training"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-barbell-reverse-curl-front_ysdi82M.gif", alt: "Person performing reverse barbell curl, front view" },
-      { src: "/musclewiki/Images/male-barbell-reverse-curl-side_EGHsY3f.gif", alt: "Person performing reverse barbell curl, side view" }
-    ],
-    steps: [
-      "Take a double overhand grip that's about shoulder width. Flex your elbows while keeping your elbows tucked in. Try not to let them flare out.",
-      "Curl until your forearm presses into your bicep. Then fully extend your elbows at the bottom of each rep."
-    ],
-    proTips: [
-      "Keep your elbows close to your body.",
-      "Lower the bar slowly for more muscle activation."
-    ],
-    safetyTips: [
-      "Avoid using excessive weight.",
-      "Stop if you feel wrist or elbow pain."
-    ],
-    commonMistakes: [
-      "Letting elbows flare out.",
-      "Using momentum to lift the bar."
+      "Use a slightly narrower grip for inner biceps or wider grip for outer biceps focus."
     ]
   }
 ];
@@ -217,8 +96,7 @@ const Biceps = () => {
   const [translateLanguage, setTranslateLanguage] = useState("hi");
   const [translatedContent, setTranslatedContent] = useState([]);
   const [translatedLabels, setTranslatedLabels] = useState({
-    biceps: "Biceps",
-    difficulty: "Difficulty"
+    biceps: "Biceps"
   });
   const [translatedIntro, setTranslatedIntro] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -229,7 +107,7 @@ const Biceps = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ biceps: "Biceps", difficulty: "Difficulty" });
+      setTranslatedLabels({ biceps: "Biceps" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -238,14 +116,8 @@ const Biceps = () => {
     setError("");
     try {
       // Translate static labels
-      const [bicepsLabel, difficultyLabel] = await Promise.all([
-        translateText("Biceps", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        biceps: bicepsLabel,
-        difficulty: difficultyLabel
-      });
+      const bicepsLabel = await translateText("Biceps", translateLanguage);
+      setTranslatedLabels({ biceps: bicepsLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(bicepsIntro.intro, translateLanguage),
@@ -253,37 +125,25 @@ const Biceps = () => {
       ]);
       const cooldown = await Promise.all(bicepsIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         bicepsContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -300,7 +160,7 @@ const Biceps = () => {
     setTranslateLanguage(e.target.value);
     setTranslateEnabled(false);
     setTranslatedContent([]);
-    setTranslatedLabels({ biceps: "Biceps", difficulty: "Difficulty" });
+    setTranslatedLabels({ biceps: "Biceps" });
     setTranslatedIntro(null);
     setError("");
   };
@@ -403,67 +263,68 @@ const Biceps = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video.replace('youtu.be/', 'www.youtube.com/embed/').replace('watch?v=', 'embed/').split('?')[0]}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}

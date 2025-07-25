@@ -19,63 +19,68 @@ const chestIntro = {
 
 const chestContent = [
   {
-    title: "Push Up",
-    difficulty: "Beginner",
-    muscleFocus: "Pectoralis major, triceps, shoulders",
-    benefits: [
-      "Builds upper body and core strength",
-      "Improves posture",
-      "Enhances functional movement"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-pushup-front.gif", alt: "Person performing push up, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-pushup-side.gif", alt: "Person performing push up, side view" }
-    ],
-    steps: [
-      "Start in a plank position with your hands under your shoulders.",
-      "Lower your body until your chest nearly touches the floor, then push back up."
-    ],
-    proTips: [
-      "Keep your body in a straight line from head to heels.",
-      "Engage your core and glutes for stability."
+    title: "💪 Chest Dips",
+    video: "https://youtu.be/FbOq-zV7lAQ?si=ceqUD2jMUnAMGiQF",
+    instructions: [
+      "Position your hands shoulder-width apart on parallel bars or a bench.",
+      "Lower your body by bending your elbows to a 90° angle.",
+      "Push back up by extending your arms fully to return to the starting position.",
+      "Keep your core tight and chest upright."
     ],
     safetyTips: [
-      "Do not let your hips sag or pike up.",
-      "Stop if you feel pain in your shoulders or wrists."
+      "Avoid going too deep — it can stress your shoulder joints. Stop when upper arms are parallel to the floor.",
+      "Maintain control throughout to prevent shoulder strain and wobble."
     ],
-    commonMistakes: [
-      "Flaring elbows out too wide.",
-      "Letting hips drop or rise."
+    proTips: [
+      "To target chest more, lean your torso forward slightly during the dip."
     ]
   },
   {
-    title: "Dumbbell Bench Press",
-    difficulty: "Beginner",
-    muscleFocus: "Pectoralis major, triceps, shoulders",
-    benefits: [
-      "Builds chest and arm strength",
-      "Improves muscle balance",
-      "Allows for greater range of motion than barbell press"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-dumbbell-bench-press-front.gif", alt: "Person performing dumbbell bench press, front view" },
-      { src: "/musclewiki/Images/male-dumbbell-bench-press-side.gif", alt: "Person performing dumbbell bench press, side view" }
-    ],
-    steps: [
-      "Lie on a bench with a dumbbell in each hand at chest level.",
-      "Press the dumbbells upward until your arms are fully extended, then lower them back down."
-    ],
-    proTips: [
-      "Keep your feet flat on the floor for stability.",
-      "Lower the dumbbells slowly for more muscle activation."
+    title: "💪 Dumbbell Fly",
+    video: "https://youtu.be/50-EQW7jH10?si=lDTF0tyw5YCJfiaG",
+    instructions: [
+      "Lie on a bench with a dumbbell in each hand, arms extended above your chest.",
+      "With a slight bend in your elbows, lower the weights out to your sides until you feel a stretch in your chest.",
+      "Bring the dumbbells back together above your chest, squeezing at the top."
     ],
     safetyTips: [
-      "Do not arch your back excessively.",
+      "Don’t let your elbows drop too low — stop when your upper arms are parallel to the floor.",
+      "Use a light to moderate weight to avoid shoulder strain."
+    ],
+    proTips: [
+      "Focus on a slow eccentric (lowering) phase for maximum chest activation."
+    ]
+  },
+  {
+    title: "💪 Incline Dumbbell Press",
+    video: "https://youtu.be/IBuBCzoVvFw?si=A6yLDNGM6h_K5mg-",
+    instructions: [
+      "Set an incline bench to 30–45° and lie back with dumbbells at chest level.",
+      "Press the weights up until your arms are fully extended, then lower back down with control.",
+      "Keep your feet flat and core engaged throughout."
+    ],
+    safetyTips: [
+      "Don’t arch your back excessively — keep your lower back in contact with the bench.",
       "Use a spotter if lifting heavy."
     ],
-    commonMistakes: [
-      "Letting elbows drop below the bench level.",
-      "Bouncing weights off the chest."
+    proTips: [
+      "Squeeze your chest at the top and lower the weights slowly for more muscle growth."
+    ]
+  },
+  {
+    title: "💪 Barbell Bench Press",
+    video: "https://youtu.be/cPMOikvTlgc?si=ZVX4TACRwqGOVhf1",
+    instructions: [
+      "Lie on a flat bench, grip the bar slightly wider than shoulder-width.",
+      "Lower the bar to your mid-chest, keeping elbows at about 75°.",
+      "Press the bar back up to the starting position."
+    ],
+    safetyTips: [
+      "Always use a spotter for safety, especially with heavy weights.",
+      "Don’t bounce the bar off your chest — control the descent."
+    ],
+    proTips: [
+      "Plant your feet firmly and drive through your heels for more power."
     ]
   }
 ];
@@ -104,7 +109,7 @@ const Chest = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ chest: "Chest", difficulty: "Difficulty" });
+      setTranslatedLabels({ chest: "Chest" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -113,14 +118,8 @@ const Chest = () => {
     setError("");
     try {
       // Translate static labels
-      const [chestLabel, difficultyLabel] = await Promise.all([
-        translateText("Chest", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        chest: chestLabel,
-        difficulty: difficultyLabel
-      });
+      const chestLabel = await translateText("Chest", translateLanguage);
+      setTranslatedLabels({ chest: chestLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(chestIntro.intro, translateLanguage),
@@ -128,37 +127,25 @@ const Chest = () => {
       ]);
       const cooldown = await Promise.all(chestIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         chestContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -278,67 +265,68 @@ const Chest = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video.replace('youtu.be/', 'www.youtube.com/embed/').replace('watch?v=', 'embed/').split('?')[0]}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}

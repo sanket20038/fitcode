@@ -19,63 +19,19 @@ const obliquesIntro = {
 
 const obliquesContent = [
   {
-    title: "Russian Twist",
-    difficulty: "Beginner",
-    muscleFocus: "Obliques, rectus abdominis, hip flexors",
-    benefits: [
-      "Strengthens obliques and rotational core muscles",
-      "Improves balance and coordination",
-      "Enhances functional movement"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-russian-twist-front.gif", alt: "Person performing Russian twist, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-russian-twist-side.gif", alt: "Person performing Russian twist, side view" }
-    ],
-    steps: [
-      "Sit on the floor with your knees bent and feet lifted.",
-      "Lean back slightly and twist your torso to each side, tapping the floor beside you."
-    ],
-    proTips: [
-      "Keep your chest lifted and back straight.",
-      "Move slowly and with control for maximum benefit."
+    title: "💪 Demo Oblique Exercise",
+    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    instructions: [
+      "Sit on the floor with your knees bent and feet flat.",
+      "Lean back slightly and twist your torso to each side, tapping the floor beside you.",
+      "Repeat for reps."
     ],
     safetyTips: [
-      "Avoid rounding your lower back.",
-      "Stop if you feel discomfort in your spine."
-    ],
-    commonMistakes: [
-      "Using momentum instead of muscle control.",
-      "Letting feet drop to the floor."
-    ]
-  },
-  {
-    title: "Side Plank",
-    difficulty: "Intermediate",
-    muscleFocus: "Obliques, glutes, shoulders",
-    benefits: [
-      "Builds lateral core strength",
-      "Improves balance and stability",
-      "Supports spine health"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-side-plank-front.gif", alt: "Person performing side plank, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-side-plank-side.gif", alt: "Person performing side plank, side view" }
-    ],
-    steps: [
-      "Lie on your side with your elbow under your shoulder and legs stacked.",
-      "Lift your hips to form a straight line from head to feet, hold, then lower."
+      "Keep your back straight and avoid rounding your lower back.",
+      "Move slowly and with control."
     ],
     proTips: [
-      "Keep your hips lifted and body in a straight line.",
-      "Engage your glutes and core for stability."
-    ],
-    safetyTips: [
-      "Do not let your hips sag.",
-      "Stop if you feel shoulder pain."
-    ],
-    commonMistakes: [
-      "Letting hips drop or rotate.",
-      "Holding your breath."
+      "Exhale as you twist for better core engagement."
     ]
   }
 ];
@@ -104,7 +60,7 @@ const Obliques = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ obliques: "Obliques", difficulty: "Difficulty" });
+      setTranslatedLabels({ obliques: "Obliques" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -113,14 +69,8 @@ const Obliques = () => {
     setError("");
     try {
       // Translate static labels
-      const [obliquesLabel, difficultyLabel] = await Promise.all([
-        translateText("Obliques", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        obliques: obliquesLabel,
-        difficulty: difficultyLabel
-      });
+      const obliquesLabel = await translateText("Obliques", translateLanguage);
+      setTranslatedLabels({ obliques: obliquesLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(obliquesIntro.intro, translateLanguage),
@@ -128,37 +78,25 @@ const Obliques = () => {
       ]);
       const cooldown = await Promise.all(obliquesIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         obliquesContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -278,67 +216,68 @@ const Obliques = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}

@@ -19,93 +19,82 @@ const shoulderIntro = {
 
 const shoulderContent = [
   {
-    title: "Pike Push Up",
-    difficulty: "Beginner",
-    muscleFocus: "Deltoids, triceps, upper chest",
-    benefits: [
-      "Builds shoulder and upper body strength",
-      "Improves pressing power",
-      "Supports shoulder health"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-bodyweight-pike-pushup-front.gif", alt: "Person performing pike push up, front view" },
-      { src: "/musclewiki/Images/male-bodyweight-pike-pushup-side.gif", alt: "Person performing pike push up, side view" }
-    ],
-    steps: [
-      "Start in a push up position, then raise your hips so your body forms an inverted V shape.",
-      "Bend your elbows to lower your head towards the ground, then push back up."
-    ],
-    proTips: [
-      "Keep your elbows tucked in as you lower.",
-      "Push through your palms for more power."
+    title: "💪 Dumbbell Lateral Raise",
+    video: "https://youtu.be/CbXvGxeMGjg?si=oarX5tu_jNOtABkr",
+    instructions: [
+      "Stand upright holding dumbbells at your sides, palms facing inward.",
+      "With a slight bend in your elbows, raise the dumbbells out to the sides until shoulder height.",
+      "Lower with control — don’t let gravity drop the weights."
     ],
     safetyTips: [
-      "Do not let your head touch the floor.",
-      "Stop if you feel shoulder pain."
+      "Don’t swing or shrug — isolate the side delts, not traps.",
+      "Use light to moderate weight to maintain strict form."
     ],
-    commonMistakes: [
-      "Letting elbows flare out.",
-      "Dropping hips too low."
+    proTips: [
+      "Slightly tilt forward and stop just below horizontal for constant shoulder tension."
     ]
   },
   {
-    title: "Dumbbell Shoulder Press",
-    difficulty: "Beginner",
-    muscleFocus: "Deltoids, triceps, upper chest",
-    benefits: [
-      "Builds shoulder and arm strength",
-      "Improves overhead pressing ability",
-      "Enhances upper body stability"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-dumbbell-shoulder-press-front.gif", alt: "Person performing dumbbell shoulder press, front view" },
-      { src: "/musclewiki/Images/male-dumbbell-shoulder-press-side.gif", alt: "Person performing dumbbell shoulder press, side view" }
-    ],
-    steps: [
-      "Sit on a bench with back support, hold a dumbbell in each hand at shoulder height.",
-      "Press the dumbbells upward until your arms are fully extended, then lower them back down."
-    ],
-    proTips: [
-      "Keep your core tight and feet flat on the floor.",
-      "Exhale as you press up."
+    title: "💪 Arnold Press (Shoulder)",
+    video: "https://youtu.be/QZNQ3wXO32A?si=oWJpFpZq1OsbFicU",
+    instructions: [
+      "Sit or stand holding dumbbells in front of you, palms facing your chest.",
+      "Rotate your palms outward while pressing up overhead.",
+      "Reverse the movement as you bring the dumbbells down."
     ],
     safetyTips: [
-      "Do not arch your back excessively.",
-      "Use a weight you can control."
+      "Keep the movement smooth and controlled — avoid jerking through the rotation.",
+      "If seated, keep your back pressed against the pad."
     ],
-    commonMistakes: [
-      "Letting elbows drop too low.",
-      "Using momentum to press."
+    proTips: [
+      "This movement hits all 3 heads of the delts — excellent for full shoulder development."
     ]
   },
   {
-    title: "Dumbbell Lateral Raise",
-    difficulty: "Beginner",
-    muscleFocus: "Deltoids, upper traps",
-    benefits: [
-      "Isolates and strengthens the side delts",
-      "Improves shoulder width",
-      "Enhances upper body aesthetics"
-    ],
-    images: [
-      { src: "/musclewiki/Images/male-dumbbell-lateral-raise-front.gif", alt: "Person performing dumbbell lateral raise, front view" },
-      { src: "/musclewiki/Images/male-dumbbell-lateral-raise-side.gif", alt: "Person performing dumbbell lateral raise, side view" }
-    ],
-    steps: [
-      "Stand with a dumbbell in each hand at your sides.",
-      "Raise your arms out to the sides until they are parallel to the floor, then lower them back down."
-    ],
-    proTips: [
-      "Move slowly for maximum muscle activation.",
-      "Keep a slight bend in your elbows."
+    title: "💪 Dumbbell Rear Delt Row",
+    video: "https://youtu.be/ghRtPXVSKlU?si=X_qFhN462_ueXQtQ",
+    instructions: [
+      "Bend over with dumbbells in hand, keeping a neutral spine.",
+      "Pull the weights out and slightly back, focusing on squeezing your rear delts.",
+      "Lower the dumbbells slowly and repeat."
     ],
     safetyTips: [
-      "Do not swing the weights.",
-      "Stop if you feel shoulder pain."
+      "Don’t yank with your traps or arms — lead the movement from your elbows, not your hands."
     ],
-    commonMistakes: [
-      "Raising weights too high.",
-      "Using momentum instead of muscle."
+    proTips: [
+      "Perform with lighter weights and higher reps for better rear delt isolation."
+    ]
+  },
+  {
+    title: "💪 Dumbbell Front Raise",
+    video: "https://youtu.be/yP4JsePYDRg?si=sfQ9EcA8QI2QeaSz",
+    instructions: [
+      "Hold dumbbells in front of your thighs, palms facing down.",
+      "Raise one or both dumbbells straight in front of you to shoulder level.",
+      "Pause, then lower back under control."
+    ],
+    safetyTips: [
+      "Don’t use momentum — control the eccentric phase (lowering) for safety and gains.",
+      "Keep a neutral wrist to avoid strain."
+    ],
+    proTips: [
+      "Alternate arms or use a plate instead of dumbbells to vary intensity."
+    ]
+  },
+  {
+    title: "💪 Barbell Upright Row",
+    video: "https://youtu.be/0nIB5WBieBU?si=WXtBoxHqVin8boYL",
+    instructions: [
+      "Stand tall with a barbell in front of you, hands shoulder-width apart.",
+      "Pull the bar straight up to your upper chest, elbows flaring out.",
+      "Lower the bar slowly under control."
+    ],
+    safetyTips: [
+      "Avoid going too high — stop at mid-upper chest to protect your shoulder joints.",
+      "Don’t grip too narrow — it can strain your wrists and impinge your shoulders."
+    ],
+    proTips: [
+      "Use EZ bar or cables for wrist comfort and smoother resistance."
     ]
   }
 ];
@@ -134,7 +123,7 @@ const Shoulder = () => {
       setTranslateEnabled(false);
       setTranslateLanguage("hi");
       setTranslatedContent([]);
-      setTranslatedLabels({ shoulder: "Shoulder", difficulty: "Difficulty" });
+      setTranslatedLabels({ shoulder: "Shoulder" });
       setTranslatedIntro(null);
       setError("");
       return;
@@ -143,14 +132,8 @@ const Shoulder = () => {
     setError("");
     try {
       // Translate static labels
-      const [shoulderLabel, difficultyLabel] = await Promise.all([
-        translateText("Shoulder", translateLanguage),
-        translateText("Difficulty", translateLanguage)
-      ]);
-      setTranslatedLabels({
-        shoulder: shoulderLabel,
-        difficulty: difficultyLabel
-      });
+      const shoulderLabel = await translateText("Shoulder", translateLanguage);
+      setTranslatedLabels({ shoulder: shoulderLabel });
       // Translate section intro
       const [intro, ...warmup] = await Promise.all([
         translateText(shoulderIntro.intro, translateLanguage),
@@ -158,37 +141,25 @@ const Shoulder = () => {
       ]);
       const cooldown = await Promise.all(shoulderIntro.cooldown.map((item) => translateText(item, translateLanguage)));
       setTranslatedIntro({ intro, warmup, cooldown });
-      // Translate all titles, difficulties, muscleFocus, steps, benefits, proTips, safetyTips, commonMistakes
+      // Translate all titles, instructions, safetyTips, proTips
       const translated = await Promise.all(
         shoulderContent.map(async (section) => {
-          const [title, difficulty, muscleFocus, ...steps] = await Promise.all([
-            translateText(section.title, translateLanguage),
-            translateText(section.difficulty, translateLanguage),
-            translateText(section.muscleFocus, translateLanguage),
-            ...section.steps.map((step) => translateText(step, translateLanguage))
-          ]);
-          const benefits = section.benefits
-            ? await Promise.all(section.benefits.map((b) => translateText(b, translateLanguage)))
-            : [];
-          const proTips = section.proTips
-            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
+          const title = await translateText(section.title, translateLanguage);
+          const instructions = section.instructions
+            ? await Promise.all(section.instructions.map((step) => translateText(step, translateLanguage)))
             : [];
           const safetyTips = section.safetyTips
             ? await Promise.all(section.safetyTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
-          const commonMistakes = section.commonMistakes
-            ? await Promise.all(section.commonMistakes.map((tip) => translateText(tip, translateLanguage)))
+          const proTips = section.proTips
+            ? await Promise.all(section.proTips.map((tip) => translateText(tip, translateLanguage)))
             : [];
           return {
             ...section,
             title,
-            difficulty,
-            muscleFocus,
-            steps,
-            benefits,
-            proTips,
+            instructions,
             safetyTips,
-            commonMistakes
+            proTips
           };
         })
       );
@@ -308,67 +279,68 @@ const Shoulder = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 transition-all duration-300 hover:scale-[1.02] hover:shadow-purple-500/20 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
-              {/* Section Title and Difficulty Badge */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-1 sm:mb-0 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              {/* Responsive Video */}
+              {section.video && (
+                <div className="w-full aspect-w-16 aspect-h-9 rounded-t-3xl overflow-hidden">
+                  <iframe
+                    src={section.video.replace('youtu.be/', 'www.youtube.com/embed/').replace('watch?v=', 'embed/').split('?')[0]}
+                    title={section.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full min-h-[220px]"
+                    style={{ minHeight: 220 }}
+                  ></iframe>
+                </div>
+              )}
+              <div className="p-6 sm:p-10 flex flex-col items-center">
+                {/* Title */}
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-2 text-center">
                   {section.title}
                 </h2>
-                <span
-                  className={`inline-block px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wide ${DIFFICULTY_COLORS[section.difficulty] || "bg-gray-500/20 text-gray-300 border-gray-400/30"}`}
-                >
-                  {section.difficulty}
-                </span>
-              </div>
-              {/* Muscle Focus and Benefits */}
-              <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm text-yellow-300 font-semibold">Muscle Focus: {section.muscleFocus}</span>
-                <ul className="flex flex-wrap gap-2 text-xs text-green-300">
-                  {section.benefits && section.benefits.map((b, i) => <li key={i} className="bg-green-900/30 px-2 py-1 rounded-lg">{b}</li>)}
-                </ul>
-              </div>
-              {/* Images */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                {section.images.map((img, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-pink-400/20 transition-all">
-                    <img
-                      className="w-full h-48 object-cover object-center rounded-2xl border border-white/10"
-                      src={img.src}
-                      alt={img.alt}
-                    />
+                <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full mb-6 mx-auto" />
+                {/* Instructions */}
+                {section.instructions && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-pink-300 mb-2">
+                      <span role="img" aria-label="instructions">✅</span> Instructions
+                    </h3>
+                    <ol className="list-decimal list-inside text-white space-y-2 text-base leading-relaxed pl-4">
+                      {section.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
                   </div>
-                ))}
-              </div>
-              {/* Steps */}
-              <ol className="list-decimal list-inside text-white/90 space-y-3 text-lg leading-relaxed pl-4 mb-2">
-                {section.steps.map((step, i) => (
-                  <li key={i} className="transition-all duration-300 hover:text-pink-300">
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              {/* Pro Tips, Safety Tips, Common Mistakes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                <div className="bg-purple-900/20 rounded-xl p-3">
-                  <h4 className="text-purple-300 font-bold mb-1 text-sm">Pro Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.proTips && section.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-red-900/20 rounded-xl p-3">
-                  <h4 className="text-red-300 font-bold mb-1 text-sm">Safety Tips</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.safetyTips && section.safetyTips.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
-                <div className="bg-yellow-900/20 rounded-xl p-3">
-                  <h4 className="text-yellow-300 font-bold mb-1 text-sm">Common Mistakes</h4>
-                  <ul className="list-disc list-inside text-white/80 text-sm">
-                    {section.commonMistakes && section.commonMistakes.map((tip, i) => <li key={i}>{tip}</li>)}
-                  </ul>
-                </div>
+                )}
+                {/* Safety Tips */}
+                {section.safetyTips && (
+                  <div className="w-full max-w-xl mx-auto mb-6">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-red-300 mb-2">
+                      <span role="img" aria-label="safety">⚠️</span> Safety Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.safetyTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {/* Pro Tips */}
+                {section.proTips && (
+                  <div className="w-full max-w-xl mx-auto">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-2">
+                      <span role="img" aria-label="pro">⭐</span> Pro Tips
+                    </h3>
+                    <ul className="list-disc list-inside text-white text-base pl-4">
+                      {section.proTips.map((tip, i) => (
+                        <li key={i}>{tip}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           ))}
