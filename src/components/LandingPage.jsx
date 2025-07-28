@@ -70,16 +70,16 @@ const LandingPage = () => {
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-xl border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-xl blur opacity-75"></div>
-              <div className="relative bg-gradient-to-r from-cyan-400 to-purple-500 p-2 rounded-xl">
-                <Dumbbell className="h-6 w-6 sm:h-8 sm:w-8 text-black font-bold" />
+              <div className="relative bg-gradient-to-r from-cyan-400 to-purple-500 p-1.5 sm:p-2 rounded-xl">
+                <Dumbbell className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-black font-bold" />
               </div>
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-white">
+              <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-black text-white">
                 fit<span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text">code</span>
               </h1>
             </div>
@@ -92,7 +92,7 @@ const LandingPage = () => {
           </nav> */}
 
           <Button
-            className="bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold hover:from-cyan-500 hover:to-purple-600 transition-all duration-300 px-6 py-2 rounded-full"
+            className="bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold hover:from-cyan-500 hover:to-purple-600 transition-all duration-300 px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-sm sm:text-base"
             onClick={() => navigate('/login/client')}
           >
             CLIENT LOGIN
@@ -105,36 +105,29 @@ const LandingPage = () => {
         {/* Extended background with gradient overlay - now covers the whole page */}
         <div className="fixed inset-0 -z-10 bg-gradient-to-br from-purple-900/20 via-black to-cyan-900/20"></div>
         
-        <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
+        <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
           <div className="max-w-7xl mx-auto text-center">
             {/* Animated background elements */}
-            <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute bottom-20 right-10 w-48 h-48 bg-gradient-to-r from-yellow-400/20 to-pink-500/20 rounded-full blur-xl animate-pulse delay-1000"></div>
+            <div className="absolute top-20 left-10 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute bottom-20 right-10 w-32 h-32 sm:w-48 sm:h-48 bg-gradient-to-r from-yellow-400/20 to-pink-500/20 rounded-full blur-xl animate-pulse delay-1000"></div>
             
             <div className="relative z-10">
               {/* Hero section headline: responsive, animated gradient text */}
-              <h2 className="font-black mb-6 text-center w-full">
+              <h2 className="font-black mb-4 sm:mb-6 text-center w-full text-xl sm:text-2xl lg:text-3xl">
                 {/* Typing effect headline in white */}
                 <TypingHeadline text="Scan. Train. Transform." speed={80} />
               </h2>
-              <h2 className="text-5xl md:text-7xl font-black mb-8">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-black mb-6 sm:mb-8">
                 {/* Subheadline in plain white */}
                 <span className="text-white">The smart way to fitness</span>
               </h2>
-              <p className="text-2xl md:text-3xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-200 mb-8 sm:mb-12 max-w-2xl sm:max-w-3xl mx-auto leading-relaxed px-4">
                 FitCode lets you scan gym equipment, get instant AI-powered workout guidance, track your progress, and unlock a new level of motivation. Join the fitness movement that puts technology and results in your hands.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-10">
-                <Button
-                  className="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold px-8 py-4 text-lg rounded-full hover:from-pink-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                  onClick={() => navigate('/register/client')}
-                >
-                  EXPLORE FITCODE
-                </Button>
-               
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 sm:mb-10 px-4">
                 <Button
                   variant="outline"
-                  className="group relative overflow-hidden border-2 border-cyan-400/50 text-cyan-400 hover:border-cyan-400 hover:text-white font-bold px-8 py-4 text-lg rounded-full transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/25"
+                  className="group relative overflow-hidden border-2 border-cyan-400/50 text-cyan-400 hover:border-cyan-400 hover:text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg rounded-full transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/25 w-full sm:w-auto"
                   onClick={openDemo}
                 >
                   {/* Animated background gradient */}
@@ -144,8 +137,8 @@ const LandingPage = () => {
                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400 opacity-0 group-hover:opacity-20 blur-sm transition-opacity duration-500"></div>
                   
                   {/* Content */}
-                  <div className="relative flex items-center">
-                    <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                  <div className="relative flex items-center justify-center">
+                    <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
                     <span className="relative">
                       SEE IT IN ACTION
                       {/* Animated underline */}
@@ -162,33 +155,33 @@ const LandingPage = () => {
         </section>
 
         {/* Animated Features Showcase */}
-        <section className="relative py-20 overflow-hidden">
+        <section className="relative py-12 sm:py-16 lg:py-20 overflow-hidden">
           {/* Animated background elements */}
           <div className="absolute inset-0">
-            <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-yellow-400/20 to-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-            <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-gradient-to-r from-pink-400/20 to-cyan-500/20 rounded-full blur-2xl animate-pulse delay-500"></div>
+            <div className="absolute top-20 left-20 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-20 right-20 w-24 h-24 sm:w-40 sm:h-40 bg-gradient-to-r from-yellow-400/20 to-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            <div className="absolute top-1/2 left-1/4 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-pink-400/20 to-cyan-500/20 rounded-full blur-2xl animate-pulse delay-500"></div>
           </div>
           
-          <div className="relative z-10 max-w-6xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <h3 className="text-4xl md:text-5xl font-black text-white mb-4">
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 sm:mb-16">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4">
                 Why Choose <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text">FitCode</span>
               </h3>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl sm:max-w-3xl mx-auto px-4">
                 Experience the future of fitness with cutting-edge technology and personalized guidance
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               <div className="group relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/10 to-purple-500/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 hover:scale-105">
-                  <div className="bg-gradient-to-r from-cyan-400 to-purple-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Sparkles className="h-8 w-8 text-black" />
+                <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 hover:scale-105">
+                  <div className="bg-gradient-to-r from-cyan-400 to-purple-500 w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <Sparkles className="h-6 w-6 sm:h-8 sm:w-8 text-black" />
                   </div>
-                  <h4 className="text-2xl font-bold text-white mb-4">AI-Powered Intelligence</h4>
-                  <p className="text-gray-300 leading-relaxed">
+                  <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 sm:mb-4">AI-Powered Intelligence</h4>
+                  <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
                     Get personalized workout plans and nutrition advice powered by advanced artificial intelligence.
                   </p>
                 </div>
@@ -196,25 +189,25 @@ const LandingPage = () => {
               
               <div className="group relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-pink-500/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 hover:scale-105">
-                  <div className="bg-gradient-to-r from-yellow-400 to-pink-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Zap className="h-8 w-8 text-black" />
+                <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 hover:scale-105">
+                  <div className="bg-gradient-to-r from-yellow-400 to-pink-500 w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-black" />
                   </div>
-                  <h4 className="text-2xl font-bold text-white mb-4">Instant Access</h4>
-                  <p className="text-gray-300 leading-relaxed">
+                  <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 sm:mb-4">Instant Access</h4>
+                  <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
                     Scan any equipment and instantly access video guides, tips, and workout routines.
                   </p>
                 </div>
               </div>
               
-              <div className="group relative">
+              <div className="group relative sm:col-span-2 lg:col-span-1">
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-400/10 to-purple-500/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 hover:scale-105">
-                  <div className="bg-gradient-to-r from-pink-400 to-purple-500 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <TrendingUp className="h-8 w-8 text-black" />
+                <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 hover:scale-105">
+                  <div className="bg-gradient-to-r from-pink-400 to-purple-500 w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-black" />
                   </div>
-                  <h4 className="text-2xl font-bold text-white mb-4">Track Progress</h4>
-                  <p className="text-gray-300 leading-relaxed">
+                  <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 sm:mb-4">Track Progress</h4>
+                  <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
                     Monitor your fitness journey with detailed analytics and achievement tracking.
                   </p>
                 </div>
@@ -507,43 +500,43 @@ const LandingPage = () => {
 
       {/* Demo Video Modal */}
       {showDemo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 lg:p-6">
           {/* Animated Backdrop */}
           <div 
             className="absolute inset-0 bg-black/90 backdrop-blur-xl animate-in fade-in-0 duration-300"
             onClick={closeDemo}
           >
             {/* Animated background elements */}
-            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-gradient-to-r from-cyan-400/10 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-gradient-to-r from-yellow-400/10 to-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            <div className="absolute top-1/4 left-1/4 w-20 h-20 sm:w-32 sm:h-32 lg:w-40 lg:h-40 bg-gradient-to-r from-cyan-400/10 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-24 h-24 sm:w-40 sm:h-40 lg:w-48 lg:h-48 bg-gradient-to-r from-yellow-400/10 to-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
           </div>
           
           {/* Modal Content */}
-          <div className="relative w-full max-w-5xl bg-gradient-to-br from-gray-900/95 via-black/95 to-gray-900/95 backdrop-blur-xl rounded-3xl border border-cyan-400/20 shadow-2xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-500">
+          <div className="relative w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl bg-gradient-to-br from-gray-900/95 via-black/95 to-gray-900/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-cyan-400/20 shadow-2xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-500">
             {/* Glowing border effect */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-cyan-400/20 via-purple-500/20 to-cyan-400/20 opacity-0 animate-pulse"></div>
+            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-cyan-400/20 via-purple-500/20 to-cyan-400/20 opacity-0 animate-pulse"></div>
             
             {/* Header */}
-            <div className="relative flex items-center justify-between p-8 border-b border-cyan-400/20 bg-gradient-to-r from-gray-900/50 to-black/50">
-              <div className="flex items-center space-x-4">
+            <div className="relative flex items-center justify-between p-3 sm:p-4 lg:p-6 border-b border-cyan-400/20 bg-gradient-to-r from-gray-900/50 to-black/50">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-2xl blur-lg opacity-75"></div>
-                  <div className="relative bg-gradient-to-r from-cyan-400 to-purple-500 p-3 rounded-2xl">
-                    <Play className="h-7 w-7 text-black" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-lg sm:rounded-xl blur-lg opacity-75"></div>
+                  <div className="relative bg-gradient-to-r from-cyan-400 to-purple-500 p-1.5 sm:p-2 rounded-lg sm:rounded-xl">
+                    <Play className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-black" />
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-3xl font-black text-white mb-1">FitCode Demo</h3>
-                  <p className="text-cyan-400 text-lg font-medium">Experience the future of fitness</p>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-white mb-1">FitCode Demo</h3>
+                  <p className="text-cyan-400 text-xs sm:text-sm lg:text-base font-medium">Experience the future of fitness</p>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-full p-3 transition-all duration-300 hover:scale-110"
+                className="text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-full p-1.5 sm:p-2 transition-all duration-300 hover:scale-110"
                 onClick={closeDemo}
               >
-                <X className="h-6 w-6" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </div>
             
@@ -552,15 +545,15 @@ const LandingPage = () => {
               {/* Video loading overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                  <p className="text-cyan-400 font-medium">Loading demo video...</p>
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-3 sm:mb-4 lg:mb-6"></div>
+                  <p className="text-cyan-400 font-medium text-sm sm:text-base lg:text-lg">Loading demo video...</p>
                 </div>
               </div>
               
               <iframe
                 src={demoVideoUrl}
                 title="FitCode Demo Video"
-                className="w-full h-full rounded-b-3xl relative z-10"
+                className="w-full h-full rounded-b-2xl sm:rounded-b-3xl relative z-10"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -573,31 +566,31 @@ const LandingPage = () => {
             </div>
             
             {/* Enhanced Footer */}
-            <div className="relative p-8 bg-gradient-to-t from-gray-900/80 via-black/60 to-transparent">
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div className="relative p-3 sm:p-4 lg:p-6 bg-gradient-to-t from-gray-900/80 via-black/60 to-transparent">
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4">
                 <div className="text-center lg:text-left">
-                  <h4 className="text-xl font-bold text-white mb-2">Ready to transform your fitness?</h4>
-                  <p className="text-gray-300 text-lg">
+                  <h4 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-1">Ready to transform your fitness?</h4>
+                  <p className="text-gray-300 text-xs sm:text-sm lg:text-base">
                     Join thousands of users already experiencing the FitCode difference
                   </p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <Button
                     variant="outline"
-                    className="border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10 hover:border-cyan-400 px-8 py-3 rounded-full transition-all duration-300 hover:scale-105"
+                    className="border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10 hover:border-cyan-400 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-full transition-all duration-300 hover:scale-105 text-xs sm:text-sm"
                     onClick={closeDemo}
                   >
-                    <X className="w-4 h-4 mr-2" />
+                    <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5" />
                     Close Demo
                   </Button>
                   <Button
-                    className="bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold hover:from-cyan-500 hover:to-purple-600 px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-cyan-400/25"
+                    className="bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold hover:from-cyan-500 hover:to-purple-600 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-cyan-400/25 text-xs sm:text-sm"
                     onClick={() => {
                       closeDemo();
                       navigate('/login/client');
                     }}
                   >
-                    <Sparkles className="w-4 h-4 mr-2" />
+                    <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5" />
                     Start Your Journey
                   </Button>
                 </div>
