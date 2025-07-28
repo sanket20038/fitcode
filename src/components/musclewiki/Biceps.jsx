@@ -309,8 +309,8 @@ const Biceps = () => {
                       {section.safetyTips.map((tip, i) => (
                         <li key={i}>{tip}</li>
                       ))}
-                    </ul>
-                  </div>
+                  </ul>
+                </div>
                 )}
                 {/* Pro Tips */}
                 {section.proTips && (
@@ -322,8 +322,8 @@ const Biceps = () => {
                       {section.proTips.map((tip, i) => (
                         <li key={i}>{tip}</li>
                       ))}
-                    </ul>
-                  </div>
+                  </ul>
+                </div>
                 )}
               </div>
             </div>

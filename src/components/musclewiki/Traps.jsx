@@ -262,8 +262,8 @@ const Traps = () => {
                       {section.safetyTips.map((tip, i) => (
                         <li key={i}>{tip}</li>
                       ))}
-                    </ul>
-                  </div>
+                  </ul>
+                </div>
                 )}
                 {/* Pro Tips */}
                 {section.proTips && (
@@ -275,8 +275,8 @@ const Traps = () => {
                       {section.proTips.map((tip, i) => (
                         <li key={i}>{tip}</li>
                       ))}
-                    </ul>
-                  </div>
+                  </ul>
+                </div>
                 )}
               </div>
             </div>

@@ -311,8 +311,8 @@ const Chest = () => {
                       {section.safetyTips.map((tip, i) => (
                         <li key={i}>{tip}</li>
                       ))}
-                    </ul>
-                  </div>
+                  </ul>
+                </div>
                 )}
                 {/* Pro Tips */}
                 {section.proTips && (
@@ -324,8 +324,8 @@ const Chest = () => {
                       {section.proTips.map((tip, i) => (
                         <li key={i}>{tip}</li>
                       ))}
-                    </ul>
-                  </div>
+                  </ul>
+                </div>
                 )}
               </div>
             </div>

@@ -19,11 +19,12 @@ const abdominalsIntro = {
 
 const abdominalsContent = [
   {
-    title: "💪 Demo Abdominal Exercise",
-    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    title: "💪 Crunches",
+    video: "https://www.youtube.com/embed/xNaXGD5aXdA",
     instructions: [
       "Lie flat on your back with your knees bent and feet flat on the floor.",
-      "Place your hands behind your head and crunch your upper body toward your knees.",
+      "Place your hands behind your head or across your chest.",
+      "Crunch your upper body toward your knees, lifting your shoulders off the ground.",
       "Lower back down slowly and repeat."
     ],
     safetyTips: [
@@ -31,7 +32,62 @@ const abdominalsContent = [
       "Keep your lower back pressed to the floor."
     ],
     proTips: [
-      "Exhale as you crunch up for better core engagement."
+      "Exhale as you crunch up for better core engagement.",
+      "Pause at the top for a stronger contraction."
+    ]
+  },
+  {
+    title: "💪 Vertical Leg Raise",
+    video: "https://www.youtube.com/embed/_Mo0c3eFLlI",
+    instructions: [
+      "Lie on your back with your legs straight and arms at your sides.",
+      "Lift your legs up toward the ceiling, keeping them straight.",
+      "Slowly lower your legs back down without letting your heels touch the floor.",
+      "Repeat for reps."
+    ],
+    safetyTips: [
+      "Keep your lower back pressed to the floor to avoid strain.",
+      "Move slowly and with control."
+    ],
+    proTips: [
+      "Place your hands under your hips for extra support if needed.",
+      "Exhale as you lift your legs."
+    ]
+  },
+  {
+    title: "💪 Laying Leg Raise",
+    video: "https://www.youtube.com/embed/vdIKI9Be8HM",
+    instructions: [
+      "Lie flat on your back with your legs extended.",
+      "Place your hands under your glutes for support.",
+      "Raise your legs up to a 90-degree angle, then lower them back down slowly.",
+      "Repeat for reps."
+    ],
+    safetyTips: [
+      "Do not arch your lower back.",
+      "Move in a slow, controlled manner."
+    ],
+    proTips: [
+      "Squeeze your abs at the top of the movement.",
+      "Keep your legs as straight as possible."
+    ]
+  },
+  {
+    title: "💪 Hanging Leg Raise",
+    video: "https://www.youtube.com/embed/knvMuBsqTB0",
+    instructions: [
+      "Hang from a pull-up bar with your arms fully extended.",
+      "Keep your legs straight and raise them up to hip level or higher.",
+      "Lower your legs back down with control.",
+      "Repeat for reps."
+    ],
+    safetyTips: [
+      "Avoid swinging your body; use your core to lift your legs.",
+      "Grip the bar firmly to prevent slipping."
+    ],
+    proTips: [
+      "Exhale as you lift your legs for better core activation.",
+      "Try to keep your torso as still as possible."
     ]
   }
 ];

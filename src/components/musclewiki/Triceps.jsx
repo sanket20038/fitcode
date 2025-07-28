@@ -267,7 +267,7 @@ const Triceps = () => {
           {contentToRender.map((section, idx) => (
             <div
               key={idx}
-              className="group relative bg-white-700/60 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
+              className="group relative bg-gray-900/70 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl p-0 sm:p-0 mb-12 transition-all duration-300 hover:shadow-pink-200/40 hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${idx * 80}ms` }}
             >
               {/* Responsive Video */}
