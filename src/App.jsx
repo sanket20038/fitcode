@@ -17,6 +17,11 @@ import ClientLogin from './components/ClientLogin';
 import OwnerLogin from './components/OwnerLogin';
 import GymLoader from './components/GymLoader';
 import ResetPassword from './components/ResetPassword';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsConditions from './components/TermsConditions';
+import AboutUs from './components/AboutUs';
+import Contact from './components/Contact';
+import HelpCenter from './components/HelpCenter';
 import Abdominals from './components/musclewiki/Abdominals';
 import Biceps from './components/musclewiki/Biceps';
 import Triceps from './components/musclewiki/Triceps';
@@ -124,6 +129,13 @@ function App() {
             path="/reset-password" 
             element={<ResetPassword />} 
           />
+
+          {/* Footer Pages */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-conditions" element={<TermsConditions />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/help-center" element={<HelpCenter />} />
 
           {/* Owner Routes */}
           <Route 
