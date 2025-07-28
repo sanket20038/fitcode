@@ -239,14 +239,14 @@ const AboutUs = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-purple-600"
+                className="border-white text-black hover:bg-white hover:text-purple-600"
                 onClick={() => navigate('/register/owner')}
               >
                 For Gym Owners
               </Button>
               <Button
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-purple-600"
+                className="border-white text-black hover:bg-white hover:text-purple-600"
                 onClick={() => navigate('/register/client')}
               >
                 For Members
