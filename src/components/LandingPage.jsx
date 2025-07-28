@@ -60,8 +60,8 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const [showDemo, setShowDemo] = useState(false);
   
-  // Demo video URL - you can replace this with your actual YouTube URL
-  const demoVideoUrl = "https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE";
+  // Demo video URL - FitCode platform demonstration
+  const demoVideoUrl = "https://www.youtube.com/embed/R6gbL8i8MoA";
   
   const openDemo = () => setShowDemo(true);
   const closeDemo = () => setShowDemo(false);
@@ -127,7 +127,7 @@ const LandingPage = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-10">
                 <Button
                   className="bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold px-8 py-4 text-lg rounded-full hover:from-pink-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                  onClick={() => navigate('/login/client')}
+                  onClick={() => navigate('/register/client')}
                 >
                   EXPLORE FITCODE
                 </Button>
@@ -138,7 +138,7 @@ const LandingPage = () => {
                   onClick={openDemo}
                 >
                   <Play className="w-5 h-5 mr-2" />
-                  WATCH DEMO
+                  SEE IT IN ACTION
                 </Button>
               </div>
             </div>
@@ -338,7 +338,7 @@ const LandingPage = () => {
             </ul>
             <Button
               className="bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold px-8 py-4 text-lg rounded-full hover:from-cyan-500 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 animate-bounce-slow"
-              onClick={() => navigate('/login/owner')}
+              onClick={() => navigate('/register/owner')}
             >
               Become a Partner
             </Button>

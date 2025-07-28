@@ -178,8 +178,8 @@ const OwnerLogin = ({ setAuthenticated, setUserType }) => {
           )}
           <div className="mt-8 text-center">
             <p className="text-sm text-white/70 mt-2">
-              <a href="/register" className="text-indigo-400 font-semibold hover:underline">
-                Sign up
+              <a href="/register/owner" className="text-indigo-400 font-semibold hover:underline">
+                Sign up as Partner
               </a>
             </p>
           </div>

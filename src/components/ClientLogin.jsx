@@ -180,8 +180,8 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
           <div className="mt-8 text-center">
             <p className="text-sm text-white/70">
               Don't have an account?{' '}
-              <Link to="/register" className="text-pink-400 font-semibold hover:underline">
-                Sign up
+              <Link to="/register/client" className="text-pink-400 font-semibold hover:underline">
+                Sign up as Client
               </Link>
             </p>
           </div>
