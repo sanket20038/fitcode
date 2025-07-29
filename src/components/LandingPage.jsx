@@ -50,7 +50,7 @@ function TypingHeadline({ text, speed = 80 }) {
   }, [text, speed]);
   
   return (
-    <span className="block text-[clamp(2.5rem,8vw,5rem)] md:text-8xl text-white font-black transition-all duration-500 min-h-[60px]">
+    <span className="block text-[clamp(2rem,8vw,4rem)] md:text-6xl lg:text-7xl xl:text-8xl text-white font-black transition-all duration-500 min-h-[50px] md:min-h-[60px] leading-tight">
       {displayed}
     </span>
   );
@@ -70,7 +70,7 @@ const LandingPage = () => {
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-xl border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-3 md:py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2 sm:space-x-3">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-xl blur opacity-75"></div>
@@ -105,7 +105,7 @@ const LandingPage = () => {
         {/* Extended background with gradient overlay - now covers the whole page */}
         <div className="fixed inset-0 -z-10 bg-gradient-to-br from-purple-900/20 via-black to-cyan-900/20"></div>
         
-        <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-12 lg:py-20">
           <div className="max-w-7xl mx-auto text-center">
             {/* Animated background elements */}
             <div className="absolute top-20 left-10 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-full blur-xl animate-pulse"></div>
@@ -113,7 +113,7 @@ const LandingPage = () => {
             
             <div className="relative z-10">
               {/* Hero section headline: responsive, animated gradient text */}
-              <h2 className="font-black mb-4 sm:mb-6 text-center w-full text-xl sm:text-2xl lg:text-3xl">
+              <h2 className="font-black mb-4 sm:mb-6 text-center w-full">
                 {/* Typing effect headline in white */}
                 <TypingHeadline text="Scan. Train. Transform." speed={80} />
               </h2>
@@ -526,8 +526,8 @@ const LandingPage = () => {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-white mb-1">FitCode Demo</h3>
-                  <p className="text-cyan-400 text-xs sm:text-sm lg:text-base font-medium">Experience the future of fitness</p>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-white mb-1">Platform Overview</h3>
+                  <p className="text-cyan-400 text-xs sm:text-sm lg:text-base font-medium">See how it works in action</p>
                 </div>
               </div>
               <Button
@@ -546,7 +546,7 @@ const LandingPage = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
                 <div className="text-center">
                   <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-3 sm:mb-4 lg:mb-6"></div>
-                  <p className="text-cyan-400 font-medium text-sm sm:text-base lg:text-lg">Loading demo video...</p>
+                  <p className="text-cyan-400 font-medium text-sm sm:text-base lg:text-lg">Loading platform overview...</p>
                 </div>
               </div>
               

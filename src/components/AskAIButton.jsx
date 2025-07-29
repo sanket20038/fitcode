@@ -437,7 +437,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="w-full max-w-lg sm:max-w-md md:max-w-lg rounded-xl shadow-2xl border border-gray-300 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-2 sm:p-4 md:p-6 overflow-y-auto max-h-[90vh]">
+        <DialogContent className="w-full max-w-lg sm:max-w-md md:max-w-lg rounded-xl shadow-2xl border border-gray-300 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-2 sm:p-4 md:p-6">
           <DialogHeader>
             <DialogTitle className="text-2xl font-extrabold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent flex items-center space-x-2">
               <Flame className="h-6 w-6 text-orange-400" />
@@ -461,16 +461,17 @@ Remember: Always emphasize that users should consult with healthcare providers b
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="diet" className="mt-4 space-y-3 sm:space-y-4">
+            <TabsContent value="diet" className="mt-4 pr-2">
+              <div className="space-y-2 sm:space-y-3">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg">
-                  <User className="text-white h-4 w-4" />
+                  <User className="text-white h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
                 <Input
                   placeholder="Age"
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-2 sm:p-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
                 />
               </div>
               <div className="flex items-center gap-3">
@@ -481,7 +482,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   placeholder="Gender"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-2 sm:p-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
                 />
               </div>
               <div className="flex items-center gap-3">
@@ -492,7 +493,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   placeholder="Height (cm)"
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-2 sm:p-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
                 />
               </div>
               <div className="flex items-center gap-3">
@@ -503,7 +504,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   placeholder="Weight (kg)"
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-2 sm:p-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
                 />
               </div>
               <div className="flex items-center gap-3">
@@ -514,7 +515,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   placeholder="Diet Goal (e.g. weight loss, muscle gain)"
                   value={dietGoal}
                   onChange={(e) => setDietGoal(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-2 sm:p-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange-400 backdrop-blur-xl"
                 />
               </div>
               <div className="flex gap-3 w-full flex-col sm:flex-row">
@@ -558,7 +559,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   placeholder="Medical Conditions (e.g. diabetes)"
                   value={medicalConditions}
                   onChange={(e) => setMedicalConditions(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-2 sm:p-3 text-white"
                 />
               </div>
               {/* Allergies */}
@@ -570,7 +571,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   placeholder="Allergies"
                   value={allergies}
                   onChange={(e) => setAllergies(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-2 sm:p-3 text-white"
                 />
               </div>
               {/* Meals per Day */}
@@ -582,7 +583,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   placeholder="Meals per Day"
                   value={mealsPerDay}
                   onChange={(e) => setMealsPerDay(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-2 sm:p-3 text-white"
                 />
               </div>
               {/* Daily Routine */}
@@ -594,7 +595,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   placeholder="Daily Routine (e.g. work schedule, sleep time)"
                   value={dailyRoutine}
                   onChange={(e) => setDailyRoutine(e.target.value)}
-                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-lg p-2 sm:p-3 text-white"
                 />
               </div>
               {/* Move Language selection to the end */}
@@ -611,6 +612,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
                   <SelectItem value="tamil">Tamil (தமிழ்)</SelectItem>
                 </SelectContent>
               </Select>
+              </div>
             </TabsContent>
 
             <TabsContent value="workout" className="mt-4 space-y-4">

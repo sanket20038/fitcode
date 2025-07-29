@@ -367,37 +367,56 @@ const exportToPDF = async (aiResponses) => {
               Scan machine QR codes, access personalized workouts, and track your progress with AI-powered insights
             </p>
             
-            {/* Main QR Scanner Card */}
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-              <Card 
-                className="relative bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 hover:scale-[1.02] cursor-pointer rounded-3xl overflow-hidden"
+            {/* Modern Hexagonal QR Scanner */}
+            <div className="flex justify-center">
+              <div 
                 onClick={() => navigate('/client/scanner')}
+                className="group relative cursor-pointer"
               >
-                <CardContent className="p-12">
-                  <div className="flex flex-col items-center">
-                    <div className="relative mb-8">
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-xl opacity-50 animate-pulse"></div>
-                      <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-full shadow-2xl group-hover:shadow-purple-500/50 transition-all duration-300">
-                        <QrCode className="h-16 w-16 text-white group-hover:scale-110 transition-transform duration-300" />
+                {/* Hexagonal background */}
+                <div className="relative w-80 h-40">
+                  {/* Outer hexagon glow */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                  
+                  {/* Main hexagon container */}
+                  <div className="relative bg-gradient-to-br from-slate-900 via-purple-900/50 to-cyan-900/50 backdrop-blur-xl border border-white/20 rounded-full p-8 shadow-2xl hover:shadow-cyan-400/30 transition-all duration-500 hover:scale-105">
+                    
+                    {/* Inner scanning area */}
+                    <div className="relative w-full h-full bg-black/60 rounded-full border-2 border-dashed border-white/30 flex items-center justify-center">
+                      
+                      {/* Rotating ring */}
+                      <div className="absolute inset-4 border-2 border-cyan-400/50 rounded-full animate-spin-slow"></div>
+                      
+                      {/* Center QR icon */}
+                      <div className="relative z-10 bg-gradient-to-r from-cyan-400 to-purple-500 p-4 rounded-2xl shadow-2xl group-hover:scale-110 transition-transform duration-300">
+                        <QrCode className="w-12 h-12 text-black" />
+                      </div>
+                      
+                      {/* Scanning particles */}
+                      <div className="absolute inset-0">
+                        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
+                        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-purple-400 rounded-full animate-ping delay-300"></div>
+                        <div className="absolute left-8 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-cyan-400 rounded-full animate-ping delay-150"></div>
+                        <div className="absolute right-8 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-purple-400 rounded-full animate-ping delay-450"></div>
+                      </div>
+                      
+                      {/* Scanning wave */}
+                      <div className="absolute inset-0 rounded-full">
+                        <div className="absolute inset-0 border-2 border-cyan-400/30 rounded-full animate-ping"></div>
+                        <div className="absolute inset-4 border-2 border-purple-400/30 rounded-full animate-ping delay-500"></div>
                       </div>
                     </div>
-                    
-                    <h3 className="text-4xl font-black text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                      Scan QR Code
-                    </h3>
-                    <p className="text-white/80 text-lg mb-8 max-w-md leading-relaxed">
-                      Scan a machine QR code to view instructions and get personalized guidance
-                    </p>
-                    
-                    <div className="flex items-center space-x-3 text-white/70 text-sm group-hover:text-white/90 transition-colors duration-300">
-                      <Sparkles className="h-5 w-5 text-yellow-400 animate-pulse" />
-                      <span className="font-medium">Click to start scanning</span>
-                      <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
-                    </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                
+                {/* Text below */}
+                <div className="mt-6 text-center">
+                  <div className="text-white font-black text-2xl mb-2">
+                    <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text">SCAN</span> QR
+                  </div>
+                  <div className="text-cyan-400 text-sm font-medium">Tap to access equipment guides</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
