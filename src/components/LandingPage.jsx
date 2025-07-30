@@ -59,12 +59,62 @@ function TypingHeadline({ text, speed = 80 }) {
 const LandingPage = () => {
   const navigate = useNavigate();
   const [showDemo, setShowDemo] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
+  const [showResult, setShowResult] = useState(false);
   
   // Demo video URL - FitCode platform demonstration
   const demoVideoUrl = "https://www.youtube.com/embed/R6gbL8i8MoA";
   
   const openDemo = () => setShowDemo(true);
   const closeDemo = () => setShowDemo(false);
+  
+  // Auto-running demo functions
+  useEffect(() => {
+    // Auto-progress through demo steps
+    const stepTimer = setTimeout(() => {
+      if (currentStep < 2) {
+        setCurrentStep(currentStep + 1);
+      } else {
+        // Reset to beginning after showing results
+        setTimeout(() => {
+          setCurrentStep(0);
+          setIsScanning(false);
+          setScanProgress(0);
+          setShowResult(false);
+        }, 3000); // Show results for 3 seconds before resetting
+      }
+    }, currentStep === 0 ? 3000 : currentStep === 1 ? 6000 : 5000); // Different timing for each step
+
+    return () => clearTimeout(stepTimer);
+  }, [currentStep]);
+
+  // Auto-start scanning when step 1 is reached
+  useEffect(() => {
+    if (currentStep === 1 && !isScanning) {
+      const scanTimer = setTimeout(() => {
+        setIsScanning(true);
+        setScanProgress(0);
+        setShowResult(false);
+        
+        // Simulate scanning progress
+        const interval = setInterval(() => {
+          setScanProgress(prev => {
+            if (prev >= 100) {
+              clearInterval(interval);
+              setIsScanning(false);
+              setShowResult(true);
+              return 100;
+            }
+            return prev + 5; // Slower progress for better visibility
+          });
+        }, 150);
+      }, 1000); // Wait 1 second before starting scan
+
+      return () => clearTimeout(scanTimer);
+    }
+  }, [currentStep, isScanning]);
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
@@ -104,6 +154,39 @@ const LandingPage = () => {
       <main className="relative">
         {/* Extended background with gradient overlay - now covers the whole page */}
         <div className="fixed inset-0 -z-10 bg-gradient-to-br from-purple-900/20 via-black to-cyan-900/20"></div>
+        
+        {/* Enhanced Animated Background Elements */}
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+          {/* Floating Fitness Icons */}
+          <div className="absolute top-20 left-10 animate-float-slow">
+            <div className="w-8 h-8 bg-gradient-to-r from-cyan-400/30 to-purple-500/30 rounded-full blur-sm"></div>
+          </div>
+          <div className="absolute top-40 right-20 animate-float-slow delay-100">
+            <div className="w-6 h-6 bg-gradient-to-r from-yellow-400/30 to-pink-500/30 rounded-full blur-sm"></div>
+          </div>
+          <div className="absolute bottom-40 left-20 animate-float-slow delay-200">
+            <div className="w-10 h-10 bg-gradient-to-r from-pink-400/30 to-cyan-500/30 rounded-full blur-sm"></div>
+          </div>
+          <div className="absolute bottom-20 right-10 animate-float-slow delay-300">
+            <div className="w-4 h-4 bg-gradient-to-r from-purple-400/30 to-yellow-500/30 rounded-full blur-sm"></div>
+          </div>
+          
+          {/* Particle Effects */}
+          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-cyan-400/20 rounded-full animate-ping"></div>
+          <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-purple-400/20 rounded-full animate-ping delay-1000"></div>
+          <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-yellow-400/20 rounded-full animate-ping delay-2000"></div>
+          <div className="absolute bottom-1/3 right-1/4 w-1 h-1 bg-pink-400/20 rounded-full animate-ping delay-3000"></div>
+          
+          {/* Geometric Shapes */}
+          <div className="absolute top-1/2 left-10 w-16 h-16 border border-cyan-400/10 rotate-45 animate-pulse"></div>
+          <div className="absolute top-1/3 right-10 w-12 h-12 border border-purple-400/10 rounded-full animate-pulse delay-1000"></div>
+          <div className="absolute bottom-1/2 left-1/4 w-20 h-20 border border-yellow-400/10 rotate-12 animate-pulse delay-500"></div>
+          
+          {/* Gradient Orbs */}
+          <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-gradient-to-r from-cyan-400/5 to-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-1/4 w-40 h-40 bg-gradient-to-r from-yellow-400/5 to-pink-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 right-1/2 w-24 h-24 bg-gradient-to-r from-pink-400/5 to-cyan-500/5 rounded-full blur-2xl animate-pulse delay-500"></div>
+        </div>
         
         <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-12 lg:py-20">
           <div className="max-w-7xl mx-auto text-center">
@@ -149,6 +232,423 @@ const LandingPage = () => {
                   {/* Pulse animation */}
                   <div className="absolute inset-0 rounded-full bg-cyan-400/20 animate-ping opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Interactive Demo Section */}
+        <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden">
+          {/* Enhanced Animated Background Elements */}
+          <div className="absolute inset-0">
+            {/* Floating Gradient Orbs */}
+            <div className="absolute top-10 left-10 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-10 right-10 w-24 h-24 sm:w-40 sm:h-40 bg-gradient-to-r from-yellow-400/20 to-pink-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            <div className="absolute top-1/2 left-1/4 w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-r from-pink-400/20 to-cyan-500/20 rounded-full blur-2xl animate-pulse delay-500"></div>
+            
+            {/* Gym Equipment Floating Icons */}
+            <div className="absolute top-1/6 right-1/6 w-4 h-4 sm:w-6 sm:h-6 text-cyan-400/40 animate-float-slow delay-300">
+              {/* Dumbbell Icon */}
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>
+              </svg>
+            </div>
+            
+            <div className="absolute bottom-1/6 left-1/6 w-5 h-5 sm:w-7 sm:h-7 text-purple-400/40 animate-float-slow delay-800">
+              {/* Treadmill Icon */}
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M13.49 5.48c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-3.6 13.9l1-4.4 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1l-5.2 2.2v4.7h2v-3.4l1.8-.7-1.6 8.1-4.9-1-.4 2 7 1.4z"/>
+              </svg>
+            </div>
+            
+            <div className="absolute top-2/3 left-1/4 w-4 h-4 sm:w-6 sm:h-6 text-pink-400/40 animate-float-slow delay-1200">
+              {/* Heart/Health Icon */}
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </div>
+            
+            <div className="absolute bottom-1/3 right-1/3 w-5 h-5 sm:w-7 sm:h-7 text-yellow-400/40 animate-float-slow delay-1600">
+              {/* Weight/Barbell Icon */}
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/>
+              </svg>
+            </div>
+            
+            <div className="absolute top-1/2 right-1/5 w-4 h-4 sm:w-6 sm:h-6 text-green-400/40 animate-float-slow delay-400">
+              {/* Checkmark/Success Icon */}
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
+            </div>
+            
+            <div className="absolute bottom-1/2 left-1/5 w-5 h-5 sm:w-7 sm:h-7 text-orange-400/40 animate-float-slow delay-1000">
+              {/* Timer/Clock Icon */}
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+              </svg>
+            </div>
+            
+            <div className="absolute top-1/3 left-1/2 w-4 h-4 sm:w-6 sm:h-6 text-blue-400/40 animate-float-slow delay-1400">
+              {/* Target/Goal Icon */}
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            
+            <div className="absolute bottom-1/4 left-1/2 w-5 h-5 sm:w-7 sm:h-7 text-red-400/40 animate-float-slow delay-600">
+              {/* Fire/Energy Icon */}
+              <svg fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            
+            {/* Animated Gradient Waves */}
+           
+            
+            {/* Particle Effects */}
+            <div className="absolute inset-0">
+              <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-cyan-400/40 rounded-full animate-ping"></div>
+              <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-purple-400/40 rounded-full animate-ping delay-700"></div>
+              <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-pink-400/40 rounded-full animate-ping delay-1400"></div>
+              <div className="absolute top-2/3 right-1/4 w-1 h-1 bg-yellow-400/40 rounded-full animate-ping delay-2100"></div>
+            </div>
+            
+            {/* Geometric Shapes */}
+           </div>
+          
+          <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 sm:mb-16">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4">
+                See <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text">FitCode</span> in Action
+              </h3>
+              <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-2xl sm:max-w-3xl mx-auto px-4">
+                Experience how easy it is to scan equipment and get instant guidance
+              </p>
+            </div>
+            
+            {/* Interactive Demo Container */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+              {/* Demo Phone Mockup */}
+              <div className="relative flex justify-center">
+                <div className="relative w-64 h-96 sm:w-80 sm:h-[500px] bg-gradient-to-br from-gray-900 to-black rounded-3xl p-2 shadow-2xl border border-cyan-400/20">
+                  {/* Phone Screen */}
+                  <div className="w-full h-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 rounded-2xl overflow-hidden relative">
+                    {/* Camera */}
+                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-16 h-2 bg-black rounded-full z-10"></div>
+                    
+                    {/* App Interface */}
+                    <div className="p-4 h-full flex flex-col">
+                      {/* Header */}
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-lg flex items-center justify-center">
+                            <Dumbbell className="w-4 h-4 text-black" />
+                          </div>
+                          <span className="text-white font-bold text-sm">FitCode</span>
+                        </div>
+                        <div className="w-6 h-6 bg-cyan-400/20 rounded-full"></div>
+                      </div>
+                      
+                      {/* Interactive Content Based on Step */}
+                      <div className="flex-1 flex items-center justify-center">
+                        {currentStep === 0 && (
+                          <div className="text-center">
+                            <div className="w-16 h-16 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-2xl flex items-center justify-center mb-4 mx-auto">
+                              <svg className="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                              </svg>
+                            </div>
+                            <h4 className="text-white font-bold mb-2">Welcome to FitCode!</h4>
+                            <p className="text-gray-300 text-sm">Scan the QR code to get started</p>
+                          </div>
+                        )}
+                        
+                        {currentStep === 1 && (
+                          <div className="relative w-48 h-48 sm:w-56 sm:h-56">
+                            {/* Scanning Frame */}
+                            <div className={`absolute inset-0 border-2 ${isScanning ? 'border-cyan-400' : 'border-gray-600'} rounded-lg transition-colors duration-300`}>
+                              {/* Corner Indicators */}
+                              <div className={`absolute top-0 left-0 w-6 h-6 border-l-4 border-t-4 ${isScanning ? 'border-cyan-400' : 'border-gray-600'} transition-colors duration-300`}></div>
+                              <div className={`absolute top-0 right-0 w-6 h-6 border-r-4 border-t-4 ${isScanning ? 'border-cyan-400' : 'border-gray-600'} transition-colors duration-300`}></div>
+                              <div className={`absolute bottom-0 left-0 w-6 h-6 border-l-4 border-b-4 ${isScanning ? 'border-cyan-400' : 'border-gray-600'} transition-colors duration-300`}></div>
+                              <div className={`absolute bottom-0 right-0 w-6 h-6 border-r-4 border-b-4 ${isScanning ? 'border-cyan-400' : 'border-gray-600'} transition-colors duration-300`}></div>
+                              
+                              {/* Scanning Line */}
+                              {isScanning && (
+                                <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse"></div>
+                              )}
+                            </div>
+                            
+                            {/* QR Code Placeholder */}
+                            <div className="absolute inset-4 bg-white/10 rounded flex items-center justify-center">
+                              <div className="text-center">
+                                <div className="w-16 h-16 bg-white/20 rounded-lg mb-2 flex items-center justify-center">
+                                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M3 3h6v6H3z"/>
+                                    <path d="M15 3h6v6h-6z"/>
+                                    <path d="M3 15h6v6H3z"/>
+                                    <path d="M15 15h6v6h-6z"/>
+                                    <path d="M9 9h6v6H9z"/>
+                                  </svg>
+                                </div>
+                                <p className="text-white/60 text-xs">QR Code</p>
+                              </div>
+                            </div>
+                            
+                            {/* Progress Bar */}
+                            {isScanning && (
+                              <div className="absolute -bottom-8 left-0 right-0">
+                                <div className="w-full bg-gray-700 rounded-full h-2">
+                                  <div 
+                                    className="bg-gradient-to-r from-cyan-400 to-purple-500 h-2 rounded-full transition-all duration-200"
+                                    style={{ width: `${scanProgress}%` }}
+                                  ></div>
+                                </div>
+                                <p className="text-cyan-400 text-xs mt-2 text-center">{scanProgress}%</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        
+                        {currentStep === 2 && showResult && (
+                          <div className="w-full h-full flex flex-col p-1.5 sm:p-2 md:p-3">
+                            {/* Header */}
+                            <div className="flex items-center justify-between mb-1.5 sm:mb-2 md:mb-3">
+                              <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                                <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                              </div>
+                              <div className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-gradient-to-r from-pink-400 to-purple-500 rounded-lg flex items-center justify-center">
+                                <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                                </svg>
+                              </div>
+                            </div>
+                            
+                            {/* Gym Info */}
+                            <div className="flex items-center space-x-1.5 sm:space-x-2 md:space-x-3 mb-1.5 sm:mb-2 md:mb-3">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <span className="text-black font-bold text-[10px] sm:text-xs">E</span>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center space-x-1 mb-0.5 sm:mb-1">
+                                  <div className="px-1 py-0.5 sm:px-1.5 sm:py-0.5 md:px-2 md:py-1 bg-purple-500 rounded-full flex items-center space-x-1">
+                                    <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span className="text-white text-[10px] sm:text-xs font-medium">Premium Gym</span>
+                                  </div>
+                                </div>
+                                <h3 className="text-white font-bold text-xs sm:text-sm md:text-base truncate">FitCode</h3>
+                                <p className="text-gray-400 text-[10px] sm:text-xs">Gym ID: 3 • Established: 2025</p>
+                              </div>
+                            </div>
+                            
+                            {/* Contact Info */}
+                            <div className="flex flex-col space-y-0.5 sm:space-y-1 md:flex-row md:items-center md:space-y-0 md:space-x-4 mb-2 sm:mb-3 md:mb-4">
+                              <div className="flex items-center space-x-1.5 sm:space-x-2">
+                                <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                </svg>
+                                <span className="text-white text-[10px] sm:text-xs">9898989898</span>
+                              </div>
+                              <div className="flex items-center space-x-1.5 sm:space-x-2">
+                                <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-pink-400" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                  <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <span className="text-white text-[10px] sm:text-xs">Visit us today!</span>
+                              </div>
+                            </div>
+                            
+                            {/* Exercise Title */}
+                            <h2 className="text-white font-bold text-sm sm:text-base md:text-lg text-center mb-1.5 sm:mb-2 md:mb-3">Leg Press</h2>
+                            
+                            {/* Tabs */}
+                            <div className="flex space-x-0.5 sm:space-x-1 mb-1.5 sm:mb-2 md:mb-3 bg-white/10 rounded-lg p-0.5 sm:p-1">
+                              <div className="flex-1 bg-cyan-500 rounded-md py-1 sm:py-1.5 md:py-2 px-1 sm:px-1.5 md:px-2 flex items-center justify-center space-x-0.5 sm:space-x-1">
+                                <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <span className="text-white text-[10px] sm:text-xs font-medium">Video Guide</span>
+                              </div>
+                              <div className="flex-1 py-1 sm:py-1.5 md:py-2 px-1 sm:px-1.5 md:px-2 flex items-center justify-center space-x-0.5 sm:space-x-1">
+                                <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                                <span className="text-gray-400 text-[10px] sm:text-xs">Instructions</span>
+                              </div>
+                              <div className="flex-1 py-1 sm:py-1.5 md:py-2 px-1 sm:px-1.5 md:px-2 flex items-center justify-center space-x-0.5 sm:space-x-1">
+                                <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                                <span className="text-gray-400 text-[10px] sm:text-xs">Safety Tips</span>
+                              </div>
+                            </div>
+                            
+                            {/* Video Card */}
+                            <div className="bg-white/5 rounded-xl p-1.5 sm:p-2 md:p-3 border border-white/10 flex-1">
+                              <div className="flex items-center space-x-1.5 sm:space-x-2 mb-1 sm:mb-1.5 md:mb-2">
+                                <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <h4 className="text-white font-bold text-[10px] sm:text-xs">How to Use Video</h4>
+                              </div>
+                              <p className="text-gray-300 text-[10px] sm:text-xs mb-1.5 sm:mb-2 md:mb-3">Watch this video to learn proper technique</p>
+                              
+                              {/* Video Placeholder */}
+                              <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg h-16 sm:h-20 md:h-24 flex items-center justify-center mb-1 sm:mb-1.5 md:mb-2">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center">
+                                  <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                  </svg>
+                                </div>
+                              </div>
+                              
+                              <div className="text-center">
+                                <p className="text-white font-bold text-[10px] sm:text-xs">No video available</p>
+                                <p className="text-gray-400 text-[10px] sm:text-xs">Check the instructions tab for written guidance</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Status */}
+                      <div className="text-center">
+                        {currentStep === 0 && (
+                          <p className="text-gray-400 text-sm">Ready to start</p>
+                        )}
+                        {currentStep === 1 && !isScanning && (
+                          <p className="text-cyan-400 text-sm font-medium">Ready to scan</p>
+                        )}
+                        {currentStep === 1 && isScanning && (
+                          <p className="text-cyan-400 text-sm font-medium">Scanning equipment...</p>
+                        )}
+                        {currentStep === 2 && showResult && (
+                          <p className="text-green-400 text-sm font-medium">Success! Equipment detected</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Floating Elements */}
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full animate-bounce"></div>
+                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full animate-bounce delay-1000"></div>
+              </div>
+              
+              {/* Interactive Demo Controls */}
+              <div className="space-y-6 sm:space-y-8">
+                {/* Step Indicators */}
+                <div className="flex justify-center space-x-2 mb-6">
+                  {[0, 1, 2].map((step) => (
+                    <div
+                      key={step}
+                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        currentStep === step 
+                          ? 'bg-gradient-to-r from-cyan-400 to-purple-500 scale-125' 
+                          : 'bg-gray-600'
+                      }`}
+                    ></div>
+                  ))}
+                </div>
+                
+                {/* Auto-running Demo Content */}
+                <div className="space-y-6">
+                  {currentStep === 0 && (
+                    <div className="text-center">
+                      <h4 className="text-2xl font-bold text-white mb-4">Welcome to FitCode Demo</h4>
+                      <p className="text-gray-300 leading-relaxed mb-6">
+                        Experience how easy it is to scan gym equipment and get instant guidance. 
+                        Watch the demo automatically progress through each step.
+                      </p>
+                      <div className="flex items-center justify-center space-x-2 text-cyan-400">
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                        <span className="text-sm">Demo starting in 3 seconds...</span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {currentStep === 1 && (
+                    <div className="space-y-6">
+                      <div className="text-center">
+                        <h4 className="text-2xl font-bold text-white mb-4">Step 1: Scan Equipment</h4>
+                        <p className="text-gray-300 leading-relaxed mb-6">
+                          Point your camera at any gym equipment's QR code. Our advanced scanning technology 
+                          instantly recognizes the equipment and provides personalized guidance.
+                        </p>
+                      </div>
+                      
+                      <div className="text-center">
+                        {!isScanning && (
+                          <div className="flex items-center justify-center space-x-2 text-cyan-400">
+                            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                            <span className="text-sm">Preparing to scan...</span>
+                          </div>
+                        )}
+                        {isScanning && (
+                          <div className="flex items-center justify-center space-x-2 text-cyan-400">
+                            <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-sm">Scanning in progress...</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {currentStep === 2 && (
+                    <div className="space-y-6">
+                      <div className="text-center">
+                        <h4 className="text-2xl font-bold text-white mb-4">Step 2: Get Results</h4>
+                        <p className="text-gray-300 leading-relaxed mb-6">
+                          Instantly access video guides added by gym owners, step-by-step instructions, 
+                          and safety tips for proper equipment usage.
+                        </p>
+                      </div>
+                      
+                      <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+                        <h5 className="text-white font-bold mb-4">What you get:</h5>
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-cyan-400/20 rounded-lg flex items-center justify-center">
+                              <svg className="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </div>
+                            <span className="text-gray-300">Video Guides (Added by Gym Owner)</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-purple-400/20 rounded-lg flex items-center justify-center">
+                              <svg className="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                              </svg>
+                            </div>
+                            <span className="text-gray-300">Step-by-Step Instructions</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-yellow-400/20 rounded-lg flex items-center justify-center">
+                              <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                              </svg>
+                            </div>
+                            <span className="text-gray-300">Safety Tips & Guidelines</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-center">
+                        <div className="flex items-center justify-center space-x-2 text-green-400">
+                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                          <span className="text-sm">Demo will restart in 3 seconds...</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -217,15 +717,33 @@ const LandingPage = () => {
         </section>
         <style>{`
           @keyframes float-slow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            50% { transform: translateY(-15px) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(-2deg); }
           }
           .animate-float-slow {
-            animation: float-slow 4s ease-in-out infinite;
+            animation: float-slow 6s ease-in-out infinite;
           }
           .animate-float-slow.delay-100 { animation-delay: 1s; }
           .animate-float-slow.delay-200 { animation-delay: 2s; }
           .animate-float-slow.delay-300 { animation-delay: 3s; }
+          
+          @keyframes glow-pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+          }
+          .animate-glow-pulse {
+            animation: glow-pulse 3s ease-in-out infinite;
+          }
+          
+          @keyframes rotate-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          .animate-rotate-slow {
+            animation: rotate-slow 20s linear infinite;
+          }
         `}</style>
 
         {/* How FitCode Works Section */}
