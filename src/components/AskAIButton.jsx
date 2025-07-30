@@ -62,6 +62,13 @@ const AskAIButton = ({ onResponse }) => {
   const isMobile = useIsMobile();
   const [showTooltip, setShowTooltip] = useState(false);
 
+  // Ensure tooltip is hidden on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setShowTooltip(false);
+    }
+  }, [isMobile]);
+
   const handleSubmit = async () => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
@@ -419,7 +426,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
           </button>
           
           {/* Motivational tooltip */}
-          {showTooltip && (
+          {showTooltip && !isMobile && (
             <div className="absolute bottom-full right-0 mb-3 opacity-100 transition-all duration-300 transform translate-y-0 max-w-[calc(100vw-2rem)]">
               <div className={`bg-gradient-to-r from-orange-600 to-red-600 backdrop-blur-xl border border-orange-400/30 rounded-xl shadow-2xl text-white font-bold
                 ${isMobile ? 'px-2 py-1 text-[10px] min-w-[120px]' : 'px-4 py-3 text-sm'}`}>
