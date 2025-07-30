@@ -116,9 +116,12 @@
   }
   body {
     @apply bg-background text-foreground;
-    overflow-x: hidden;
   }
   html {
+    overflow-x: hidden;
+  }
+  /* Prevent horizontal scroll on specific containers instead of global */
+  .no-horizontal-scroll {
     overflow-x: hidden;
   }
 }
