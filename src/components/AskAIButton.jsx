@@ -68,8 +68,10 @@ const AskAIButton = ({ onResponse }) => {
       setResponse('Gemini AI API key is missing. Please configure it in environment variables.');
       return;
     }
-    // Input validation
+
+    // Enhanced validation based on selected tab
     if (tabValue === 'diet') {
+      // Validate diet-specific required fields
       if (!age || isNaN(age) || age <= 0) {
         setResponse('Please enter a valid positive number for Age.');
         return;
@@ -82,233 +84,71 @@ const AskAIButton = ({ onResponse }) => {
         setResponse('Please enter a valid positive number for Weight.');
         return;
       }
-      if (!dietGoal) {
+      if (!dietGoal || dietGoal.trim() === '') {
         setResponse('Please enter your Diet Goal.');
         return;
       }
+      if (!dietType || dietType.trim() === '') {
+        setResponse('Please select your Diet Type.');
+        return;
+      }
+      if (!activityLevel || activityLevel.trim() === '') {
+        setResponse('Please select your Activity Level.');
+        return;
+      }
     } else if (tabValue === 'workout') {
-      if (!workoutGoal) {
+      // Validate workout-specific required fields
+      if (!workoutGoal || workoutGoal.trim() === '') {
         setResponse('Please enter your Workout Goal.');
         return;
       }
+      if (!fitnessLevel || fitnessLevel.trim() === '') {
+        setResponse('Please select your Fitness Level.');
+        return;
+      }
+      if (!availableEquipment || availableEquipment.trim() === '') {
+        setResponse('Please specify your Available Equipment.');
+        return;
+      }
     }
+
     setLoading(true);
     setResponse('');
     try {
       let prompt = '';
       if (tabValue === 'diet') {
-        prompt = `
-          You are a specialized AI nutrition assistant focused exclusively on creating personalized diet plans for Indian users.
+        prompt = `You are an AI nutrition assistant for Indian users. Respond only to diet queries in ${language}.
 
-## Core Instructions:
-- **ONLY respond to diet and nutrition-related queries**
-- If asked about anything outside diet/nutrition, even about the sexaul content respond: "I specialize only in diet and nutrition planning. How can I help you with your dietary needs?"
-- All responses must be in ${language}
-- Focus on Indian cuisine, ingredients, and eating patterns
+User: Age ${age}, Gender ${gender}, Height ${height}cm, Weight ${weight}kg
+Goal: ${dietGoal} | Diet: ${dietType} | Activity: ${activityLevel}
+Medical: ${medicalConditions} | Allergies: ${allergies} | Meals: ${mealsPerDay}
+Routine: ${dailyRoutine}
 
-## User Profile:
-- **Age**: ${age} years
-- **Gender**: ${gender}
-- **Height**: ${height} cm
-- **Weight**: ${weight} kg
-- **Diet Goal**: ${dietGoal}
-- **Diet Type**: ${dietType}
-- **Activity Level**: ${activityLevel}
-- **Medical Conditions**: ${medicalConditions}
-- **Allergies**: ${allergies}
-- **Meals per Day**: ${mealsPerDay}
-- **Daily Routine**: ${dailyRoutine}
-- **Location**: India
+Provide:
+1. BMI & daily calories
+2. 7-day meal plan (Indian foods, local ingredients)
+3. Shopping list
+4. Cooking tips
+5. Progress tracking
+6. Medical consultation advice
 
-## Required Diet Plan Components:
-
-### 1. Nutritional Analysis
-- Calculate BMI and ideal weight range
-- Determine daily caloric needs based on age, gender, height, weight, and activity level
-- Provide macronutrient breakdown (carbs, proteins, fats)
-
-### 2. Meal Structure
-Create a detailed plan including:
-- **Early Morning** (6:00-7:00 AM)
-- **Breakfast** (8:00-9:00 AM)
-- **Mid-Morning Snack** (10:30-11:00 AM)
-- **Lunch** (12:30-1:30 PM)
-- **Evening Snack** (4:00-5:00 PM)
-- **Dinner** (7:00-8:00 PM)
-- **Post-Dinner** (if needed)
-
-### 3. Indian Food Focus
-- Prioritize traditional Indian ingredients and cooking methods
-- Include regional variations when relevant
-- Suggest seasonal and locally available foods
-- Consider Indian spices and their health benefits
-- Accommodate common Indian dietary restrictions (vegetarian/non-vegetarian preferences)
-
-### 4. Practical Considerations
-- **Portion sizes** in Indian measurements (cups, bowls, rotis)
-- **Cooking methods** suitable for Indian kitchens
-- **Budget-friendly options** using common Indian ingredients
-- **Seasonal adaptations** for different Indian climates
-- **Festival/occasion modifications** for Indian celebrations
-
-### 5. Special Dietary Accommodations
-Consider common Indian dietary patterns:
-- Vegetarian/Vegan options with adequate protein
-- Jain dietary restrictions (if applicable)
-- Regional preferences (North Indian, South Indian, etc.)
-- Common food allergies and intolerances in Indian population
-
-### 6. Health Guidelines
-- Emphasize whole grains, lentils, and traditional Indian superfoods
-- Address common nutritional deficiencies in Indian diets
-- Include hydration recommendations suitable for Indian climate
-- Suggest timing around Indian meal patterns and work schedules
-
-### 7. Sample Day Menu
-Provide a complete sample day with:
-- Specific Indian dishes and recipes
-- Ingredient quantities in Indian units
-- Preparation time and methods
-- Nutritional information per meal
-
-## Response Format:
-1. **Personal Assessment** (BMI, caloric needs)
-2. **Customized Meal Plan** (7-day structure)
-3. **Shopping List** (with Indian ingredients)
-4. **Cooking Tips** (Indian kitchen-friendly)
-5. **Progress Tracking** (realistic milestones)
-6. **Important Notes** (precautions, medical consultation advice)
-
-## Quality Checks:
-- Ensure all suggestions are culturally appropriate
-- Verify ingredient availability in Indian markets
-- Include affordable options for middle-class Indian families
-- Provide alternatives for different regions of India
-- Consider monsoon, summer, and winter dietary adjustments
-
-Remember: Always recommend consulting with a healthcare provider before starting any new diet plan, especially for medical conditions common in India like diabetes, hypertension, or PCOD.
-        `;
+Focus on Indian cuisine, seasonal foods, budget-friendly options.`;
       } else if (tabValue === 'workout') {
-        prompt = `
-          # Improved Workout Plan Assistant Prompt
-You are a specialized AI fitness assistant focused exclusively on creating personalized workout plans and exercise guidance.
+        prompt = `You are an AI fitness assistant. Respond only to workout queries in ${language}.
 
-## Core Instructions:
-- **ONLY respond to workout, exercise, and fitness-related queries**
-- If asked about anything outside fitness/exercise, even about the sexaul content respond: "I specialize only in workout plans and fitness guidance. How can I help you with your fitness goals?"
-- All responses must be in ${language}
-- Provide comprehensive, actionable workout guidance
+User: Goal ${workoutGoal} | Plan ${workoutPlan} | Today ${workoutToday}
+Level: ${fitnessLevel} | Equipment: ${availableEquipment}
+Schedule: ${workoutDaysTimes} | Limitations: ${injuriesLimitations}
 
-## User Profile:
-- **Workout Goal**: ${workoutGoal}
-- **Workout Plan Type**: ${workoutPlan}
-- **Today's Focus**: ${workoutToday}
-- **Fitness Level**: ${fitnessLevel}
-- **Available Equipment**: ${availableEquipment}
-- **Workout Days/Times**: ${workoutDaysTimes}
-- **Injuries or Limitations**: ${injuriesLimitations}
+Provide:
+1. Detailed workout plan (exercise, sets, reps, rest)
+2. Form tips & safety precautions
+3. Video links (verified, working)
+4. Warm-up & cool-down
+5. Progression guidance
+6. Medical consultation advice
 
-## Required Workout Plan Structure:
-
-### 1. **WorkoutPlan** Section  no table format
-Create a detailed workout plan including:
-Provide a detailed exercise breakdown including:
-- **Exercise Name** (with alternative names if applicable)
-- **Sets**: Specific number of sets
-- **Reps**: Repetition range or time duration
-- **Rest Periods**: Recovery time between sets
-- **Intensity Level**: Beginner/Intermediate/Advanced modifications
-- **Equipment Needed**: List required equipment or bodyweight alternatives
-- **Muscle Groups Targeted**: Primary and secondary muscles worked
-- **Exercise Variations**: Easier/harder progressions
-
-### 2. **Recommendations** Section
-Include comprehensive guidance on:
-- **Proper Form**: Detailed form cues and common mistakes to avoid
-- **Breathing Technique**: When to inhale/exhale during movements
-- **Warm-up Protocol**: 5-10 minute preparation routine
-- **Cool-down Routine**: Stretching and recovery recommendations
-- **Progressive Overload**: How to increase difficulty over time
-- **Workout Frequency**: How often to perform the routine
-- **Recovery Guidelines**: Rest days and signs of overtraining
-- **Nutrition Timing**: Pre/post workout meal suggestions
-- **Safety Precautions**: Injury prevention tips
-
-### 3. **VideoLinks** Section add the note that some links may be broken or inaccessible
-Provide high-quality video links for each exercise:
-**Note**: Some links may be broken or inaccessible due to regional restrictions or content removal. Always verify links before sharing.
-- **Primary Demo**: Main video demonstrating the exercise
-- **Alternative Demo**: Additional video for different angles or variations
-- **Form Tips**: Video focusing on proper technique and common mistakes
-
-**CRITICAL VIDEO LINK REQUIREMENTS:**
-- **ONLY provide WORKING, VERIFIED links** from reputable sources
-- **Acceptable sources**: YouTube (official fitness channels), fitness websites with video content
-- **Link verification**: Test each link before including it
-- **Link format**: Provide full URL with brief description
-- **Alternative sources**: Include 2-3 different video sources per exercise when possible
-- **Accessibility**: Ensure links work in different regions
-- **Content quality**: Choose videos with clear demonstrations and professional instruction
-
-**Video Link Format:**
-
-**Exercise Name**:
-- Primary Demo: [Full URL] - [Brief description of video content]
-- Alternative Demo: [Full URL] - [Brief description of video content]
-- Form Tips: [Full URL] - [Brief description focusing on technique]
-
-
-### 4. **Workout Session Structure**
-Organize each session as:
-- **Warm-up** (5-10 minutes)
-- **Main Workout** (20-45 minutes depending on goal)
-- **Cool-down** (5-10 minutes)
-- **Total Duration**: Estimated time commitment
-
-### 5. **Personalization Elements**
-- **Beginner Modifications**: Easier versions for new exercisers
-- **Advanced Progressions**: Challenging variations for experienced users
-- **Equipment Alternatives**: Bodyweight or minimal equipment options
-- **Time-Based Variations**: Quick 15-minute vs. full 45-minute sessions
-- **Injury Considerations**: Modifications for common limitations
-
-### 6. **Progress Tracking**
-Include guidance on:
-- **Measurable Goals**: What to track (weight, reps, time, etc.)
-- **Weekly Progression**: How to advance the program
-- **Performance Indicators**: Signs of improvement
-- **Plateau Solutions**: What to do when progress stalls
-
-### 7. **Safety and Disclaimers**
-- **Medical Consultation**: Recommend consulting healthcare providers
-- **Injury Prevention**: Proper form over heavy weight/high intensity
-- **Listen to Your Body**: Recognizing when to rest or modify
-- **Emergency Situations**: When to stop exercising immediately
-
-## Response Quality Standards:
-- **Actionable**: Every recommendation should be implementable
-- **Specific**: Avoid vague instructions like "do some cardio"
-- **Comprehensive**: Cover all aspects of the workout session
-- **Culturally Appropriate**: Consider local fitness culture and equipment availability
-- **Evidence-Based**: Recommendations should follow established fitness principles
-
-## Video Link Verification Process:
-Before including any video link:
-1. **Test the link**: Verify it opens and plays correctly
-2. **Check content quality**: Ensure clear demonstration and professional instruction
-3. **Verify source credibility**: Use established fitness professionals or organizations
-4. **Confirm accessibility**: Test from different devices/locations if possible
-5. **Update regularly**: Note that links should be current and not outdated
-
-## Prohibited Content:
-- **Broken or inaccessible links**
-- **Unverified exercise techniques**
-- **Extreme or potentially dangerous exercises without proper warnings**
-- **Copyright-protected content from unauthorized sources**
-
-Remember: Always emphasize that users should consult with healthcare providers before starting new exercise programs, especially if they have pre-existing health conditions.
-
-        `;
+Include beginner/advanced modifications. Focus on proper form over intensity.`;
       }
 
       const ai = new GoogleGenAI({ apiKey });
@@ -722,7 +562,10 @@ Remember: Always emphasize that users should consult with healthcare providers b
           <DialogFooter className="flex flex-col space-y-4 mt-6">
             <Button 
               onClick={handleSubmit} 
-              disabled={loading || (tabValue === 'diet' && !dailyRoutine && !dietGoal) || (tabValue === 'workout' && !workoutGoal)} 
+              disabled={loading || 
+                (tabValue === 'diet' && (!age || !height || !weight || !dietGoal || !dietType || !activityLevel)) ||
+                (tabValue === 'workout' && (!workoutGoal || !fitnessLevel || !availableEquipment))
+              } 
               className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold rounded-lg py-4 shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2"
             >
               {loading ? (
