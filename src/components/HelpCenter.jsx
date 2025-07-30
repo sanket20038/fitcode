@@ -58,7 +58,7 @@ const HelpCenter = () => {
       questions: [
         {
           question: 'How do I reset my password?',
-          answer: 'Click on "Forgot Password" on the login page, enter your email address, and follow the instructions sent to your email to reset your password.'
+          answer: 'Click on "Forgot Password" on the client or owner login page, enter your email address, and follow the instructions sent to your email to reset your password.'
         },
         {
           question: 'Can I change my account type?',

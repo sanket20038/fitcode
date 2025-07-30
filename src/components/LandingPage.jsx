@@ -961,8 +961,8 @@ const LandingPage = () => {
                   Platform
                 </h5>
                 <div className="space-y-2 sm:space-y-3">
-                  <a href="/login/owner" className="block text-gray-400 hover:text-cyan-400 transition-colors duration-300 hover:translate-x-1 text-sm sm:text-base py-1 sm:py-0 touch-manipulation">For Gym Owners</a>
-                  <a href="/login/client" className="block text-gray-400 hover:text-cyan-400 transition-colors duration-300 hover:translate-x-1 text-sm sm:text-base py-1 sm:py-0 touch-manipulation">For Members</a>
+                                  <a href="/login/owner" className="block text-gray-400 hover:text-cyan-400 transition-colors duration-300 hover:translate-x-1 text-sm sm:text-base py-1 sm:py-0 touch-manipulation">Gym Owner Login</a>
+                <a href="/login/client" className="block text-gray-400 hover:text-cyan-400 transition-colors duration-300 hover:translate-x-1 text-sm sm:text-base py-1 sm:py-0 touch-manipulation">Member Login</a>
                   {/* <a href="#" className="block text-gray-400 hover:text-cyan-400 transition-colors duration-300 hover:translate-x-1 text-sm sm:text-base py-1 sm:py-0 touch-manipulation">Features</a>
                   <a href="#" className="block text-gray-400 hover:text-cyan-400 transition-colors duration-300 hover:translate-x-1 text-sm sm:text-base py-1 sm:py-0 touch-manipulation">Pricing</a> */}
                 </div>

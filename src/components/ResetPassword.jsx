@@ -32,7 +32,7 @@ const ResetPassword = () => {
     try {
       await authAPI.resetPassword({ value, password });
       setSuccess('Password reset successful! You can now log in.');
-      setTimeout(() => navigate('/login'), 2000);
+              setTimeout(() => navigate('/login/client'), 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to reset password.');
     } finally {

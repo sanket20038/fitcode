@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import './App.css';
 
 // Components
-import Login from './components/Login';
 import Register from './components/Register';
 import ClientRegister from './components/ClientRegister';
 import OwnerRegister from './components/OwnerRegister';
@@ -81,7 +80,7 @@ function App() {
             element={
               authenticated ? 
                 <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
-                <Login />
+                <Navigate to="/login/client" replace />
             } 
           />
           <Route

@@ -36,7 +36,7 @@ const Register = () => {
       });
       
       setSuccess('Registration successful! Please sign in.');
-      setTimeout(() => navigate('/login'), 2000);
+      setTimeout(() => navigate('/login/owner'), 2000);
     } catch (error) {
       setError(error.response?.data?.message || 'Registration failed');
     } finally {
@@ -64,7 +64,7 @@ const Register = () => {
       });
       
       setSuccess('Registration successful! Please sign in.');
-      setTimeout(() => navigate('/login'), 2000);
+      setTimeout(() => navigate('/login/client'), 2000);
     } catch (error) {
       setError(error.response?.data?.message || 'Registration failed');
     } finally {
@@ -202,8 +202,12 @@ const Register = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <Link to="/login" className="text-blue-600 hover:underline">
-                Sign in
+              <Link to="/login/client" className="text-blue-600 hover:underline">
+                Sign in as Client
+              </Link>
+              {' '}or{' '}
+              <Link to="/login/owner" className="text-blue-600 hover:underline">
+                Sign in as Owner
               </Link>
             </p>
           </div>
