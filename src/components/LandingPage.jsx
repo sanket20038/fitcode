@@ -178,9 +178,7 @@ const LandingPage = () => {
           <div className="absolute bottom-1/3 right-1/4 w-1 h-1 bg-pink-400/20 rounded-full animate-ping delay-3000"></div>
           
           {/* Geometric Shapes */}
-          <div className="absolute top-1/2 left-10 w-16 h-16 border border-cyan-400/10 rotate-45 animate-pulse"></div>
-          <div className="absolute top-1/3 right-10 w-12 h-12 border border-purple-400/10 rounded-full animate-pulse delay-1000"></div>
-          <div className="absolute bottom-1/2 left-1/4 w-20 h-20 border border-yellow-400/10 rotate-12 animate-pulse delay-500"></div>
+          
           
           {/* Gradient Orbs */}
           <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-gradient-to-r from-cyan-400/5 to-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
@@ -537,8 +535,8 @@ const LandingPage = () => {
                 </div>
                 
                 {/* Floating Elements */}
-                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full animate-bounce"></div>
-                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full animate-bounce delay-1000"></div>
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full blur-xl animate-pulse delay-1000"></div>
+                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-yellow-400 to-pink-500 rounded-full blur-xl animate-pulse delay-1000"></div>
               </div>
               
               {/* Interactive Demo Controls */}
