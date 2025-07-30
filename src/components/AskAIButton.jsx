@@ -359,7 +359,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
   return (
     <>
       {/* Enhanced Gym-Inspired AI Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-4 z-50">
         <div className="relative group">
           {/* Animated energy aura */}
           <div className={`absolute ${isMobile ? '-inset-1' : '-inset-2'} bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl blur-xl opacity-60 group-hover:opacity-90 animate-pulse transition duration-1000`}></div>
