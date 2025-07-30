@@ -302,9 +302,9 @@ const exportToPDF = async (aiResponses) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
+    <div className="relative bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800" style={{ minHeight: '200vh' }}>
       {/* Modern Header with Glassmorphism - Enhanced Sticky */}
-      <header className="sticky-header sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl">
+      <header className="sticky-header sticky top-0 z-50 backdrop-blur-xl bg-gray-900/90 border-b border-white/10 shadow-2xl" style={{ position: 'sticky', top: 0, zIndex: 9999 }}>
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo and App Name */}
           <div className="flex items-center space-x-3">
@@ -822,6 +822,14 @@ const exportToPDF = async (aiResponses) => {
 
       {/* AI Assistant Button */}
       <AskAIButton onResponse={handleAiResponse} />
+      
+      {/* Additional content to test scrolling */}
+      <div className="h-96 bg-gradient-to-t from-gray-800 to-transparent flex items-center justify-center">
+        <div className="text-center text-white/60">
+          <p className="text-lg">Scroll to test sticky header</p>
+          <p className="text-sm mt-2">The header should stay at the top</p>
+        </div>
+      </div>
     </div>
   );
 };
