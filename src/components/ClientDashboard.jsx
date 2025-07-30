@@ -373,7 +373,7 @@ const exportToPDF = async (aiResponses) => {
         )}
 
         {/* Hero Section with QR Scanner */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 mt-8">
           <div className="max-w-4xl mx-auto px-4">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Your Fitness Journey
