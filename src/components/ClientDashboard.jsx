@@ -305,7 +305,7 @@ const exportToPDF = async (aiResponses) => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
       {/* Modern Header with Glassmorphism */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between overflow-x-hidden">
           {/* Logo and App Name */}
           <div className="flex items-center space-x-3">
             <div className="relative">
@@ -341,7 +341,7 @@ const exportToPDF = async (aiResponses) => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 overflow-x-hidden">
         {/* Success/Error Messages */}
         {error && (
           <Alert className="mb-6 bg-red-500/10 border-red-500/20 backdrop-blur-xl animate-in slide-in-from-top duration-300">
@@ -358,74 +358,74 @@ const exportToPDF = async (aiResponses) => {
         )}
 
         {/* Hero Section with QR Scanner */}
-        <div className="text-center mb-16">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl font-black text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+        <div className="text-center mb-16 overflow-x-hidden">
+          <div className="max-w-4xl mx-auto px-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Your Fitness Journey
             </h2>
-            <p className="text-xl text-white/70 mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-white/70 mb-12 max-w-2xl mx-auto leading-relaxed px-4">
               Scan machine QR codes, access personalized workouts, and track your progress with AI-powered insights
             </p>
             
             {/* Modern Hexagonal QR Scanner */}
-            <div className="flex justify-center">
+            <div className="flex justify-center px-4">
               <div 
                 onClick={() => navigate('/client/scanner')}
                 className="group relative cursor-pointer"
               >
                 {/* Hexagonal background */}
-                <div className="relative w-80 h-40">
+                <div className="relative w-64 sm:w-72 md:w-80 h-32 sm:h-36 md:h-40">
                   {/* Outer hexagon glow */}
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
                   
                   {/* Main hexagon container */}
-                  <div className="relative bg-gradient-to-br from-slate-900 via-purple-900/50 to-cyan-900/50 backdrop-blur-xl border border-white/20 rounded-full p-8 shadow-2xl hover:shadow-cyan-400/30 transition-all duration-500 hover:scale-105">
+                  <div className="relative bg-gradient-to-br from-slate-900 via-purple-900/50 to-cyan-900/50 backdrop-blur-xl border border-white/20 rounded-full p-4 sm:p-6 md:p-8 shadow-2xl hover:shadow-cyan-400/30 transition-all duration-500 hover:scale-105">
                     
                     {/* Inner scanning area */}
                     <div className="relative w-full h-full bg-black/60 rounded-full border-2 border-dashed border-white/30 flex items-center justify-center">
                       
                       {/* Rotating ring */}
-                      <div className="absolute inset-4 border-2 border-cyan-400/50 rounded-full animate-spin-slow"></div>
+                      <div className="absolute inset-2 sm:inset-3 md:inset-4 border-2 border-cyan-400/50 rounded-full animate-spin-slow"></div>
                       
                       {/* Center QR icon */}
-                      <div className="relative z-10 bg-gradient-to-r from-cyan-400 to-purple-500 p-4 rounded-2xl shadow-2xl group-hover:scale-110 transition-transform duration-300">
-                        <QrCode className="w-12 h-12 text-black" />
+                      <div className="relative z-10 bg-gradient-to-r from-cyan-400 to-purple-500 p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-2xl group-hover:scale-110 transition-transform duration-300">
+                        <QrCode className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-black" />
                       </div>
                       
                       {/* Scanning particles */}
                       <div className="absolute inset-0">
-                        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
-                        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-purple-400 rounded-full animate-ping delay-300"></div>
-                        <div className="absolute left-8 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-cyan-400 rounded-full animate-ping delay-150"></div>
-                        <div className="absolute right-8 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-purple-400 rounded-full animate-ping delay-450"></div>
+                        <div className="absolute top-4 sm:top-6 md:top-8 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-cyan-400 rounded-full animate-ping"></div>
+                        <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-400 rounded-full animate-ping delay-300"></div>
+                        <div className="absolute left-4 sm:left-6 md:left-8 top-1/2 transform -translate-y-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-cyan-400 rounded-full animate-ping delay-150"></div>
+                        <div className="absolute right-4 sm:right-6 md:right-8 top-1/2 transform -translate-y-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-400 rounded-full animate-ping delay-450"></div>
                       </div>
                       
                       {/* Scanning wave */}
                       <div className="absolute inset-0 rounded-full">
                         <div className="absolute inset-0 border-2 border-cyan-400/30 rounded-full animate-ping"></div>
-                        <div className="absolute inset-4 border-2 border-purple-400/30 rounded-full animate-ping delay-500"></div>
+                        <div className="absolute inset-2 sm:inset-3 md:inset-4 border-2 border-purple-400/30 rounded-full animate-ping delay-500"></div>
                       </div>
                     </div>
                   </div>
                 </div>
                 
                 {/* Text below */}
-                <div className="mt-6 text-center">
-                  <div className="text-white font-black text-2xl mb-2">
+                <div className="mt-4 sm:mt-6 text-center">
+                  <div className="text-white font-black text-lg sm:text-xl md:text-2xl mb-1 sm:mb-2">
                     <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text">SCAN</span> QR
                   </div>
-                  <div className="text-cyan-400 text-sm font-medium">Tap to access equipment guides</div>
+                  <div className="text-cyan-400 text-xs sm:text-sm font-medium">Tap to access equipment guides</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-10 mb-20 text-center">
-  <h2 className="text-3xl sm:text-4xl font-semibold text-white/90 tracking-wide mb-2">
+        <div className="mt-10 mb-20 text-center overflow-x-hidden">
+  <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white/90 tracking-wide mb-2 px-4">
     Want to train smarter?
   </h2>
-  <p className="text-white/60 max-w-xl mx-auto text-base sm:text-lg mb-6">
+  <p className="text-white/60 max-w-xl mx-auto text-base sm:text-lg mb-6 px-4">
   Explore our interactive muscle map to discover machine-specific exercises, complete with how-to videos, multilingual instructions, and safety tips — designed to guide users of all backgrounds.
 </p>
 
@@ -534,45 +534,45 @@ const exportToPDF = async (aiResponses) => {
         {/* Enhanced Modern Tabs - Responsive */}
         <Tabs value={tabValue} onValueChange={setTabValue} className="space-y-8">
           <div className="flex justify-center px-2 sm:px-4">
-            <TabsList className="inline-flex h-12 sm:h-16 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-1 sm:p-2 shadow-2xl w-full sm:max-w-none overflow-x-auto min-w-max no-scrollbar">
+            <TabsList className="inline-flex h-12 sm:h-16 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-1 sm:p-2 shadow-2xl w-full max-w-full overflow-hidden">
               <TabsTrigger 
                 value="airesponses"
-                className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-none"
+                className="relative px-2 sm:px-4 md:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1"
               >
-                <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="flex items-center space-x-1 sm:space-x-2">
                   <div className="relative">
                     <Zap className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
                     <div className="absolute -top-1 -right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <span className="font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap">AI Responses</span>
+                  <span className="font-semibold text-xs sm:text-sm md:text-base">AI Responses</span>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 data-[state=active]:opacity-100 transition-opacity duration-500"></div>
               </TabsTrigger>
               
               <TabsTrigger 
                 value="bookmarks" 
-                className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-none"
+                className="relative px-2 sm:px-4 md:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1"
               >
-                <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="flex items-center space-x-1 sm:space-x-2">
                   <div className="relative">
                     <Bookmark className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
                     <div className="absolute -top-1 -right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <span className="font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap">Bookmarks</span>
+                  <span className="font-semibold text-xs sm:text-sm md:text-base">Bookmarks</span>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 data-[state=active]:opacity-100 transition-opacity duration-500"></div>
               </TabsTrigger>
               
               <TabsTrigger 
                 value="history"
-                className="relative px-3 sm:px-6 md:px-8 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-none"
+                className="relative px-2 sm:px-4 md:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl transition-all duration-500 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 text-white/70 hover:text-white hover:bg-white/10 group flex-1"
               >
-                <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="flex items-center space-x-1 sm:space-x-2">
                   <div className="relative">
                     <History className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
                     <div className="absolute -top-1 -right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                  <span className="font-semibold text-xs sm:text-sm md:text-base whitespace-nowrap">Scan History</span>
+                  <span className="font-semibold text-xs sm:text-sm md:text-base">Scan History</span>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-xl sm:rounded-2xl blur-xl opacity-0 data-[state=active]:opacity-100 transition-opacity duration-500"></div>
               </TabsTrigger>
@@ -820,8 +820,8 @@ const exportToPDF = async (aiResponses) => {
         </Tabs>
       </main>
 
-      {/* AI Assistant Button - Temporarily hidden for debugging */}
-      {/* <AskAIButton onResponse={handleAiResponse} /> */}
+      {/* AI Assistant Button */}
+      <AskAIButton onResponse={handleAiResponse} />
     </div>
   );
 };
