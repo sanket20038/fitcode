@@ -117,49 +117,16 @@
   body {
     @apply bg-background text-foreground;
     overflow-x: hidden;
-    overflow-y: auto;
   }
   
   /* Prevent horizontal scroll on mobile */
   html, body {
     max-width: 100vw;
     overflow-x: hidden;
-    overflow-y: auto;
   }
   
   /* Ensure fixed positioned elements don't cause horizontal scroll */
   .fixed {
     max-width: calc(100vw - 1rem);
-  }
-  
-  /* Enhanced sticky header support */
-  .sticky-header {
-    position: -webkit-sticky !important;
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 9999 !important;
-    will-change: transform;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    background: rgba(17, 24, 39, 0.95) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-  }
-  
-  /* Ensure proper stacking context for sticky elements */
-  .sticky-header {
-    isolation: isolate;
-  }
-  
-  /* Force sticky behavior */
-  header[class*="sticky"] {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 9999 !important;
-  }
-  
-  /* Smooth scrolling for better sticky behavior */
-  html {
-    scroll-behavior: smooth;
   }
 }
