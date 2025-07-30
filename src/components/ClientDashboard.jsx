@@ -373,7 +373,7 @@ const exportToPDF = async (aiResponses) => {
         )}
 
         {/* Hero Section with QR Scanner */}
-        <div className="text-center mb-16 mt-8">
+        <div className="text-center mb-16 mt-10">
           <div className="max-w-4xl mx-auto px-4">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Your Fitness Journey
@@ -400,7 +400,7 @@ const exportToPDF = async (aiResponses) => {
                     <div className="relative w-full h-full bg-black/60 rounded-full border-2 border-dashed border-white/30 flex items-center justify-center">
                       
                       {/* Rotating ring */}
-                      <div className="absolute inset-2 sm:inset-3 md:inset-4 border-2 border-cyan-400/50 rounded-full animate-spin-slow"></div>
+                      {/* <div className="absolute inset-2 sm:inset-3 md:inset-4 border-2 border-cyan-400/50 rounded-full animate-spin-slow"></div> */}
                       
                       {/* Center QR icon */}
                       <div className="relative z-10 bg-gradient-to-r from-cyan-400 to-purple-500 p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-2xl group-hover:scale-110 transition-transform duration-300">
