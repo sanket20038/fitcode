@@ -127,7 +127,7 @@ const LandingPage = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 sm:mb-10 px-4">
                 <Button
                   variant="outline"
-                  className="group relative overflow-hidden border-2 border-cyan-400/50 text-cyan-400 hover:border-cyan-400 hover:text-white font-bold px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base lg:text-lg rounded-full transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/25 w-full sm:w-auto"
+                  className="group relative overflow-hidden border-2 border-cyan-400/50 text-cyan-400 hover:border-cyan-400 hover:text-white font-bold px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 text-sm sm:text-base lg:text-lg rounded-full transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-400/25 w-auto max-w-[280px] sm:max-w-none"
                   onClick={openDemo}
                 >
                   {/* Animated background gradient */}
@@ -138,7 +138,7 @@ const LandingPage = () => {
                   
                   {/* Content */}
                   <div className="relative flex items-center justify-center">
-                    <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                    <Play className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
                     <span className="relative">
                       SEE IT IN ACTION
                       {/* Animated underline */}
