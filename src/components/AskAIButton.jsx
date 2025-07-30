@@ -359,7 +359,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
   return (
     <>
       {/* Enhanced Gym-Inspired AI Button */}
-      <div className="fixed bottom-6 right-4 z-50">
+      <div className="fixed bottom-6 right-2 sm:right-4 z-50 max-w-[calc(100vw-1rem)] sm:max-w-[calc(100vw-2rem)]">
         <div className="relative group">
           {/* Animated energy aura */}
           <div className={`absolute ${isMobile ? '-inset-1' : '-inset-2'} bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-2xl blur-xl opacity-60 group-hover:opacity-90 animate-pulse transition duration-1000`}></div>
@@ -370,8 +370,8 @@ Remember: Always emphasize that users should consult with healthcare providers b
               setOpen(true);
               if (isMobile) setShowTooltip(true);
             }}
-            className={`relative flex items-center space-x-3 bg-gradient-to-r from-orange-600 via-red-600 to-yellow-600 rounded-2xl shadow-2xl transition-all duration-300 group-hover:shadow-orange-500/50 backdrop-blur-xl border border-orange-400/30
-              ${isMobile ? 'px-3 py-2 text-xs' : 'px-5 py-4 text-base'}
+            className={`relative flex items-center space-x-2 sm:space-x-3 bg-gradient-to-r from-orange-600 via-red-600 to-yellow-600 rounded-2xl shadow-2xl transition-all duration-300 group-hover:shadow-orange-500/50 backdrop-blur-xl border border-orange-400/30 overflow-hidden
+              ${isMobile ? 'px-2 py-2 text-xs' : 'px-5 py-4 text-base'}
               ${isMobile ? '' : 'hover:scale-105 hover:-translate-y-2'}`}
             aria-label="Ask AI for Diet & Workout Plan"
             onMouseEnter={() => !isMobile && setShowTooltip(true)}
@@ -392,12 +392,12 @@ Remember: Always emphasize that users should consult with healthcare providers b
             </div>
             
             {/* Motivational text */}
-            <div className="text-left">
+            <div className="text-left min-w-0">
               <div className={`text-white font-black tracking-wide flex items-center space-x-1 ${isMobile ? 'text-xs' : 'text-sm'}`}>
-                <Dumbbell className={isMobile ? 'h-3 w-3' : 'h-4 w-4'} />
-                <span>AI TRAINER</span>
+                <Dumbbell className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} flex-shrink-0`} />
+                <span className="truncate">AI TRAINER</span>
               </div>
-              <div className={`text-orange-100 font-bold ${isMobile ? 'text-[10px]' : 'text-xs'}`}>GET FIT NOW!</div>
+              <div className={`text-orange-100 font-bold ${isMobile ? 'text-[10px]' : 'text-xs'} truncate`}>GET FIT NOW!</div>
             </div>
             
             {/* Energy particles */}
@@ -410,7 +410,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
             </div>
             
             {/* Strength bars animation */}
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-0.5">
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-0.5 max-w-[20px]">
               <div className={`${isMobile ? 'w-0.5 h-2' : 'w-0.5 h-3'} bg-white/60 rounded-full animate-pulse`} style={{ animationDelay: '0s' }}></div>
               <div className={`${isMobile ? 'w-0.5 h-2.5' : 'w-0.5 h-4'} bg-white/70 rounded-full animate-pulse`} style={{ animationDelay: '0.2s' }}></div>
               <div className={`${isMobile ? 'w-0.5 h-3' : 'w-0.5 h-5'} bg-white/80 rounded-full animate-pulse`} style={{ animationDelay: '0.4s' }}></div>
@@ -421,8 +421,8 @@ Remember: Always emphasize that users should consult with healthcare providers b
           
           {/* Motivational tooltip */}
           {(showTooltip || isMobile) && (
-            <div className="absolute bottom-full right-0 mb-3 opacity-100 transition-all duration-300 transform translate-y-0">
-              <div className={`bg-gradient-to-r from-orange-600 to-red-600 backdrop-blur-xl border border-orange-400/30 rounded-xl shadow-2xl text-white font-bold whitespace-nowrap
+            <div className="absolute bottom-full right-0 mb-3 opacity-100 transition-all duration-300 transform translate-y-0 max-w-[calc(100vw-2rem)]">
+              <div className={`bg-gradient-to-r from-orange-600 to-red-600 backdrop-blur-xl border border-orange-400/30 rounded-xl shadow-2xl text-white font-bold
                 ${isMobile ? 'px-2 py-1 text-[10px] min-w-[120px]' : 'px-4 py-3 text-sm'}`}>
                 <div className={`flex items-center space-x-1 ${isMobile ? '' : 'space-x-2'}`}>
                   <Target className={`${isMobile ? 'h-2 w-2' : 'h-4 w-4'} text-yellow-300`} />
