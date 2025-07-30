@@ -820,8 +820,8 @@ const exportToPDF = async (aiResponses) => {
         </Tabs>
       </main>
 
-      {/* AI Assistant Button */}
-      <AskAIButton onResponse={handleAiResponse} />
+      {/* AI Assistant Button - Temporarily hidden for debugging */}
+      {/* <AskAIButton onResponse={handleAiResponse} /> */}
     </div>
   );
 };
