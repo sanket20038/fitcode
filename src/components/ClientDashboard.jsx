@@ -302,10 +302,10 @@ const exportToPDF = async (aiResponses) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 relative">
       {/* Modern Header with Glassmorphism */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between overflow-x-hidden">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo and App Name */}
           <div className="flex items-center space-x-3">
             <div className="relative">
@@ -341,7 +341,7 @@ const exportToPDF = async (aiResponses) => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 overflow-x-hidden">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         {/* Success/Error Messages */}
         {error && (
           <Alert className="mb-6 bg-red-500/10 border-red-500/20 backdrop-blur-xl animate-in slide-in-from-top duration-300">
@@ -358,7 +358,7 @@ const exportToPDF = async (aiResponses) => {
         )}
 
         {/* Hero Section with QR Scanner */}
-        <div className="text-center mb-16 overflow-x-hidden">
+        <div className="text-center mb-16">
           <div className="max-w-4xl mx-auto px-4">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Your Fitness Journey
@@ -421,7 +421,7 @@ const exportToPDF = async (aiResponses) => {
           </div>
         </div>
 
-        <div className="mt-10 mb-20 text-center overflow-x-hidden">
+        <div className="mt-10 mb-20 text-center">
   <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white/90 tracking-wide mb-2 px-4">
     Want to train smarter?
   </h2>
