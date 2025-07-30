@@ -302,9 +302,22 @@ const exportToPDF = async (aiResponses) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 relative">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 relative dashboard-container">
       {/* Modern Header with Glassmorphism */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl">
+      <header 
+        className="sticky top-0 z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 shadow-2xl"
+        style={{
+          position: 'sticky',
+          top: '0',
+          zIndex: 50,
+          backdropFilter: 'blur(16px)',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          minHeight: '60px',
+          width: '100%'
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo and App Name */}
           <div className="flex items-center space-x-3">
@@ -822,6 +835,14 @@ const exportToPDF = async (aiResponses) => {
 
       {/* AI Assistant Button */}
       <AskAIButton onResponse={handleAiResponse} />
+      
+      {/* Test content to make page scrollable */}
+      <div className="h-96 bg-gradient-to-br from-purple-900 to-pink-900 flex items-center justify-center">
+        <div className="text-white text-center">
+          <h3 className="text-2xl font-bold mb-4">Test Content</h3>
+          <p className="text-lg">Scroll down to test sticky header</p>
+        </div>
+      </div>
     </div>
   );
 };
