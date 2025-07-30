@@ -368,7 +368,6 @@ Remember: Always emphasize that users should consult with healthcare providers b
           <button
             onClick={() => {
               setOpen(true);
-              if (isMobile) setShowTooltip(true);
             }}
             className={`relative flex items-center space-x-2 sm:space-x-3 bg-gradient-to-r from-orange-600 via-red-600 to-yellow-600 rounded-2xl shadow-2xl transition-all duration-300 group-hover:shadow-orange-500/50 backdrop-blur-xl border border-orange-400/30 overflow-hidden
               ${isMobile ? 'px-2 py-2 text-xs' : 'px-5 py-4 text-base'}
@@ -420,7 +419,7 @@ Remember: Always emphasize that users should consult with healthcare providers b
           </button>
           
           {/* Motivational tooltip */}
-          {(showTooltip || isMobile) && (
+          {showTooltip && (
             <div className="absolute bottom-full right-0 mb-3 opacity-100 transition-all duration-300 transform translate-y-0 max-w-[calc(100vw-2rem)]">
               <div className={`bg-gradient-to-r from-orange-600 to-red-600 backdrop-blur-xl border border-orange-400/30 rounded-xl shadow-2xl text-white font-bold
                 ${isMobile ? 'px-2 py-1 text-[10px] min-w-[120px]' : 'px-4 py-3 text-sm'}`}>
