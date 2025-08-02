@@ -614,7 +614,7 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
               onClick={handleSubmit} 
               disabled={loading || 
                 (tabValue === 'diet' && (!age || !height || !weight || !dietGoal || !dietType || !activityLevel)) ||
-                (tabValue === 'workout' && (!workoutGoal || !fitnessLevel || !availableEquipment))
+                (tabValue === 'workout' && (!workoutGoal || !fitnessLevel))
               } 
               className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold rounded-lg py-4 shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2"
             >
