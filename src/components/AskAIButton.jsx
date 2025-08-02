@@ -117,38 +117,33 @@ const AskAIButton = ({ onResponse }) => {
     try {
       let prompt = '';
       if (tabValue === 'diet') {
-        prompt = `You are an AI nutrition assistant for Indian users. Respond only to diet queries in ${language}.
-
-User: Age ${age}, Gender ${gender}, Height ${height}cm, Weight ${weight}kg
-Goal: ${dietGoal} | Diet: ${dietType} | Activity: ${activityLevel}
-Medical: ${medicalConditions} | Allergies: ${allergies} | Meals: ${mealsPerDay}
-Routine: ${dailyRoutine}
+        prompt = `You are a Fitcode AI Nutrition Assistant. Respond only in ${language}.
+User Details: Age ${age}, Gender ${gender}, Height ${height}cm, Weight ${weight}kg, Goal: ${dietGoal}, Diet: ${dietType}, Activity: ${activityLevel}, Medical: ${medicalConditions}, Allergies: ${allergies}, Meals: ${mealsPerDay}, Routine: ${dailyRoutine}.
 
 Provide:
-1. BMI & daily calories
-2. 7-day meal plan (Indian foods, local ingredients)
-3. Shopping list
-4. Cooking tips
-5. Progress tracking
-6. Medical consultation advice
 
-Focus on Indian cuisine, seasonal foods, budget-friendly options.`;
+1. BMI & daily calorie needs.
+2. 7-day Indian meal plan (seasonal, budget-friendly).
+3. Shopping list (local ingredients).
+4. Cooking tips.
+5. Progress tracking guidance.
+6. Medical advice (if applicable).
+
+Focus on Indian cuisine, using local, seasonal ingredients.`;
       } else if (tabValue === 'workout') {
-        prompt = `You are an AI fitness assistant. Respond only to workout queries in ${language}.
-
-User: Goal ${workoutGoal} | Plan ${workoutPlan} | Today ${workoutToday}
-Level: ${fitnessLevel} | Equipment: ${availableEquipment}
-Schedule: ${workoutDaysTimes} | Limitations: ${injuriesLimitations}
+        prompt = `You are a Fitcode AI Fitness Assistant. Respond only in ${language} based on the user’s preference.
+User: Goal ${workoutGoal}, Plan ${workoutPlan}, Today's Workout ${workoutToday}, Fitness Level ${fitnessLevel}, Limitations ${injuriesLimitations}.
 
 Provide:
-1. Detailed workout plan (exercise, sets, reps, rest)
-2. Form tips & safety precautions
-3. Video links (verified, working)
-4. Warm-up & cool-down
-5. Progression guidance
-6. Medical consultation advice
 
-Include beginner/advanced modifications. Focus on proper form over intensity.`;
+1. Detailed workout plan (exercises, sets, reps, rest).
+2. Form tips & safety precautions.
+3. Verified video links.
+4. Warm-up & cool-down suggestions.
+5. Progression tips.
+6. Medical consultation advice (if needed).
+
+Include modifications for beginners/advanced. Focus on proper form, not just intensity.`;
       }
 
       const ai = new GoogleGenAI({ apiKey });
@@ -507,7 +502,7 @@ Include beginner/advanced modifications. Focus on proper form over intensity.`;
                 </Select>
               </div>
               {/* Available Equipment */}
-              <div className="flex items-center gap-3">
+              {/* <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg">
                   <Dumbbell className="text-white h-4 w-4" />
                 </div>
@@ -517,9 +512,9 @@ Include beginner/advanced modifications. Focus on proper form over intensity.`;
                   onChange={(e) => setAvailableEquipment(e.target.value)}
                   className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
                 />
-              </div>
+              </div> */}
               {/* Workout Days/Times */}
-              <div className="flex items-center gap-3">
+              {/* <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-r from-pink-600 to-red-600 rounded-lg">
                   <Flame className="text-white h-4 w-4" />
                 </div>
@@ -529,7 +524,7 @@ Include beginner/advanced modifications. Focus on proper form over intensity.`;
                   onChange={(e) => setWorkoutDaysTimes(e.target.value)}
                   className="flex-1 bg-white/10 border border-white/20 rounded-lg p-4 text-white"
                 />
-              </div>
+              </div> */}
               {/* Injuries or Limitations */}
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg">
