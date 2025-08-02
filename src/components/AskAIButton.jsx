@@ -9,6 +9,9 @@ import { GoogleGenAI } from '@google/genai';
 import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { marked } from 'marked';
 import { 
   User, 
   Venus, 
@@ -22,9 +25,7 @@ import {
   Flame,
   TrendingUp,
   X,
-  Download,
-  Share2,
-  Copy,
+  FileText,
   Check
 } from 'lucide-react';
 
@@ -64,7 +65,7 @@ const AskAIButton = ({ onResponse }) => {
   const [tabValue, setTabValue] = useState('diet');
   const [language, setLanguage] = useState('en');
   const [showResponsePopup, setShowResponsePopup] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [showTooltip, setShowTooltip] = useState(false);
@@ -205,44 +206,140 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
     }
   };
 
-  const copyToClipboard = async () => {
+  const exportToPDF = async () => {
+    setPdfLoading(true);
+    
     try {
-      // Ensure response is in markdown format
-      const markdownResponse = response || '';
-      await navigator.clipboard.writeText(markdownResponse);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy: ', err);
-    }
-  };
-
-  const downloadResponse = () => {
-    const element = document.createElement('a');
-    // Ensure response is in markdown format and set proper MIME type
-    const markdownResponse = response || '';
-    const file = new Blob([markdownResponse], { type: 'text/markdown' });
-    element.href = URL.createObjectURL(file);
-    element.download = `${tabValue === 'diet' ? 'diet' : 'workout'}_plan.md`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  };
-
-  const shareResponse = async () => {
-    if (navigator.share) {
-      try {
-        // Ensure response is in markdown format for sharing
-        const markdownResponse = response || '';
-        await navigator.share({
-          title: `${tabValue === 'diet' ? 'Diet' : 'Workout'} Plan`,
-          text: markdownResponse,
-        });
-      } catch (err) {
-        console.error('Error sharing:', err);
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      // Create iframe for the response
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'absolute';
+      iframe.style.left = '-9999px';
+      iframe.style.width = '210mm'; // A4 width
+      iframe.style.height = 'auto';
+      
+      document.body.appendChild(iframe);
+      
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              font-size: 14px;
+              line-height: 1.6;
+              color: #333333;
+              background-color: #ffffff;
+              margin: 0;
+              padding: 20px;
+              width: 170mm; /* A4 width minus margins */
+              box-sizing: border-box;
+            }
+            .response-title {
+              font-size: 18px;
+              font-weight: bold;
+              color: #1f2937;
+              border-bottom: 2px solid #e5e7eb;
+              padding-bottom: 8px;
+              margin-bottom: 15px;
+            }
+            .response-content {
+              line-height: 1.8;
+            }
+            h1, h2, h3, h4, h5, h6 {
+              margin-top: 20px;
+              margin-bottom: 10px;
+              font-weight: bold;
+            }
+            h1 { font-size: 24px; color: #1f2937; }
+            h2 { font-size: 20px; color: #374151; }
+            h3 { font-size: 18px; color: #4b5563; }
+            p { margin-bottom: 12px; }
+            ul, ol { margin-bottom: 15px; padding-left: 25px; }
+            li { margin-bottom: 5px; }
+            strong { font-weight: bold; color: #1f2937; }
+            em { font-style: italic; }
+          </style>
+        </head>
+        <body>
+          <div class="response-title">${tabValue === 'diet' ? 'Diet Plan' : 'Workout Plan'}:</div>
+          <div class="response-content">${marked(response)}</div>
+        </body>
+        </html>
+      `;
+      
+      const iframeDoc = iframe.contentDocument;
+      iframeDoc.write(htmlContent);
+      iframeDoc.close();
+      
+      // Wait for content to load
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Capture the response
+      const canvas = await html2canvas(iframeDoc.body, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: iframeDoc.body.scrollWidth,
+        height: iframeDoc.body.scrollHeight
+      });
+      
+      document.body.removeChild(iframe);
+      
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = pdfWidth - 20; // 10mm margin each side
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // If content is too tall for one page, split it
+      if (imgHeight > pdfHeight - 20) {
+        const pageContentHeight = pdfHeight - 20;
+        const totalPages = Math.ceil(imgHeight / pageContentHeight);
+        
+        for (let page = 0; page < totalPages; page++) {
+          if (page > 0) {
+            pdf.addPage();
+          }
+          
+          const sourceY = (page * pageContentHeight * canvas.height) / imgHeight;
+          const sourceHeight = Math.min(
+            (pageContentHeight * canvas.height) / imgHeight,
+            canvas.height - sourceY
+          );
+          
+          // Create a temporary canvas for this page section
+          const pageCanvas = document.createElement('canvas');
+          pageCanvas.width = canvas.width;
+          pageCanvas.height = sourceHeight;
+          const pageCtx = pageCanvas.getContext('2d');
+          
+          pageCtx.drawImage(
+            canvas,
+            0, sourceY, canvas.width, sourceHeight,
+            0, 0, canvas.width, sourceHeight
+          );
+          
+          const pageImgData = pageCanvas.toDataURL('image/png');
+          const pageImgHeight = (sourceHeight * imgWidth) / canvas.width;
+          
+          pdf.addImage(pageImgData, 'PNG', 10, 10, imgWidth, pageImgHeight);
+        }
+      } else {
+        // Content fits on one page
+        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
       }
-    } else {
-      copyToClipboard();
+      
+      pdf.save(`${tabValue === 'diet' ? 'diet' : 'workout'}_plan.pdf`);
+      
+    } catch (error) {
+      console.error('PDF generation failed:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setPdfLoading(false);
     }
   };
 
@@ -652,39 +749,24 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
           </DialogHeader>
 
           <div className="mt-6 space-y-4">
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3 justify-center">
+            {/* Export to PDF Button */}
+            <div className="flex justify-center">
               <Button
-                onClick={copyToClipboard}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg px-4 py-2 transition-all duration-300 hover:scale-105 flex items-center space-x-2"
+                onClick={exportToPDF}
+                disabled={pdfLoading}
+                className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-300 hover:scale-105 flex items-center space-x-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {copied ? (
+                {pdfLoading ? (
                   <>
-                    <Check className="h-4 w-4" />
-                    <span>Copied!</span>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Generating PDF...</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="h-4 w-4" />
-                    <span>Copy Plan</span>
+                    <FileText className="h-5 w-5" />
+                    <span>Export to PDF</span>
                   </>
                 )}
-              </Button>
-              
-              <Button
-                onClick={downloadResponse}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-lg px-4 py-2 transition-all duration-300 hover:scale-105 flex items-center space-x-2"
-              >
-                <Download className="h-4 w-4" />
-                <span>Download</span>
-              </Button>
-              
-              <Button
-                onClick={shareResponse}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg px-4 py-2 transition-all duration-300 hover:scale-105 flex items-center space-x-2"
-              >
-                <Share2 className="h-4 w-4" />
-                <span>Share</span>
               </Button>
             </div>
 
