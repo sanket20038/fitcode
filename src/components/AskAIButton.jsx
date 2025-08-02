@@ -149,7 +149,7 @@ User: Goal ${workoutGoal}, Plan ${workoutPlan}, Today's Workout ${workoutToday},
 
 Provide:
 
-1. Detailed workout plan (exercises, sets, reps, rest).
+1. Detailed workout plan (exercises, sets, reps, rest) no table format.
 2. Form tips & safety precautions.
 3. Verified video links.
 4. Warm-up & cool-down suggestions.
@@ -196,13 +196,8 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
       console.log('AI response:', reply);
       // Save AI response to localStorage
       localStorage.setItem('aiResponses', JSON.stringify([reply]));
-      // Show response popup first
+      // Show response popup - no automatic navigation
       setShowResponsePopup(true);
-      console.log('Setting showResponsePopup to true');
-      // Navigate to client dashboard AI responses tab after a short delay (original functionality)
-      setTimeout(() => {
-        navigate('/client?tab=airesponses');
-      }, 100);
     } catch (error) {
       setResponse('Failed to get AI response. Please try again.');
       setLoading(false);
