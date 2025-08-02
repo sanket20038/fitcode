@@ -122,11 +122,7 @@ const AskAIButton = ({ onResponse }) => {
         setShowResponsePopup(true);
         return;
       }
-      if (!availableEquipment || availableEquipment.trim() === '') {
-        setResponse('Please specify your Available Equipment.');
-        setShowResponsePopup(true);
-        return;
-      }
+      // Removed availableEquipment validation as it's not required
     }
 
     setLoading(true);
@@ -200,10 +196,13 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
       console.log('AI response:', reply);
       // Save AI response to localStorage
       localStorage.setItem('aiResponses', JSON.stringify([reply]));
-      // Show response popup AND navigate to dashboard (maintain original functionality)
+      // Show response popup first
       setShowResponsePopup(true);
-      // Navigate to client dashboard AI responses tab after successful response (original functionality)
-      navigate('/client?tab=airesponses');
+      console.log('Setting showResponsePopup to true');
+      // Navigate to client dashboard AI responses tab after a short delay (original functionality)
+      setTimeout(() => {
+        navigate('/client?tab=airesponses');
+      }, 100);
     } catch (error) {
       setResponse('Failed to get AI response. Please try again.');
       setLoading(false);
