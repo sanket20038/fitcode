@@ -207,7 +207,9 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(response);
+      // Ensure response is in markdown format
+      const markdownResponse = response || '';
+      await navigator.clipboard.writeText(markdownResponse);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -217,9 +219,11 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
 
   const downloadResponse = () => {
     const element = document.createElement('a');
-    const file = new Blob([response], { type: 'text/plain' });
+    // Ensure response is in markdown format and set proper MIME type
+    const markdownResponse = response || '';
+    const file = new Blob([markdownResponse], { type: 'text/markdown' });
     element.href = URL.createObjectURL(file);
-    element.download = `${tabValue === 'diet' ? 'diet' : 'workout'}_plan.txt`;
+    element.download = `${tabValue === 'diet' ? 'diet' : 'workout'}_plan.md`;
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -228,9 +232,11 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
   const shareResponse = async () => {
     if (navigator.share) {
       try {
+        // Ensure response is in markdown format for sharing
+        const markdownResponse = response || '';
         await navigator.share({
           title: `${tabValue === 'diet' ? 'Diet' : 'Workout'} Plan`,
-          text: response,
+          text: markdownResponse,
         });
       } catch (err) {
         console.error('Error sharing:', err);
