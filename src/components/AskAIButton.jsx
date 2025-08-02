@@ -20,7 +20,12 @@ import {
   Sparkles,
   Bot,
   Flame,
-  TrendingUp
+  TrendingUp,
+  X,
+  Download,
+  Share2,
+  Copy,
+  Check
 } from 'lucide-react';
 
 // Simple mobile detection hook
@@ -58,6 +63,8 @@ const AskAIButton = ({ onResponse }) => {
   const [loading, setLoading] = useState(false);
   const [tabValue, setTabValue] = useState('diet');
   const [language, setLanguage] = useState('en');
+  const [showResponsePopup, setShowResponsePopup] = useState(false);
+  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [showTooltip, setShowTooltip] = useState(false);
@@ -66,6 +73,7 @@ const AskAIButton = ({ onResponse }) => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
       setResponse('Gemini AI API key is missing. Please configure it in environment variables.');
+      setShowResponsePopup(true);
       return;
     }
 
@@ -74,40 +82,49 @@ const AskAIButton = ({ onResponse }) => {
       // Validate diet-specific required fields
       if (!age || isNaN(age) || age <= 0) {
         setResponse('Please enter a valid positive number for Age.');
+        setShowResponsePopup(true);
         return;
       }
       if (!height || isNaN(height) || height <= 0) {
         setResponse('Please enter a valid positive number for Height.');
+        setShowResponsePopup(true);
         return;
       }
       if (!weight || isNaN(weight) || weight <= 0) {
         setResponse('Please enter a valid positive number for Weight.');
+        setShowResponsePopup(true);
         return;
       }
       if (!dietGoal || dietGoal.trim() === '') {
         setResponse('Please enter your Diet Goal.');
+        setShowResponsePopup(true);
         return;
       }
       if (!dietType || dietType.trim() === '') {
         setResponse('Please select your Diet Type.');
+        setShowResponsePopup(true);
         return;
       }
       if (!activityLevel || activityLevel.trim() === '') {
         setResponse('Please select your Activity Level.');
+        setShowResponsePopup(true);
         return;
       }
     } else if (tabValue === 'workout') {
       // Validate workout-specific required fields
       if (!workoutGoal || workoutGoal.trim() === '') {
         setResponse('Please enter your Workout Goal.');
+        setShowResponsePopup(true);
         return;
       }
       if (!fitnessLevel || fitnessLevel.trim() === '') {
         setResponse('Please select your Fitness Level.');
+        setShowResponsePopup(true);
         return;
       }
       if (!availableEquipment || availableEquipment.trim() === '') {
         setResponse('Please specify your Available Equipment.');
+        setShowResponsePopup(true);
         return;
       }
     }
@@ -131,7 +148,7 @@ Provide:
 
 Focus on Indian cuisine, using local, seasonal ingredients.`;
       } else if (tabValue === 'workout') {
-        prompt = `You are a Fitcode AI Fitness Assistant. Respond only in ${language} based on the user’s preference.
+        prompt = `You are a Fitcode AI Fitness Assistant. Respond only in ${language} based on the user's preference.
 User: Goal ${workoutGoal}, Plan ${workoutPlan}, Today's Workout ${workoutToday}, Fitness Level ${fitnessLevel}, Limitations ${injuriesLimitations}.
 
 Provide:
@@ -180,14 +197,52 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
         onResponse(reply);
       }
       setLoading(false);
-      console.log('AI response before navigation:', reply);
+      console.log('AI response:', reply);
       // Save AI response to localStorage
       localStorage.setItem('aiResponses', JSON.stringify([reply]));
-      // Navigate to client dashboard AI responses tab after successful response
+      // Show response popup AND navigate to dashboard (maintain original functionality)
+      setShowResponsePopup(true);
+      // Navigate to client dashboard AI responses tab after successful response (original functionality)
       navigate('/client?tab=airesponses');
     } catch (error) {
       setResponse('Failed to get AI response. Please try again.');
       setLoading(false);
+      setShowResponsePopup(true);
+    }
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(response);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
+
+  const downloadResponse = () => {
+    const element = document.createElement('a');
+    const file = new Blob([response], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = `${tabValue === 'diet' ? 'diet' : 'workout'}_plan.txt`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  const shareResponse = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${tabValue === 'diet' ? 'Diet' : 'Workout'} Plan`,
+          text: response,
+        });
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      copyToClipboard();
     }
   };
 
@@ -576,11 +631,115 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
                 </>
               )}
             </Button>
-            {response && (
-              <div className="prose prose-invert max-h-60 overflow-auto text-white bg-white/5 rounded-lg p-4 backdrop-blur-xl border border-white/10">
-                <ReactMarkdown>{response}</ReactMarkdown>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* AI Response Popup */}
+      <Dialog open={showResponsePopup} onOpenChange={setShowResponsePopup}>
+        <DialogContent className="w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl border border-gray-300 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-2 sm:p-4 md:p-6">
+          <DialogHeader className="flex flex-row items-center justify-between">
+            <DialogTitle className="text-2xl font-extrabold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent flex items-center space-x-2">
+              <Flame className="h-6 w-6 text-orange-400" />
+              <span>Your {tabValue === 'diet' ? 'Diet' : 'Workout'} Plan</span>
+            </DialogTitle>
+            <Button
+              onClick={() => setShowResponsePopup(false)}
+              className="bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-all duration-300"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </DialogHeader>
+
+          <div className="mt-6 space-y-4">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Button
+                onClick={copyToClipboard}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg px-4 py-2 transition-all duration-300 hover:scale-105 flex items-center space-x-2"
+              >
+                {copied ? (
+                  <>
+                    <Check className="h-4 w-4" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4" />
+                    <span>Copy Plan</span>
+                  </>
+                )}
+              </Button>
+              
+              <Button
+                onClick={downloadResponse}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-lg px-4 py-2 transition-all duration-300 hover:scale-105 flex items-center space-x-2"
+              >
+                <Download className="h-4 w-4" />
+                <span>Download</span>
+              </Button>
+              
+              <Button
+                onClick={shareResponse}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg px-4 py-2 transition-all duration-300 hover:scale-105 flex items-center space-x-2"
+              >
+                <Share2 className="h-4 w-4" />
+                <span>Share</span>
+              </Button>
+            </div>
+
+            {/* Response Content */}
+            <div className="bg-white/5 rounded-xl p-6 backdrop-blur-xl border border-white/10 max-h-[60vh] overflow-y-auto">
+              <div className="prose prose-invert max-w-none text-white">
+                <ReactMarkdown 
+                  components={{
+                    h1: ({children}) => <h1 className="text-2xl font-bold text-orange-400 mb-4">{children}</h1>,
+                    h2: ({children}) => <h2 className="text-xl font-bold text-orange-300 mb-3">{children}</h2>,
+                    h3: ({children}) => <h3 className="text-lg font-bold text-orange-200 mb-2">{children}</h3>,
+                    p: ({children}) => <p className="text-white/90 mb-3 leading-relaxed">{children}</p>,
+                    ul: ({children}) => <ul className="list-disc list-inside space-y-2 text-white/90 mb-4">{children}</ul>,
+                    ol: ({children}) => <ol className="list-decimal list-inside space-y-2 text-white/90 mb-4">{children}</ol>,
+                    li: ({children}) => <li className="text-white/90">{children}</li>,
+                    strong: ({children}) => <strong className="text-orange-300 font-bold">{children}</strong>,
+                    em: ({children}) => <em className="text-orange-200 italic">{children}</em>,
+                    code: ({children}) => <code className="bg-white/10 px-2 py-1 rounded text-orange-300 font-mono text-sm">{children}</code>,
+                    blockquote: ({children}) => <blockquote className="border-l-4 border-orange-400 pl-4 italic text-white/80 bg-white/5 p-3 rounded-r-lg">{children}</blockquote>,
+                  }}
+                >
+                  {response}
+                </ReactMarkdown>
               </div>
-            )}
+            </div>
+
+            {/* Success Message */}
+            <div className="text-center">
+              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-400/30 rounded-lg px-4 py-2">
+                <Check className="h-5 w-5 text-green-400" />
+                <span className="text-green-300 font-semibold">Plan Generated Successfully! 🎉</span>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="flex flex-col space-y-4 mt-6">
+            <div className="flex flex-col sm:flex-row gap-3 w-full">
+              <Button
+                onClick={() => setShowResponsePopup(false)}
+                className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-semibold rounded-lg py-3 transition-all duration-300"
+              >
+                Close
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowResponsePopup(false);
+                  setOpen(false);
+                  navigate('/client?tab=airesponses');
+                }}
+                className="flex-1 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold rounded-lg py-3 transition-all duration-300 flex items-center justify-center space-x-2"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span>View in Dashboard</span>
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
