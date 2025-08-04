@@ -284,7 +284,24 @@ const exportToPDF = async (aiResponses) => {
       }
     }
     
-    pdf.save('ai_responses.pdf');
+    // Determine the type of responses for better filename
+    const hasDiet = aiResponses.some(response => response.toLowerCase().includes('diet'));
+    const hasWorkout = aiResponses.some(response => response.toLowerCase().includes('workout'));
+    
+    let filename = 'FitCode_AI_Responses';
+    if (hasDiet && hasWorkout) {
+      filename = 'FitCode_Diet_and_Workout_Plans';
+    } else if (hasDiet) {
+      filename = 'FitCode_Diet_Plan';
+    } else if (hasWorkout) {
+      filename = 'FitCode_Workout_Plan';
+    }
+    
+    // Add timestamp to filename
+    const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    filename = `${filename}_${timestamp}.pdf`;
+    
+    pdf.save(filename);
     
   } catch (error) {
     console.error('PDF generation failed:', error);
@@ -631,6 +648,21 @@ const exportToPDF = async (aiResponses) => {
                           <CardTitle className="text-white text-base sm:text-lg flex items-center space-x-2">
                             <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-orange-400" />
                             <span>FitCode AI Assistant</span>
+                            {response.toLowerCase().includes('diet') && (
+                              <span className="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-xs border border-green-500/30">
+                                🥗 FitCode Diet Plan
+                              </span>
+                            )}
+                            {response.toLowerCase().includes('workout') && (
+                              <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full text-xs border border-blue-500/30">
+                                💪 FitCode Workout Plan
+                              </span>
+                            )}
+                            {!response.toLowerCase().includes('diet') && !response.toLowerCase().includes('workout') && (
+                              <span className="bg-purple-500/20 text-purple-300 px-2 py-1 rounded-full text-xs border border-purple-500/30">
+                                🤖 FitCode AI Response
+                              </span>
+                            )}
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="p-4 sm:p-6">
