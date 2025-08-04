@@ -58,6 +58,7 @@ const ClientDashboard = ({ setAuthenticated, setUserType }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [pdfLoading, setPdfLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -150,6 +151,7 @@ const ClientDashboard = ({ setAuthenticated, setUserType }) => {
   };
 
 const exportToPDF = async (aiResponses) => {
+  setPdfLoading(true);
   try {
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -306,6 +308,8 @@ const exportToPDF = async (aiResponses) => {
   } catch (error) {
     console.error('PDF generation failed:', error);
     alert('Failed to generate PDF. Please try again.');
+  } finally {
+    setPdfLoading(false);
   }
 };
 
@@ -628,10 +632,20 @@ const exportToPDF = async (aiResponses) => {
                   {aiResponses.length > 0 && (
                     <Button
                       onClick={() => exportToPDF(aiResponses)}
-                      className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg transition-all duration-300 hover:scale-105 w-full sm:w-auto text-sm sm:text-base"
+                      disabled={pdfLoading}
+                      className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg transition-all duration-300 hover:scale-105 w-full sm:w-auto text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Download className="h-4 w-4 mr-2" />
-                      Export PDF
+                      {pdfLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                          <span>Generating PDF...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Download className="h-4 w-4 mr-2" />
+                          <span>Export PDF</span>
+                        </>
+                      )}
                     </Button>
                   )}
                 </div>
