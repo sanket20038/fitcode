@@ -630,7 +630,7 @@ const exportToPDF = async (aiResponses) => {
                         <CardHeader className="p-4 sm:p-6">
                           <CardTitle className="text-white text-base sm:text-lg flex items-center space-x-2">
                             <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-orange-400" />
-                            <span>FitCode AI Response {index + 1}</span>
+                            <span>FitCode AI Assistant</span>
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="p-4 sm:p-6">
