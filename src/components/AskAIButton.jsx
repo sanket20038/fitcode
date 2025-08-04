@@ -735,17 +735,11 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
       {/* AI Response Popup */}
       <Dialog open={showResponsePopup} onOpenChange={setShowResponsePopup}>
         <DialogContent className="w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl border border-gray-300 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-2 sm:p-4 md:p-6">
-          <DialogHeader className="flex flex-row items-center justify-between">
+          <DialogHeader className="flex flex-row items-center justify-center">
             <DialogTitle className="text-2xl font-extrabold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent flex items-center space-x-2">
               <Flame className="h-6 w-6 text-orange-400" />
               <span>Your {tabValue === 'diet' ? 'Diet' : 'Workout'} Plan</span>
             </DialogTitle>
-            <Button
-              onClick={() => setShowResponsePopup(false)}
-              className="bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-all duration-300"
-            >
-              <X className="h-5 w-5" />
-            </Button>
           </DialogHeader>
 
           <div className="mt-6 space-y-4">
@@ -802,27 +796,7 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
             </div>
           </div>
 
-          <DialogFooter className="flex flex-col space-y-4 mt-6">
-            <div className="flex flex-col sm:flex-row gap-3 w-full">
-              <Button
-                onClick={() => setShowResponsePopup(false)}
-                className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-semibold rounded-lg py-3 transition-all duration-300"
-              >
-                Close
-              </Button>
-              <Button
-                onClick={() => {
-                  setShowResponsePopup(false);
-                  setOpen(false);
-                  navigate('/client?tab=airesponses');
-                }}
-                className="flex-1 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold rounded-lg py-3 transition-all duration-300 flex items-center justify-center space-x-2"
-              >
-                <Sparkles className="h-4 w-4" />
-                <span>View in Dashboard</span>
-              </Button>
-            </div>
-          </DialogFooter>
+
         </DialogContent>
       </Dialog>
     </>
