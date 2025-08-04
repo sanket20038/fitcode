@@ -634,8 +634,22 @@ const exportToPDF = async (aiResponses) => {
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="p-4 sm:p-6">
-                          <div className="prose prose-invert max-w-none">
-                            <ReactMarkdown className="text-white/90 leading-relaxed text-sm sm:text-base">
+                          <div className="prose prose-invert max-w-none text-white">
+                            <ReactMarkdown 
+                              components={{
+                                h1: ({children}) => <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-orange-400 mb-2 sm:mb-4">{children}</h1>,
+                                h2: ({children}) => <h2 className="text-base sm:text-lg md:text-xl font-bold text-orange-300 mb-2 sm:mb-3">{children}</h2>,
+                                h3: ({children}) => <h3 className="text-sm sm:text-base md:text-lg font-bold text-orange-200 mb-1 sm:mb-2">{children}</h3>,
+                                p: ({children}) => <p className="text-white/90 mb-2 sm:mb-3 leading-relaxed text-sm sm:text-base">{children}</p>,
+                                ul: ({children}) => <ul className="list-disc list-inside space-y-1 sm:space-y-2 text-white/90 mb-3 sm:mb-4 text-sm sm:text-base">{children}</ul>,
+                                ol: ({children}) => <ol className="list-decimal list-inside space-y-1 sm:space-y-2 text-white/90 mb-3 sm:mb-4 text-sm sm:text-base">{children}</ol>,
+                                li: ({children}) => <li className="text-white/90 text-sm sm:text-base">{children}</li>,
+                                strong: ({children}) => <strong className="text-orange-300 font-bold">{children}</strong>,
+                                em: ({children}) => <em className="text-orange-200 italic">{children}</em>,
+                                code: ({children}) => <code className="bg-white/10 px-1 sm:px-2 py-0.5 sm:py-1 rounded text-orange-300 font-mono text-xs sm:text-sm">{children}</code>,
+                                blockquote: ({children}) => <blockquote className="border-l-4 border-orange-400 pl-2 sm:pl-4 italic text-white/80 bg-white/5 p-2 sm:p-3 rounded-r-lg text-sm sm:text-base">{children}</blockquote>,
+                              }}
+                            >
                               {response}
                             </ReactMarkdown>
                           </div>
