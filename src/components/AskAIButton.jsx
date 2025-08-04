@@ -132,6 +132,7 @@ const AskAIButton = ({ onResponse }) => {
       let prompt = '';
       if (tabValue === 'diet') {
         prompt = `You are a Fitcode AI Nutrition Assistant. Respond only in ${language}.
+        also only provide the diet plan and nothing else.if user ask for anything else, just say that you are a diet or workout assistant. 
 User Details: Age ${age}, Gender ${gender}, Height ${height}cm, Weight ${weight}kg, Goal: ${dietGoal}, Diet: ${dietType}, Activity: ${activityLevel}, Medical: ${medicalConditions}, Allergies: ${allergies}, Meals: ${mealsPerDay}, Routine: ${dailyRoutine}.
 
 Provide:
@@ -145,7 +146,7 @@ Provide:
 
 Focus on Indian cuisine, using local, seasonal ingredients.`;
       } else if (tabValue === 'workout') {
-        prompt = `You are a Fitcode AI Fitness Assistant. Respond only in ${language} based on the user's preference.
+        prompt = `You are a Fitcode AI Fitness Assistant. Respond only in ${language} based on the user's preference. also only provide the workout plan and nothing else.if user ask for anything else, just say that you are a diet or workout assistant.
 User: Goal ${workoutGoal}, Plan ${workoutPlan}, Today's Workout ${workoutToday}, Fitness Level ${fitnessLevel}, Limitations ${injuriesLimitations}.
 
 Provide:

@@ -555,7 +555,15 @@ const QRScanner = () => {
                       >
                         {isRequestingPermission ? (
                           <>
-                            <GymLoader variant="video" text="Requesting Camera..." />
+                            <div className="flex items-center justify-center">
+                              <img
+                                src="/lg.gif"
+                                className="w-8 h-8 rounded-lg mr-3"
+                                alt="Loading..."
+                                style={{ objectFit: 'contain', background: 'transparent', border: 'none' }}
+                              />
+                              <span>Requesting Camera...</span>
+                            </div>
                           </>
                         ) : (
                           <>
@@ -583,7 +591,15 @@ const QRScanner = () => {
                     >
                       {isUploading ? (
                         <>
-                          <GymLoader variant="video" text="Processing Image..." />
+                          <div className="flex items-center justify-center">
+                            <img
+                              src="/lg.gif"
+                              className="w-8 h-8 rounded-lg mr-3"
+                              alt="Loading..."
+                              style={{ objectFit: 'contain', background: 'transparent', border: 'none' }}
+                            />
+                            <span>Processing Image...</span>
+                          </div>
                         </>
                       ) : (
                         <>
@@ -608,7 +624,15 @@ const QRScanner = () => {
                       >
                         {isRequestingPermission ? (
                           <>
-                            <GymLoader variant="video" text="Requesting Camera..." />
+                            <div className="flex items-center justify-center">
+                              <img
+                                src="/lg.gif"
+                                className="w-8 h-8 rounded-lg mr-3"
+                                alt="Loading..."
+                                style={{ objectFit: 'contain', background: 'transparent', border: 'none' }}
+                              />
+                              <span>Requesting Camera...</span>
+                            </div>
                           </>
                         ) : (
                           <>
