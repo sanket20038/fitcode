@@ -7,7 +7,7 @@ import { Alert, AlertDescription } from './ui/alert';
 import { Dumbbell, Eye, EyeOff, Building } from 'lucide-react';
 import { authAPI } from '../lib/api';
 import { setAuth } from '../lib/auth';
-import GoogleOAuthButton from './GoogleOAuthButton';
+import GoogleOAuthRegistration from './GoogleOAuthRegistration';
 
 const OwnerLogin = ({ setAuthenticated, setUserType }) => {
   const [form, setForm] = useState({ username: '', password: '', showPassword: false });
@@ -57,16 +57,26 @@ const OwnerLogin = ({ setAuthenticated, setUserType }) => {
       const response = await authAPI.googleAuth({
         access_token: googleData.access_token,
         user: googleData.user,
-        userType: 'owner'
+        userType: 'owner',
+        username: googleData.username
       });
       
-      const { token, user } = response.data;
-      setAuth(token, user, 'owner');
-      setAuthenticated(true);
-      setUserType('owner');
-      navigate('/owner/dashboard');
+      // Check if user exists and can login
+      if (response.data.userExists) {
+        const { token, user } = response.data;
+        setAuth(token, user, 'owner');
+        setAuthenticated(true);
+        setUserType('owner');
+        navigate('/owner/dashboard');
+        return { userExists: true };
+      } else {
+        // User doesn't exist - show registration message
+        setError('User not found. Please register first.');
+        return { userExists: false };
+      }
     } catch (error) {
       setError(error.response?.data?.message || 'Google authentication failed');
+      return { userExists: false };
     } finally {
       setLoading(false);
     }
@@ -170,15 +180,16 @@ const OwnerLogin = ({ setAuthenticated, setUserType }) => {
           </div>
 
           {/* Google OAuth Button */}
-          <GoogleOAuthButton
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-            userType="owner"
-            variant="owner"
-            className="mb-4"
-          >
-            Continue with Google
-          </GoogleOAuthButton>
+                  <GoogleOAuthRegistration
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          userType="owner"
+          variant="owner"
+          className="mb-4"
+          isLogin={true}
+        >
+          Continue with Google
+        </GoogleOAuthRegistration>
           {/* Forgot Password Modal */}
           {showForgot && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

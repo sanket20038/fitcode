@@ -34,10 +34,21 @@ const OwnerRegister = () => {
         username: googleData.username
       });
       
-      setSuccess('Welcome to FitCode Partner Program! We\'ll contact you soon.');
-      setTimeout(() => navigate('/login/owner'), 2000);
+      // Check if user exists or is new
+      if (response.data.userExists) {
+        // User exists - show login message
+        setError('User already exists. Please login instead.');
+        setTimeout(() => navigate('/login/owner'), 2000);
+      } else {
+        // New user - show success message
+        setSuccess('Welcome to FitCode Partner Program! We\'ll contact you soon.');
+        setTimeout(() => navigate('/login/owner'), 2000);
+      }
+      
+      return { userExists: response.data.userExists };
     } catch (error) {
       setError(error.response?.data?.message || 'Google authentication failed');
+      return { userExists: false };
     } finally {
       setLoading(false);
     }
@@ -174,14 +185,15 @@ const OwnerRegister = () => {
           </div>
 
           {/* Google OAuth Button */}
-          <GoogleOAuthRegistration
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-            userType="owner"
-            variant="owner"
-            className="mb-4"
-          >
-            Continue with Google
+                  <GoogleOAuthRegistration
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          userType="owner"
+          variant="owner"
+          className="mb-4"
+          isLogin={false}
+        >
+          Continue with Google
         </GoogleOAuthRegistration>
 
           {/* Partner benefits section */}
