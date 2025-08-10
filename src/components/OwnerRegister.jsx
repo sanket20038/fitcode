@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Alert, AlertDescription } from './ui/alert';
 import { Dumbbell, Building, CheckCircle, BarChart3, Users, Shield } from 'lucide-react';
 import { authAPI } from '../lib/api';
-import GoogleOAuthButton from './GoogleOAuthButton';
+import GoogleOAuthRegistration from './GoogleOAuthRegistration';
 
 const OwnerRegister = () => {
   const [form, setForm] = useState({ 
@@ -30,7 +30,8 @@ const OwnerRegister = () => {
       const response = await authAPI.googleAuth({
         access_token: googleData.access_token,
         user: googleData.user,
-        userType: 'owner'
+        userType: 'owner',
+        username: googleData.username
       });
       
       setSuccess('Welcome to FitCode Partner Program! We\'ll contact you soon.');
@@ -173,7 +174,7 @@ const OwnerRegister = () => {
           </div>
 
           {/* Google OAuth Button */}
-          <GoogleOAuthButton
+          <GoogleOAuthRegistration
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
             userType="owner"
@@ -181,7 +182,7 @@ const OwnerRegister = () => {
             className="mb-4"
           >
             Continue with Google
-          </GoogleOAuthButton>
+        </GoogleOAuthRegistration>
 
           {/* Partner benefits section */}
           <div className="mt-8 space-y-3">

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Alert, AlertDescription } from './ui/alert';
 import { Dumbbell, User, CheckCircle, Zap, Target, TrendingUp } from 'lucide-react';
 import { authAPI } from '../lib/api';
-import GoogleOAuthButton from './GoogleOAuthButton';
+import GoogleOAuthRegistration from './GoogleOAuthRegistration';
 
 const ClientRegister = () => {
   const [form, setForm] = useState({ 
@@ -30,7 +30,8 @@ const ClientRegister = () => {
       const response = await authAPI.googleAuth({
         access_token: googleData.access_token,
         user: googleData.user,
-        userType: 'client'
+        userType: 'client',
+        username: googleData.username
       });
       
       setSuccess('Welcome to FitCode! Your fitness journey starts now.');
@@ -174,7 +175,7 @@ const ClientRegister = () => {
           </div>
 
           {/* Google OAuth Button */}
-          <GoogleOAuthButton
+          <GoogleOAuthRegistration
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
             userType="client"
@@ -182,7 +183,7 @@ const ClientRegister = () => {
             className="mb-4"
           >
             Continue with Google
-          </GoogleOAuthButton>
+          </GoogleOAuthRegistration>
 
           {/* Benefits section */}
           <div className="mt-8 space-y-3">
