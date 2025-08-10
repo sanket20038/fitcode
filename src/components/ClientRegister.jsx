@@ -4,8 +4,9 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Alert, AlertDescription } from './ui/alert';
-import { Dumbbell, User, CheckCircle, Zap, Target, TrendingUp } from 'lucide-react';
+import { Dumbbell, User, CheckCircle, BarChart3, Users, Shield, Chrome } from 'lucide-react';
 import { authAPI } from '../lib/api';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import GoogleOAuthRegistration from './GoogleOAuthRegistration';
 
 const ClientRegister = () => {
@@ -94,129 +95,132 @@ const ClientRegister = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-black to-cyan-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-4">
       {/* Animated background elements */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-cyan-400/20 to-purple-500/20 rounded-full blur-xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-48 h-48 bg-gradient-to-r from-yellow-400/20 to-pink-500/20 rounded-full blur-xl animate-pulse delay-1000"></div>
+      <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-indigo-500/20 rounded-full blur-xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-10 w-48 h-48 bg-gradient-to-r from-indigo-400/20 to-purple-500/20 rounded-full blur-xl animate-pulse delay-1000"></div>
       
-      <Card className="w-full max-w-md bg-white/10 backdrop-blur-sm border border-white/20 shadow-2xl">
+      <Card className="w-full max-w-md shadow-2xl rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl relative z-10">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-2xl blur opacity-75"></div>
-              <div className="relative bg-gradient-to-r from-cyan-400 to-purple-500 p-3 rounded-2xl">
-                <Dumbbell className="h-8 w-8 text-black font-bold" />
-              </div>
+          <div className="flex justify-center mb-6">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-5 rounded-full shadow-lg animate-pulse">
+              <User className="h-12 w-12 text-white" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-black text-white">
-            Join <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text">FitCode</span>
-          </CardTitle>
-          <CardDescription className="text-gray-300 text-lg">
-            Start your fitness transformation today
-          </CardDescription>
+          <CardTitle className="text-4xl font-extrabold text-transparent bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text">Client Registration</CardTitle>
+          <CardDescription className="text-white/70 mt-2">Join FitCode as a Gym Client</CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
-            <Alert className="mb-4 border-red-500/50 bg-red-500/10">
-              <AlertDescription className="text-red-200">{error}</AlertDescription>
+            <Alert className="mb-5 border-red-400 bg-red-500/10">
+              <AlertDescription className="text-red-100 font-semibold">{error}</AlertDescription>
             </Alert>
           )}
-
           {success && (
-            <Alert className="mb-4 border-green-500/50 bg-green-500/10">
-              <CheckCircle className="h-4 w-4 text-green-400" />
-              <AlertDescription className="text-green-200">{success}</AlertDescription>
+            <Alert className="mb-5 border-green-400 bg-green-500/10">
+              <AlertDescription className="text-green-100 font-semibold">{success}</AlertDescription>
             </Alert>
           )}
 
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div>
-              <Input
-                type="text"
-                placeholder="Choose your username"
-                value={form.username}
-                onChange={(e) => setForm({ ...form, username: e.target.value })}
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400"
-                required
-              />
-            </div>
-            <div>
-              <Input
-                type="email"
-                placeholder="Your email address"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400"
-                required
-              />
-            </div>
-            <div>
-              <Input
-                type="password"
-                placeholder="Create a strong password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400"
-                required
-              />
-            </div>
-            <div>
-              <Input
-                type="password"
-                placeholder="Confirm your password"
-                value={form.confirmPassword}
-                onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-cyan-400"
-                required
-              />
-            </div>
-
+          <Tabs defaultValue="normal" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-white/10 border-white/20">
+              <TabsTrigger 
+                value="normal" 
+                className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-white/70"
+              >
+                Normal Registration
+              </TabsTrigger>
+              <TabsTrigger 
+                value="google" 
+                className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-white/70"
+              >
+                Google Registration
+              </TabsTrigger>
+            </TabsList>
             
-            <Button 
-              type="submit" 
-              className="w-full bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold hover:from-cyan-500 hover:to-purple-600 transition-all duration-300 py-3 text-lg" 
-              disabled={loading}
-            >
-              {loading ? 'Creating Your Account...' : 'Start My Fitness Journey'}
-            </Button>
-          </form>
-
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-300/30" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-transparent px-2 text-gray-400">Or continue with</span>
-            </div>
-          </div>
-
-          {/* Google OAuth Button */}
-                  <GoogleOAuthRegistration
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleError}
-          userType="client"
-          variant="client"
-          className="mb-4"
-          isLogin={false}
-        >
-          Continue with Google
-        </GoogleOAuthRegistration>
+            <TabsContent value="normal" className="mt-6">
+              <form onSubmit={handleRegister} className="space-y-6">
+                <Input
+                  type="text"
+                  placeholder="Username"
+                  value={form.username}
+                  onChange={(e) => setForm({ ...form, username: e.target.value })}
+                  required
+                  className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                />
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  required
+                  className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  required
+                  className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                />
+                <Input
+                  type="password"
+                  placeholder="Confirm Password"
+                  value={form.confirmPassword}
+                  onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+                  required
+                  className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                />
+                <Button type="submit" className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 rounded-xl" disabled={loading}>
+                  {loading ? 'Creating Account...' : 'Create Client Account'}
+                </Button>
+              </form>
+            </TabsContent>
+            
+            <TabsContent value="google" className="mt-6">
+              <div className="space-y-4">
+                <div className="text-center">
+                  <p className="text-white/70 text-sm mb-4">
+                    Register with your Google account. Choose a username to get started.
+                  </p>
+                </div>
+                
+                <GoogleOAuthRegistration
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  userType="client"
+                  variant="client"
+                  isLogin={false}
+                >
+                  Continue with Google
+                </GoogleOAuthRegistration>
+                
+                <div className="text-center">
+                  <p className="text-white/60 text-xs">
+                    Already have an account? 
+                    <a href="/login/client" className="text-indigo-400 hover:underline ml-1">
+                      Login here
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
 
           {/* Benefits section */}
           <div className="mt-8 space-y-3">
             <h4 className="text-white font-semibold text-center mb-4">What you'll get:</h4>
             <div className="flex items-center space-x-3 text-gray-300">
-              <Zap className="h-5 w-5 text-cyan-400" />
+              <BarChart3 className="h-5 w-5 text-cyan-400" />
               <span>AI-powered workout guidance</span>
             </div>
             <div className="flex items-center space-x-3 text-gray-300">
-              <Target className="h-5 w-5 text-purple-400" />
+              <Users className="h-5 w-5 text-purple-400" />
               <span>Personalized fitness plans</span>
             </div>
             <div className="flex items-center space-x-3 text-gray-300">
-              <TrendingUp className="h-5 w-5 text-yellow-400" />
+              <Shield className="h-5 w-5 text-yellow-400" />
               <span>Progress tracking & analytics</span>
             </div>
           </div>

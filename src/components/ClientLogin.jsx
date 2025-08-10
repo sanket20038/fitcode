@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Alert, AlertDescription } from './ui/alert';
-import { Dumbbell, Eye, EyeOff, User } from 'lucide-react';
+import { Dumbbell, Eye, EyeOff, User, Chrome } from 'lucide-react';
 import { authAPI } from '../lib/api';
 import { setAuth } from '../lib/auth';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import GoogleOAuthRegistration from './GoogleOAuthRegistration';
 
 const ClientLogin = ({ setAuthenticated, setUserType }) => {
@@ -119,15 +120,15 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-6">
       <Card className="w-full max-w-md shadow-2xl rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-5 rounded-full shadow-lg animate-pulse">
-              <Dumbbell className="h-12 w-12 text-white" />
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-5 rounded-full shadow-lg animate-pulse">
+              <User className="h-12 w-12 text-white" />
             </div>
           </div>
-          <CardTitle className="text-4xl font-extrabold text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">Client Login</CardTitle>
+          <CardTitle className="text-4xl font-extrabold text-transparent bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text">Client Login</CardTitle>
           <CardDescription className="text-white/70 mt-2">Sign in to your client account</CardDescription>
         </CardHeader>
         <CardContent>
@@ -136,68 +137,96 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
               <AlertDescription className="text-red-100 font-semibold">{error}</AlertDescription>
             </Alert>
           )}
-          <form onSubmit={handleLogin} className="space-y-6">
-            <Input
-              type="text"
-              placeholder="Username"
-              value={form.username}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
-              required
-              className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
-            />
-            <div className="flex items-center justify-between">
-              <Input
-                type={form.showPassword ? 'text' : 'password'}
-                placeholder="Password"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                required
-                className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
-              />
-              <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="ml-2 text-blue-400 hover:text-indigo-400 focus:outline-none"
-                aria-label={form.showPassword ? 'Hide password' : 'Show password'}
+          
+          <Tabs defaultValue="normal" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-white/10 border-white/20">
+              <TabsTrigger 
+                value="normal" 
+                className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-white/70"
               >
-                {form.showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </button>
-            </div>
-            {/* Forgot Password Link */}
-            <div className="text-right">
-              <button
-                type="button"
-                className="text-sm text-indigo-400 hover:underline focus:outline-none"
-                onClick={() => setShowForgot(true)}
+                Normal Login
+              </TabsTrigger>
+              <TabsTrigger 
+                value="google" 
+                className="data-[state=active]:bg-blue-600 data-[state=active]:text-white text-white/70"
               >
-                Forgot Password?
-              </button>
-            </div>
-            <Button type="submit" className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 rounded-xl" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign in as Gym Client'}
-            </Button>
-          </form>
-
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-300/30" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-transparent px-2 text-gray-400">Or continue with</span>
-            </div>
-          </div>
-
-          {/* Google OAuth Button - Only shows username input */}
-          <GoogleOAuthRegistration
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-            userType="client"
-            variant="client"
-            isLogin={true}
-          >
-            Continue with Google
-          </GoogleOAuthRegistration>
+                Google Login
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="normal" className="mt-6">
+              <form onSubmit={handleLogin} className="space-y-6">
+                <Input
+                  type="text"
+                  placeholder="Username"
+                  value={form.username}
+                  onChange={(e) => setForm({ ...form, username: e.target.value })}
+                  required
+                  className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                />
+                <div className="flex items-center justify-between">
+                  <Input
+                    type={form.showPassword ? 'text' : 'password'}
+                    placeholder="Password"
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    required
+                    className="text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="ml-2 text-blue-400 hover:text-indigo-400 focus:outline-none"
+                    aria-label={form.showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {form.showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+                {/* Forgot Password Link */}
+                <div className="text-right">
+                  <button
+                    type="button"
+                    className="text-sm text-indigo-400 hover:underline focus:outline-none"
+                    onClick={() => setShowForgot(true)}
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+                <Button type="submit" className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 rounded-xl" disabled={loading}>
+                  {loading ? 'Signing in...' : 'Sign in as Client'}
+                </Button>
+              </form>
+            </TabsContent>
+            
+            <TabsContent value="google" className="mt-6">
+              <div className="space-y-4">
+                <div className="text-center">
+                  <p className="text-white/70 text-sm mb-4">
+                    Login with your Google account. Enter your username to continue.
+                  </p>
+                </div>
+                
+                <GoogleOAuthRegistration
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  userType="client"
+                  variant="client"
+                  isLogin={true}
+                >
+                  Continue with Google
+                </GoogleOAuthRegistration>
+                
+                <div className="text-center">
+                  <p className="text-white/60 text-xs">
+                    Don't have an account? 
+                    <a href="/register/client" className="text-indigo-400 hover:underline ml-1">
+                      Register here
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
 
           {/* Forgot Password Modal */}
           {showForgot && (
