@@ -14,7 +14,6 @@ import {
   Edit, 
   Trash2, 
   QrCode, 
-  Download, 
   BarChart3, 
   LogOut,
   Building,
@@ -57,6 +56,9 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
 
   // New state for video preview dialog
   const [showVideoPreview, setShowVideoPreview] = useState(false);
+
+  // State to track QR generation loading for each machine
+  const [qrLoadingStates, setQrLoadingStates] = useState({});
 
   // Helper function to extract YouTube video ID from URL
   const getYouTubeVideoId = (url) => {
@@ -237,27 +239,42 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
 
   const handleGenerateQR = async (machineId) => {
     try {
+      // Set loading state for this specific machine
+      setQrLoadingStates(prev => ({ ...prev, [machineId]: true }));
+      
+      // First generate the QR code
       await qrAPI.generateQR(machineId);
-      setSuccess('QR code generated successfully');
-      loadData();
-    } catch (error) {
-      setError(error.response?.data?.message || 'Failed to generate QR code');
-    }
-  };
-
-  const handleDownloadQR = async (machineId) => {
-    try {
+      setSuccess('QR code generated and downloaded successfully!');
+      
+      // Then automatically download it
       const response = await qrAPI.getQRImage(machineId);
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
+      const filename = `qr_code_machine_${machineId}.png`;
       link.href = url;
-      link.setAttribute('download', `qr_code_machine_${machineId}.png`);
+      link.setAttribute('download', filename);
       document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
+      
+      try {
+        link.click();
+        // Update success message with filename
+        const machineName = machines.find(m => m.id === machineId)?.name || `Machine ${machineId}`;
+        setSuccess(`QR code for "${machineName}" generated and downloaded as "${filename}"!`);
+      } catch (downloadError) {
+        // If automatic download fails, show a message with manual download option
+        setSuccess(`QR code generated successfully! If download didn't start automatically, right-click the link and select "Save as".`);
+      } finally {
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      }
+      
+      // Reload data to update the UI
+      loadData();
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to download QR code');
+      setError(error.response?.data?.message || 'Failed to generate or download QR code');
+    } finally {
+      // Clear loading state
+      setQrLoadingStates(prev => ({ ...prev, [machineId]: false }));
     }
   };
 
@@ -807,15 +824,20 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                             <Button
                               size="sm"
                               onClick={() => handleGenerateQR(machine.id)}
+                              className="bg-green-600 hover:bg-green-700 text-white"
+                              disabled={qrLoadingStates[machine.id]}
                             >
-                              <QrCode className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleDownloadQR(machine.id)}
-                            >
-                              <Download className="h-4 w-4" />
+                              {qrLoadingStates[machine.id] ? (
+                                <>
+                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></div>
+                                  Generating & Downloading...
+                                </>
+                              ) : (
+                                <>
+                                  <QrCode className="h-4 w-4 mr-1" />
+                                  Generate & Download QR
+                                </>
+                              )}
                             </Button>
                           </div>
                         </CardContent>
