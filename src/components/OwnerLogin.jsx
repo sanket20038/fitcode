@@ -61,17 +61,25 @@ const OwnerLogin = ({ setAuthenticated, setUserType }) => {
         username: googleData.username
       });
       
+      const { userExists, message, token, user } = response.data;
+      
       // Check if user exists and can login
-      if (response.data.userExists) {
-        const { token, user } = response.data;
-        setAuth(token, user, 'owner');
-        setAuthenticated(true);
-        setUserType('owner');
-        navigate('/owner/dashboard');
-        return { userExists: true };
+      if (userExists) {
+        if (token && user) {
+          // Successful login
+          setAuth(token, user, 'owner');
+          setAuthenticated(true);
+          setUserType('owner');
+          navigate('/owner/dashboard');
+          return { userExists: true };
+        } else {
+          // Username doesn't match existing account
+          setError(message);
+          return { userExists: true };
+        }
       } else {
-        // User doesn't exist - show registration message
-        setError('User not found. Please register first.');
+        // User doesn't exist or username taken
+        setError(message);
         return { userExists: false };
       }
     } catch (error) {
@@ -179,17 +187,17 @@ const OwnerLogin = ({ setAuthenticated, setUserType }) => {
             </div>
           </div>
 
-          {/* Google OAuth Button */}
-                  <GoogleOAuthRegistration
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleError}
-          userType="owner"
-          variant="owner"
-          className="mb-4"
-          isLogin={true}
-        >
-          Continue with Google
-        </GoogleOAuthRegistration>
+          {/* Google OAuth Button - Only shows username input */}
+          <GoogleOAuthRegistration
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            userType="owner"
+            variant="owner"
+            isLogin={true}
+          >
+            Continue with Google
+          </GoogleOAuthRegistration>
+
           {/* Forgot Password Modal */}
           {showForgot && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

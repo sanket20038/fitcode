@@ -34,18 +34,25 @@ const OwnerRegister = () => {
         username: googleData.username
       });
       
+      const { userExists, message, token, user } = response.data;
+      
       // Check if user exists or is new
-      if (response.data.userExists) {
+      if (userExists) {
         // User exists - show login message
-        setError('User already exists. Please login instead.');
+        setError(message || 'User already exists. Please login instead.');
         setTimeout(() => navigate('/login/owner'), 2000);
       } else {
-        // New user - show success message
-        setSuccess('Welcome to FitCode Partner Program! We\'ll contact you soon.');
-        setTimeout(() => navigate('/login/owner'), 2000);
+        if (token && user) {
+          // New user created successfully
+          setSuccess('Welcome to FitCode Partner Program! We\'ll contact you soon.');
+          setTimeout(() => navigate('/login/owner'), 2000);
+        } else {
+          // Username taken or other issue
+          setError(message || 'Registration failed. Please try a different username.');
+        }
       }
       
-      return { userExists: response.data.userExists };
+      return { userExists: userExists };
     } catch (error) {
       setError(error.response?.data?.message || 'Google authentication failed');
       return { userExists: false };

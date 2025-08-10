@@ -62,17 +62,25 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
         username: googleData.username
       });
       
+      const { userExists, message, token, user } = response.data;
+      
       // Check if user exists and can login
-      if (response.data.userExists) {
-        const { token, user } = response.data;
-        setAuth(token, user, 'client');
-        setAuthenticated(true);
-        setUserType('client');
-        navigate('/client/dashboard');
-        return { userExists: true };
+      if (userExists) {
+        if (token && user) {
+          // Successful login
+          setAuth(token, user, 'client');
+          setAuthenticated(true);
+          setUserType('client');
+          navigate('/client/dashboard');
+          return { userExists: true };
+        } else {
+          // Username doesn't match existing account
+          setError(message);
+          return { userExists: true };
+        }
       } else {
-        // User doesn't exist - show registration message
-        setError('User not found. Please register first.');
+        // User doesn't exist or username taken
+        setError(message);
         return { userExists: false };
       }
     } catch (error) {
@@ -149,7 +157,7 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="ml-2 text-purple-400 hover:text-pink-400 focus:outline-none"
+                className="ml-2 text-blue-400 hover:text-indigo-400 focus:outline-none"
                 aria-label={form.showPassword ? 'Hide password' : 'Show password'}
               >
                 {form.showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -159,14 +167,14 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
             <div className="text-right">
               <button
                 type="button"
-                className="text-sm text-pink-400 hover:underline focus:outline-none"
+                className="text-sm text-indigo-400 hover:underline focus:outline-none"
                 onClick={() => setShowForgot(true)}
               >
                 Forgot Password?
               </button>
             </div>
-            <Button type="submit" className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 rounded-xl" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign in as Client'}
+            <Button type="submit" className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 rounded-xl" disabled={loading}>
+              {loading ? 'Signing in...' : 'Sign in as Gym Client'}
             </Button>
           </form>
 
@@ -180,17 +188,17 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
             </div>
           </div>
 
-          {/* Google OAuth Button */}
-                  <GoogleOAuthRegistration
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleError}
-          userType="client"
-          variant="client"
-          className="mb-4"
-          isLogin={true}
-        >
-          Continue with Google
-        </GoogleOAuthRegistration>
+          {/* Google OAuth Button - Only shows username input */}
+          <GoogleOAuthRegistration
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            userType="client"
+            variant="client"
+            isLogin={true}
+          >
+            Continue with Google
+          </GoogleOAuthRegistration>
+
           {/* Forgot Password Modal */}
           {showForgot && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

@@ -20,7 +20,7 @@ const GoogleOAuthRegistration = ({
   const [username, setUsername] = useState('');
   const [googleUserData, setGoogleUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [userExists, setUserExists] = useState(false);
+  const [userExists, setUserExists] = useState(null); // null = not checked yet
 
   const login = useGoogleLogin({
     onSuccess: async (response) => {
@@ -38,6 +38,7 @@ const GoogleOAuthRegistration = ({
           userType: userType
         });
         setShowUsernameDialog(true);
+        setUserExists(null); // Reset user existence check
       } catch (error) {
         console.error('Error fetching user info:', error);
         onError('Failed to get user information from Google');
@@ -72,17 +73,25 @@ const GoogleOAuthRegistration = ({
         username: username.trim()
       });
       
-      // If user exists, close dialog and let parent handle login
-      if (result && result.userExists) {
-        setShowUsernameDialog(false);
-        setUsername('');
-        setGoogleUserData(null);
-        setUserExists(false);
-      }
-      // If user doesn't exist, keep dialog open and show message
-      else if (result && !result.userExists) {
-        setUserExists(false);
-        // Don't close dialog, let user see the message
+      // Update the userExists state based on the result
+      if (result && result.userExists !== undefined) {
+        setUserExists(result.userExists);
+        
+        // If user exists and this is login, close dialog and let parent handle
+        if (result.userExists && isLogin) {
+          setShowUsernameDialog(false);
+          setUsername('');
+          setGoogleUserData(null);
+          setUserExists(null);
+        }
+        // If user doesn't exist and this is registration, close dialog and let parent handle
+        else if (!result.userExists && !isLogin) {
+          setShowUsernameDialog(false);
+          setUsername('');
+          setGoogleUserData(null);
+          setUserExists(null);
+        }
+        // Otherwise, keep dialog open to show the appropriate message
       }
     } catch (error) {
       onError('Authentication failed. Please try again.');
@@ -106,16 +115,33 @@ const GoogleOAuthRegistration = ({
 
   const getDialogTitle = () => {
     if (isLogin) {
+      if (userExists === null) return 'Enter Username for Google Login';
       return userExists ? 'User Found - Login' : 'User Not Found';
     }
     return 'Choose Your Username';
   };
 
   const getSubmitButtonText = () => {
+    if (isLoading) return 'Processing...';
+    
     if (isLogin) {
+      if (userExists === null) return 'Check Username';
       return userExists ? 'Login with Google' : 'Go Back to Register';
     }
     return 'Create Account';
+  };
+
+  const getDialogMessage = () => {
+    if (isLogin) {
+      if (userExists === null) {
+        return 'Enter your username to login with Google';
+      } else if (userExists) {
+        return 'User found! Click login to continue with Google.';
+      } else {
+        return 'User not found. Please register first or go back to registration.';
+      }
+    }
+    return 'This will be your display name on the platform';
   };
 
   return (
@@ -148,17 +174,15 @@ const GoogleOAuthRegistration = ({
                 onKeyPress={(e) => e.key === 'Enter' && handleUsernameSubmit()}
                 className="mt-1"
                 autoFocus
+                disabled={isLoading}
               />
               <p className="text-sm text-gray-500 mt-1">
-                {isLogin 
-                  ? 'Enter your username to login with Google'
-                  : 'This will be your display name on the platform'
-                }
+                {getDialogMessage()}
               </p>
             </div>
 
             {/* Show different messages based on user existence */}
-            {isLogin && userExists && (
+            {isLogin && userExists === true && (
               <Alert className="border-green-500/50 bg-green-500/10">
                 <CheckCircle className="h-4 w-4 text-green-400" />
                 <AlertDescription className="text-green-200">
@@ -182,7 +206,7 @@ const GoogleOAuthRegistration = ({
                 disabled={isLoading || !username.trim()}
                 className="flex-1"
               >
-                {isLoading ? 'Processing...' : getSubmitButtonText()}
+                {getSubmitButtonText()}
               </Button>
               <Button
                 variant="outline"
@@ -190,7 +214,7 @@ const GoogleOAuthRegistration = ({
                   setShowUsernameDialog(false);
                   setUsername('');
                   setGoogleUserData(null);
-                  setUserExists(false);
+                  setUserExists(null);
                 }}
                 disabled={isLoading}
               >
