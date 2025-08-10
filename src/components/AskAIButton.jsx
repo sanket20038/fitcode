@@ -131,34 +131,37 @@ const AskAIButton = ({ onResponse }) => {
     try {
       let prompt = '';
       if (tabValue === 'diet') {
-        prompt = `You are a Fitcode AI Nutrition Assistant. Respond only in ${language}.
-        also only provide the diet plan and nothing else.if user ask for anything else, just say that you are a diet or workout assistant. 
-User Details: Age ${age}, Gender ${gender}, Height ${height}cm, Weight ${weight}kg, Goal: ${dietGoal}, Diet: ${dietType}, Activity: ${activityLevel}, Medical: ${medicalConditions}, Allergies: ${allergies}, Meals: ${mealsPerDay}, Routine: ${dailyRoutine}.
+        // Build diet prompt with only filled fields
+        const dietFields = [];
+        if (age) dietFields.push(`Age:${age}`);
+        if (gender) dietFields.push(`Gender:${gender}`);
+        if (height) dietFields.push(`Height:${height}cm`);
+        if (weight) dietFields.push(`Weight:${weight}kg`);
+        if (dietGoal) dietFields.push(`Goal:${dietGoal}`);
+        if (dietType) dietFields.push(`Diet:${dietType}`);
+        if (activityLevel) dietFields.push(`Activity:${activityLevel}`);
+        if (medicalConditions) dietFields.push(`Medical:${medicalConditions}`);
+        if (allergies) dietFields.push(`Allergies:${allergies}`);
+        if (mealsPerDay) dietFields.push(`Meals:${mealsPerDay}`);
+        if (dailyRoutine) dietFields.push(`Routine:${dailyRoutine}`);
 
-Provide:
-
-1. BMI & daily calorie needs.
-2. 7-day Indian meal plan (seasonal, budget-friendly).
-3. Shopping list (local ingredients).
-4. Cooking tips.
-5. Progress tracking guidance.
-6. Medical advice (if applicable).
-
-Focus on Indian cuisine, using local, seasonal ingredients.`;
+        prompt = `Fitcode AI Nutrition. ${language}. Diet only.
+${dietFields.join(', ')}.
+Give: 1)BMI/calories 2)7-day plan 3)Shopping 4)Cooking 5)Progress 6)Medical
+Indian cuisine, local ingredients.`;
       } else if (tabValue === 'workout') {
-        prompt = `You are a Fitcode AI Fitness Assistant. Respond only in ${language} based on the user's preference. also only provide the workout plan and nothing else.if user ask for anything else, just say that you are a diet or workout assistant.
-User: Goal ${workoutGoal}, Plan ${workoutPlan}, Today's Workout ${workoutToday}, Fitness Level ${fitnessLevel}, Limitations ${injuriesLimitations}.
+        // Build workout prompt with only filled fields
+        const workoutFields = [];
+        if (workoutGoal) workoutFields.push(`Goal:${workoutGoal}`);
+        if (workoutPlan) workoutFields.push(`Plan:${workoutPlan}`);
+        if (workoutToday) workoutFields.push(`Today:${workoutToday}`);
+        if (fitnessLevel) workoutFields.push(`Level:${fitnessLevel}`);
+        if (injuriesLimitations) workoutFields.push(`Limits:${injuriesLimitations}`);
 
-Provide:
-
-1. Detailed workout plan (exercises, sets, reps, rest) no table format.
-2. Form tips & safety precautions.
-3. Verified video links.
-4. Warm-up & cool-down suggestions.
-5. Progression tips.
-6. Medical consultation advice (if needed).
-
-Include modifications for beginners/advanced. Focus on proper form, not just intensity.`;
+        prompt = `Fitcode AI Fitness. ${language}. Workout only.
+${workoutFields.join(', ')}.
+Give: 1)Workout 2)Form 3)Videos 4)Warm/cool 5)Progress 6)Medical
+Mods: beginner/advanced. Form>intensity.`;
       }
 
       const ai = new GoogleGenAI({ apiKey });
@@ -166,6 +169,12 @@ Include modifications for beginners/advanced. Focus on proper form, not just int
       const result = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: prompt,
+        generationConfig: {
+          maxOutputTokens: 1000, // Limit response length to save tokens
+          temperature: 0.7, // Balanced creativity
+          topP: 0.9, // Focus on most relevant responses
+          topK: 40 // Limit token selection for efficiency
+        }
       });
 
       let reply = result.text || 'No response from Gemini AI.';
