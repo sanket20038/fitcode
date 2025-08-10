@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Alert, AlertDescription } from './ui/alert';
 import { Dumbbell, User, CheckCircle, Zap, Target, TrendingUp } from 'lucide-react';
 import { authAPI } from '../lib/api';
+import GoogleOAuthButton from './GoogleOAuthButton';
 
 const ClientRegister = () => {
   const [form, setForm] = useState({ 
@@ -18,6 +19,32 @@ const ClientRegister = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+
+  const handleGoogleSuccess = async (googleData) => {
+    setLoading(true);
+    setError('');
+    setSuccess('');
+    
+    try {
+      // Call backend to authenticate with Google
+      const response = await authAPI.googleAuth({
+        access_token: googleData.access_token,
+        user: googleData.user,
+        userType: 'client'
+      });
+      
+      setSuccess('Welcome to FitCode! Your fitness journey starts now.');
+      setTimeout(() => navigate('/login/client'), 2000);
+    } catch (error) {
+      setError(error.response?.data?.message || 'Google authentication failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (errorMessage) => {
+    setError(errorMessage);
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -135,6 +162,27 @@ const ClientRegister = () => {
               {loading ? 'Creating Your Account...' : 'Start My Fitness Journey'}
             </Button>
           </form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-gray-300/30" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-transparent px-2 text-gray-400">Or continue with</span>
+            </div>
+          </div>
+
+          {/* Google OAuth Button */}
+          <GoogleOAuthButton
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            userType="client"
+            variant="client"
+            className="mb-4"
+          >
+            Continue with Google
+          </GoogleOAuthButton>
 
           {/* Benefits section */}
           <div className="mt-8 space-y-3">

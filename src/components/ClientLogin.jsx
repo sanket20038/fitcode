@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from './ui/alert';
 import { Dumbbell, Eye, EyeOff, User } from 'lucide-react';
 import { authAPI } from '../lib/api';
 import { setAuth } from '../lib/auth';
+import GoogleOAuthButton from './GoogleOAuthButton';
 
 const ClientLogin = ({ setAuthenticated, setUserType }) => {
   const [form, setForm] = useState({ username: '', password: '', showPassword: false });
@@ -46,6 +47,34 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleSuccess = async (googleData) => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      // Call backend to authenticate with Google
+      const response = await authAPI.googleAuth({
+        access_token: googleData.access_token,
+        user: googleData.user,
+        userType: 'client'
+      });
+      
+      const { token, user } = response.data;
+      setAuth(token, user, 'client');
+      setAuthenticated(true);
+      setUserType('client');
+      navigate('/client/dashboard');
+    } catch (error) {
+      setError(error.response?.data?.message || 'Google authentication failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (errorMessage) => {
+    setError(errorMessage);
   };
 
   const handleForgotPassword = async (e) => {
@@ -130,6 +159,27 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
               {loading ? 'Signing in...' : 'Sign in as Client'}
             </Button>
           </form>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-gray-300/30" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-transparent px-2 text-gray-400">Or continue with</span>
+            </div>
+          </div>
+
+          {/* Google OAuth Button */}
+          <GoogleOAuthButton
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            userType="client"
+            variant="client"
+            className="mb-4"
+          >
+            Continue with Google
+          </GoogleOAuthButton>
           {/* Forgot Password Modal */}
           {showForgot && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
