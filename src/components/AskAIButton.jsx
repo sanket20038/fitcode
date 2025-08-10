@@ -70,45 +70,6 @@ const AskAIButton = ({ onResponse }) => {
   const isMobile = useIsMobile();
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Function to filter and redirect off-topic responses
-  const filterAndRedirectResponse = (response, tabType, userLanguage) => {
-    const lowerResponse = response.toLowerCase();
-    
-    // Define off-topic keywords for each tab
-    const offTopicKeywords = {
-      diet: ['workout', 'exercise', 'gym', 'fitness', 'training', 'cardio', 'strength'],
-      workout: ['diet', 'nutrition', 'food', 'meal', 'calorie', 'protein', 'vitamin']
-    };
-    
-    // Check if response contains off-topic keywords
-    const currentTabKeywords = offTopicKeywords[tabType] || [];
-    const hasOffTopicContent = currentTabKeywords.some(keyword => 
-      lowerResponse.includes(keyword)
-    );
-    
-    // If off-topic content detected, redirect user
-    if (hasOffTopicContent) {
-      const redirectMessages = {
-        diet: {
-          english: "I am a FitCode AI Nutrition Assistant. I can only help with diet plans, meal suggestions, and nutrition advice. For workout plans, please use the workout tab.",
-          hindi: "मैं FitCode AI Nutrition Assistant हूं। मैं केवल आहार योजनाओं, भोजन सुझावों और पोषण सलाह में मदद कर सकता हूं। कसरत योजनाओं के लिए, कृपया workout टैब का उपयोग करें।",
-          marathi: "मी FitCode AI Nutrition Assistant आहे. मी फक्त आहार योजना, जेवण सूचना आणि पोषण सल्ल्यामध्ये मदत करू शकतो. कसरत योजनांसाठी, कृपया workout टॅब वापरा.",
-          tamil: "நான் FitCode AI Nutrition Assistant. நான் உணவு திட்டங்கள், உணவு பரிந்துரைகள் மற்றும் ஊட்டச்சத்து ஆலோசனைகளில் மட்டுமே உதவ முடியும். உடற்பயிற்சி திட்டங்களுக்கு, தயவுசெய்து workout டேப் பயன்படுத்தவும்."
-        },
-        workout: {
-          english: "I am a FitCode AI Fitness Assistant. I can only help with workout plans, exercise guidance, and fitness advice. For nutrition plans, please use the diet tab.",
-          hindi: "मैं FitCode AI Fitness Assistant हूं। मैं केवल कसरत योजनाओं, व्यायाम मार्गदर्शन और फिटनेस सलाह में मदद कर सकता हूं। पोषण योजनाओं के लिए, कृपया diet टैब का उपयोग करें।",
-          marathi: "मी FitCode AI Fitness Assistant आहे. मी फक्त कसरत योजना, व्यायाम मार्गदर्शन आणि फिटनेस सल्ल्यामध्ये मदत करू शकतो. पोषण योजनांसाठी, कृपया diet टॅब वापरा.",
-          tamil: "நான் FitCode AI Fitness Assistant. நான் உடற்பயிற்சி திட்டங்கள், பயிற்சி வழிகாட்டுதல் மற்றும் உடல்நல ஆலோசனைகளில் மட்டுமே உதவ முடியும். ஊட்டச்சத்து திட்டங்களுக்கு, தயவுசெய்து diet டேப் பயன்படுத்தவும்."
-        }
-      };
-      
-      return redirectMessages[tabType][userLanguage] || redirectMessages[tabType].english;
-    }
-    
-    return response;
-  };
-
   const handleSubmit = async () => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
@@ -221,10 +182,6 @@ IMPORTANT: You are ONLY a fitness/workout assistant. If the user asks for anythi
       });
 
       let reply = result.text || 'No response from Gemini AI.';
-      
-      // Post-process response to ensure it's fitness-related
-      reply = filterAndRedirectResponse(reply, tabValue, language);
-      
       // Remove asterisks from response
       try {
         const jsonResponse = JSON.parse(reply);
