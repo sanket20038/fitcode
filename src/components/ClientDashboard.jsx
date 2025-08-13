@@ -359,19 +359,21 @@ const exportToPDF = async (aiResponses) => {
             
           </div>
           {/* Welcome and Logout */}
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <div className="text-right">
-              <span className="block text-white/60 text-xs sm:text-sm">Welcome back,</span>
-              <span className="block text-white font-bold text-base sm:text-lg break-all">{user?.username}</span>
+          <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
+            <div className="text-right min-w-0">
+              <span className="block text-white/60 text-xs sm:text-sm md:text-base">Welcome back,</span>
+              <span className="block text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl break-words max-w-[120px] sm:max-w-[150px] md:max-w-[200px] lg:max-w-[250px]">
+                {user?.username}
+              </span>
             </div>
             <Button
               variant="outline"
               size="sm"
-              className="bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 border-none text-white font-bold shadow-lg hover:from-pink-600 hover:to-yellow-500 hover:scale-105 active:scale-95 transition-all duration-300 px-4 py-1 text-xs sm:text-sm rounded-xl drop-shadow-lg"
+              className="bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 border-none text-white font-bold shadow-lg hover:from-pink-600 hover:to-yellow-500 hover:scale-105 active:scale-95 transition-all duration-300 px-2 sm:px-3 md:px-4 py-1 text-xs sm:text-sm rounded-xl drop-shadow-lg flex-shrink-0"
               onClick={handleLogout}
             >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              <LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Logout</span>
             </Button>
           </div>
         </div>
