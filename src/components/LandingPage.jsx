@@ -1091,14 +1091,14 @@ const LandingPage = () => {
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                  <Button
+                  {/* <Button
                     variant="outline"
                     className="border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10 hover:border-cyan-400 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-full transition-all duration-300 hover:scale-105 text-xs sm:text-sm"
                     onClick={closeDemo}
                   >
                     <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5" />
                     Close Demo
-                  </Button>
+                  </Button> */}
                   <Button
                     className="bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold hover:from-cyan-500 hover:to-purple-600 px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-cyan-400/25 text-xs sm:text-sm"
                     onClick={() => {
