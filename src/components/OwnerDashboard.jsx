@@ -91,18 +91,35 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
   // Helper function to validate image URL
   const validateImageUrl = (url) => {
     if (!url) return false;
+    
     // Check if it's a direct image URL
     const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
     if (imageExtensions.test(url)) return true;
     
-    // Check if it's a Google Drive URL
-    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/;
-    if (driveRegex.test(url)) return true;
+    // Check if it's a Google Drive URL (both share and direct formats)
+    const driveShareRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/;
+    const driveDirectRegex = /https:\/\/drive\.google\.com\/uc\?export=view&id=([a-zA-Z0-9_-]+)/;
+    if (driveShareRegex.test(url) || driveDirectRegex.test(url)) return true;
     
     // Check if it's a data URL
     if (url.startsWith('data:image/')) return true;
     
-    return false;
+    // Allow other common image hosting URLs
+    const allowedHosts = [
+      'imgur.com',
+      'postimg.cc',
+      'ibb.co',
+      'imageshack.com',
+      'flickr.com',
+      'dropbox.com'
+    ];
+    
+    try {
+      const urlObj = new URL(url);
+      return allowedHosts.some(host => urlObj.hostname.includes(host));
+    } catch {
+      return false;
+    }
   };
 
   useEffect(() => {
