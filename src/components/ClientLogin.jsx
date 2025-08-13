@@ -64,36 +64,21 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
       
       const { userExists, message, token, user } = response.data;
       
-      // Check if user exists and can login
-      if (userExists) {
-        if (token && user) {
-          // Successful login
-          setAuth(token, user, 'client');
-          setAuthenticated(true);
-          setUserType('client');
-          navigate('/client/dashboard');
-          return { userExists: true };
-        } else {
-          // Username doesn't match existing account
-          setError(message);
-          return { userExists: true };
-        }
+      // Unified flow - handle both login and registration
+      if (token && user) {
+        // Successful authentication (login or registration)
+        setAuth(token, user, 'client');
+        setAuthenticated(true);
+        setUserType('client');
+        navigate('/client/dashboard');
+        return { success: true };
       } else {
-        // User doesn't exist - redirect to registration with Google data
-        // Navigate to registration page with Google data
-        navigate('/register/client', { 
-          state: { 
-            googleData: {
-              ...googleData,
-              userExists: false
-            }
-          } 
-        });
-        return { userExists: false };
+        setError(message);
+        return { success: false };
       }
     } catch (error) {
       setError(error.response?.data?.message || 'Google authentication failed');
-      return { userExists: false };
+      return { success: false };
     } finally {
       setLoading(false);
     }
@@ -196,13 +181,12 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
             </div>
           </div>
 
-          {/* Google OAuth Button - Only shows username input */}
+          {/* Google OAuth Button - Unified flow */}
           <GoogleOAuthRegistration
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
             userType="client"
             variant="client"
-            isLogin={true}
           >
             Continue with Google
           </GoogleOAuthRegistration>
