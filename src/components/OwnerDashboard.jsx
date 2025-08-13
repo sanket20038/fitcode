@@ -81,45 +81,38 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
   // Helper function to convert Google Drive image URL to direct link
   const getDriveImageUrl = (url) => {
     if (!url) return null;
-    // Google Drive share link format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-    // Direct image format: https://drive.google.com/uc?export=view&id=FILE_ID
-    const regex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/;
-    const match = url.match(regex);
-    return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : null;
+    
+    // Handle different Google Drive URL formats
+    const shareRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/;
+    const directRegex = /https:\/\/drive\.google\.com\/uc\?export=view&id=([a-zA-Z0-9_-]+)/;
+    const openRegex = /https:\/\/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/;
+    
+    let match = url.match(shareRegex);
+    if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    
+    match = url.match(directRegex);
+    if (match) return url; // Already in direct format
+    
+    match = url.match(openRegex);
+    if (match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    
+    return url; // Return original if no conversion needed
   };
 
   // Helper function to validate image URL
   const validateImageUrl = (url) => {
-    if (!url) return false;
+    if (!url) return true; // Allow empty URLs
     
-    // Check if it's a direct image URL
-    const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
-    if (imageExtensions.test(url)) return true;
+    // Allow any URL that starts with http/https
+    if (url.startsWith('http://') || url.startsWith('https://')) return true;
     
-    // Check if it's a Google Drive URL (both share and direct formats)
-    const driveShareRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/;
-    const driveDirectRegex = /https:\/\/drive\.google\.com\/uc\?export=view&id=([a-zA-Z0-9_-]+)/;
-    if (driveShareRegex.test(url) || driveDirectRegex.test(url)) return true;
-    
-    // Check if it's a data URL
+    // Allow data URLs
     if (url.startsWith('data:image/')) return true;
     
-    // Allow other common image hosting URLs
-    const allowedHosts = [
-      'imgur.com',
-      'postimg.cc',
-      'ibb.co',
-      'imageshack.com',
-      'flickr.com',
-      'dropbox.com'
-    ];
+    // Allow relative URLs
+    if (url.startsWith('/') || url.startsWith('./')) return true;
     
-    try {
-      const urlObj = new URL(url);
-      return allowedHosts.some(host => urlObj.hostname.includes(host));
-    } catch {
-      return false;
-    }
+    return false;
   };
 
   useEffect(() => {
