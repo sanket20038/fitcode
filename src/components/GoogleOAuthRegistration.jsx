@@ -37,6 +37,7 @@ const GoogleOAuthRegistration = ({
           user: userInfo,
           userType: userType
         });
+        setUsername(userInfo.name); // Automatically set username from Google profile
         setShowUsernameDialog(true);
         setUserExists(null); // Reset user existence check
       } catch (error) {
