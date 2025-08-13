@@ -31,12 +31,25 @@ const GoogleOAuthRegistration = ({
           headers: { Authorization: `Bearer ${response.access_token}` },
         }).then(res => res.json());
 
-        // Store Google user data and show username dialog
-        setGoogleUserData({
+        // Store Google user data
+        const googleData = {
           access_token: response.access_token,
           user: userInfo,
           userType: userType
-        });
+        };
+
+        // If this is login, automatically use email as username and skip dialog
+        if (isLogin) {
+          const autoUsername = userInfo.email.split('@')[0]; // Use email prefix as username
+          onSuccess({
+            ...googleData,
+            username: autoUsername
+          });
+          return;
+        }
+
+        // For registration, show username dialog
+        setGoogleUserData(googleData);
         setUsername(userInfo.name); // Automatically set username from Google profile
         setShowUsernameDialog(true);
         setUserExists(null); // Reset user existence check
