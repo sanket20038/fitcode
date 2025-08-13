@@ -79,8 +79,16 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
           return { userExists: true };
         }
       } else {
-        // User doesn't exist or username taken
-        setError(message);
+        // User doesn't exist - redirect to registration with Google data
+        // Navigate to registration page with Google data
+        navigate('/register/client', { 
+          state: { 
+            googleData: {
+              ...googleData,
+              userExists: false
+            }
+          } 
+        });
         return { userExists: false };
       }
     } catch (error) {
