@@ -25,6 +25,7 @@ import {
 import { gymAPI, qrAPI, analyticsAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
 import GymLoader from './GymLoader';
+import GoogleDriveFilePicker from './GoogleDriveFilePicker';
 
 const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
   const [user] = useState(getUser());
