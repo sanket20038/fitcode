@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import GoogleOAuthButton from './GoogleOAuthButton';
 import { Button } from './ui/button';
 import { Loader2, UploadCloud, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from './ui/alert';
@@ -33,6 +34,8 @@ const EnhancedGoogleDrivePicker = ({
     loadGoogleAPI();
   }, []);
 
+  const [showSignIn, setShowSignIn] = useState(false);
+
   const handleGoogleDriveUpload = async () => {
     if (!isPickerLoaded || !window.gapi || !window.google) {
       setError('Google Drive Picker not loaded');
@@ -46,12 +49,14 @@ const EnhancedGoogleDrivePicker = ({
     try {
       const token = localStorage.getItem('google_access_token');
       if (!token) {
-        throw new Error('Please sign in with Google first');
+        setError('You must sign in with Google to use the Drive Picker.');
+        setShowSignIn(true);
+        setIsLoading(false);
+        return;
       }
 
       // Create picker with specific view for images and videos
       const view = new window.google.picker.View(window.google.picker.ViewId.DOCS);
-      
       // Filter for images and videos
       if (allowedTypes.includes('image')) {
         view.setMimeTypes('image/*');
@@ -72,7 +77,6 @@ const EnhancedGoogleDrivePicker = ({
           setIsLoading(false);
         })
         .build();
-      
       picker.setVisible(true);
     } catch (error) {
       setError(error.message);
@@ -247,6 +251,26 @@ const EnhancedGoogleDrivePicker = ({
         )}
         {buttonText}
       </Button>
+
+      {showSignIn && (
+        <div className="mt-2">
+          <GoogleOAuthButton
+            onSuccess={(data) => {
+              if (data?.access_token) {
+                localStorage.setItem('google_access_token', data.access_token);
+                setShowSignIn(false);
+                setError(null);
+              }
+            }}
+            onError={() => setError('Google sign-in failed.')}
+            userType="owner"
+            variant="owner"
+            className="w-fit"
+          >
+            Sign in with Google
+          </GoogleOAuthButton>
+        </div>
+      )}
     </div>
   );
 };
