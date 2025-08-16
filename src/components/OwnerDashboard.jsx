@@ -665,9 +665,7 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                                       e.target.nextSibling.style.display = 'flex';
                                     }}
                                   />
-                                  <div className="hidden text-gray-400 text-xs text-center p-2">
-                                    Invalid image
-                                  </div>
+                                  
                                 </div>
                               </div>
                             )}
