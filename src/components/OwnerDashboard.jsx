@@ -182,11 +182,14 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
   const handleGymSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Always embed/convert the logo_url to a direct Drive link if possible
+      const embeddedLogoUrl = getDriveImageUrl(gymForm.logo_url);
+      const gymFormWithEmbeddedLogo = { ...gymForm, logo_url: embeddedLogoUrl };
       if (gym) {
-        await gymAPI.updateGym(gymForm);
+        await gymAPI.updateGym(gymFormWithEmbeddedLogo);
         setSuccess('Gym updated successfully');
       } else {
-        const response = await gymAPI.createGym(gymForm);
+        const response = await gymAPI.createGym(gymFormWithEmbeddedLogo);
         setGym(response.data.gym);
         setSuccess('Gym created successfully');
       }
