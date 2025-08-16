@@ -82,8 +82,7 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
               userType="client"
               variant="client"
             >
-              <span className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 text-lg">
-                <svg className="w-6 h-6 mr-2" viewBox="0 0 48 48"><g><path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.7 33.7 29.8 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 6 .9 8.3 2.7l6.2-6.2C34.2 4.5 29.4 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.6 20-21 0-1.3-.1-2.7-.3-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.2 17.1 19.2 14 24 14c3.1 0 6 .9 8.3 2.7l6.2-6.2C34.2 4.5 29.4 3 24 3c-7.2 0-13 5.8-13 13 0 2.2.6 4.3 1.7 6.1z"/><path fill="#FBBC05" d="M24 44c5.8 0 10.7-3.3 13.7-8.1l-7-5.1C29.8 37 24 37 24 37c-4.8 0-8.8-3.1-10.7-7.6l-7 5.1C7.3 39.5 15.2 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.7C34.7 33.7 29.8 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 6 .9 8.3 2.7l6.2-6.2C34.2 4.5 29.4 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.6 20-21 0-1.3-.1-2.7-.3-4z"/></g></svg>
+              <span className="flex items-center gap-2 px-6 py-3 text-white font-semibold ">
                 Sign in with Google
               </span>
             </GoogleOAuthRegistration>
