@@ -75,17 +75,21 @@ const OwnerLogin = ({ setAuthenticated, setUserType }) => {
               <AlertDescription className="text-red-100 font-semibold">{error}</AlertDescription>
             </Alert>
           )}
-          <div className="flex flex-col items-center w-full mt-10 mb-4">
+          <div className="flex justify-center mt-12 mb-2">
             <GoogleOAuthRegistration
               onSuccess={handleGoogleSuccess}
               onError={handleGoogleError}
               userType="owner"
               variant="owner"
             >
-              <span className="flex items-center gap-3 px-8 py-4 bg-white rounded-full shadow-md text-black font-semibold text-lg w-full justify-center hover:bg-gray-100 transition-all duration-200 border border-gray-200">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6 mr-2" />
+              <button
+                type="button"
+                className="flex items-center gap-3 px-10 py-4 bg-white rounded-full shadow-xl text-black font-semibold text-xl min-w-[320px] justify-center hover:bg-gray-100 transition-all duration-200 border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-200"
+                style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}
+              >
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-7 h-7 mr-2" />
                 Sign in with Google
-              </span>
+              </button>
             </GoogleOAuthRegistration>
           </div>
         </CardContent>
