@@ -82,7 +82,7 @@ const OwnerLogin = ({ setAuthenticated, setUserType }) => {
               userType="owner"
               variant="owner"
             >
-              <span className="flex items-center gap-2 px-6 py-3 text-white font-semibold transition-all duration-300 text-lg">
+              <span className="flex items-center gap-2 px-6 py-3 text-black font-semibold transition-all duration-300 text-lg">
                 Sign in with Google
               </span>
             </GoogleOAuthRegistration>

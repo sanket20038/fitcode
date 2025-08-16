@@ -82,8 +82,8 @@ const ClientLogin = ({ setAuthenticated, setUserType }) => {
               userType="client"
               variant="client"
             >
-              <span className="flex items-center gap-2 px-6 py-3 text-white font-semibold ">
-                Sign in with Google
+              <span className="flex items-center gap-2 px-6 py-3 text-black font-semibold ">
+              Sign in with Google
               </span>
             </GoogleOAuthRegistration>
           </div>
