@@ -25,7 +25,7 @@ import {
 import { gymAPI, qrAPI, analyticsAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
 import GymLoader from './GymLoader';
-import GoogleDriveFilePicker from './GoogleDriveFilePicker';
+import EnhancedGoogleDrivePicker from './EnhancedGoogleDrivePicker';
 import GoogleOAuthButton from './GoogleOAuthButton';
   // Store Google access token for Drive picker
   const handleGoogleSignIn = (googleData) => {
@@ -540,10 +540,10 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                                   }`}
                                 />
                                 <div className="flex gap-2">
-                                  <GoogleDriveFilePicker
+                                  <EnhancedGoogleDrivePicker
                                     buttonText="Select from Drive"
-                                    accept="image/*"
-                                    onFileSelected={(url) => setGymForm({ ...gymForm, logo_url: url })}
+                                    allowedTypes={['image']}
+                                    onFileSelected={(fileData) => setGymForm({ ...gymForm, logo_url: fileData.url })}
                                   />
                                   <button
                                     type="button"
