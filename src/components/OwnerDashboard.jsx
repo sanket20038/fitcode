@@ -26,6 +26,18 @@ import { gymAPI, qrAPI, analyticsAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
 import GymLoader from './GymLoader';
 import GoogleDriveFilePicker from './GoogleDriveFilePicker';
+import GoogleOAuthButton from './GoogleOAuthButton';
+  // Store Google access token for Drive picker
+  const handleGoogleSignIn = (googleData) => {
+    if (googleData?.access_token) {
+      localStorage.setItem('google_access_token', googleData.access_token);
+    }
+  };
+
+  const handleGoogleSignInError = (err) => {
+    // Optionally show error to user
+    setError(typeof err === 'string' ? err : 'Google sign-in failed');
+  };
 
 const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
   const [user] = useState(getUser());
@@ -510,7 +522,8 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                             <label className="block text-sm font-semibold text-gray-900">
                               Logo URL
                             </label>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex flex-col gap-2">
+                              <div className="flex items-center space-x-2">
                               <Input
                                 placeholder="Enter logo URL (direct image link or Google Drive share link)"
                                 value={gymForm.logo_url}
@@ -537,6 +550,18 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                               >
                                 <Info className="h-5 w-5" />
                               </button>
+                              </div>
+                              <div>
+                                <GoogleOAuthButton
+                                  onSuccess={handleGoogleSignIn}
+                                  onError={handleGoogleSignInError}
+                                  userType="owner"
+                                  variant="owner"
+                                  className="w-fit"
+                                >
+                                  Sign in with Google for Drive Picker
+                                </GoogleOAuthButton>
+                              </div>
                             </div>
                             {gymForm.logo_url && !validateImageUrl(gymForm.logo_url) && (
                               <p className="text-sm text-red-600">
