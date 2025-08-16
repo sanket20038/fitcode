@@ -25,8 +25,8 @@ import {
 import { gymAPI, qrAPI, analyticsAPI } from '../lib/api';
 import { getUser, clearAuth } from '../lib/auth';
 import GymLoader from './GymLoader';
-import EnhancedGoogleDrivePicker from './EnhancedGoogleDrivePicker';
-import GoogleOAuthButton from './GoogleOAuthButton';
+// Removed EnhancedGoogleDrivePicker for now
+// Removed GoogleOAuthButton import
   // Store Google access token for Drive picker
   const handleGoogleSignIn = (googleData) => {
     if (googleData?.access_token) {
@@ -540,11 +540,7 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                                   }`}
                                 />
                                 <div className="flex gap-2">
-                                  <EnhancedGoogleDrivePicker
-                                    buttonText="Select from Drive"
-                                    allowedTypes={['image']}
-                                    onFileSelected={(fileData) => setGymForm({ ...gymForm, logo_url: fileData.url })}
-                                  />
+                                  {/* Google Drive Picker temporarily removed. Paste your logo URL below. */}
                                   <button
                                     type="button"
                                     aria-label="Show Drive upload info"
@@ -555,15 +551,7 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                                     <Info className="h-5 w-5" />
                                   </button>
                                 </div>
-                                <GoogleOAuthButton
-                                  onSuccess={handleGoogleSignIn}
-                                  onError={handleGoogleSignInError}
-                                  userType="owner"
-                                  variant="owner"
-                                  className="w-fit mt-1"
-                                >
-                                  Sign in with Google for Drive Picker
-                                </GoogleOAuthButton>
+                                {/* Removed Sign in with Google for Drive Picker button */}
                                 {gymForm.logo_url && !validateImageUrl(gymForm.logo_url) && (
                                   <p className="text-sm text-red-600 mt-1">
                                     Please enter a valid image URL or Google Drive share link
