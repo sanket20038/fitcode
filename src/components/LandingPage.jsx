@@ -862,8 +862,9 @@ const LandingPage = () => {
               <li className="flex items-center"><span className="text-cyan-400 mr-2">✔</span>Access your own analytics dashboard</li>
             </ul>
             <Button
-              className="bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold px-8 py-4 text-lg rounded-full hover:from-cyan-500 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 animate-bounce-slow"
-              // Registration via Google only; navigation removed
+              className="bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold px-8 py-4 text-lg rounded-full hover:from-cyan-500 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 animate-bounce-slow focus:outline-none focus:ring-4 focus:ring-cyan-400/50"
+              onClick={() => navigate('/login/owner')}
+              aria-label="Become a Partner (Gym Owner Login)"
             >
               Become a Partner
             </Button>
