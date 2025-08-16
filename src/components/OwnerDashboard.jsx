@@ -511,89 +511,94 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                             Update your gym's information and branding
                           </DialogDescription>
                         </DialogHeader>
-                        <form onSubmit={handleGymSubmit} className="space-y-4">
-                          <Input
-                            placeholder="Gym Name"
-                            value={gymForm.name}
-                            onChange={(e) => setGymForm({ ...gymForm, name: e.target.value })}
-                            required
-                          />
+                        <form onSubmit={handleGymSubmit} className="space-y-6 bg-gray-50 rounded-xl p-6 border border-gray-200">
+                          <div className="space-y-1">
+                            <label className="block text-sm font-semibold text-gray-900 mb-1">Gym Name</label>
+                            <Input
+                              placeholder="Enter your gym's name"
+                              value={gymForm.name}
+                              onChange={(e) => setGymForm({ ...gymForm, name: e.target.value })}
+                              required
+                              className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
                           <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-900">
-                              Logo URL
-                            </label>
-                            <div className="flex flex-col gap-2">
-                              <div className="flex items-center space-x-2">
-                              <Input
-                                placeholder="Enter logo URL (direct image link or Google Drive share link)"
-                                value={gymForm.logo_url}
-                                onChange={(e) => setGymForm({ ...gymForm, logo_url: e.target.value })}
-                                className={`rounded-md border shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                                  gymForm.logo_url && !validateImageUrl(gymForm.logo_url) 
-                                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                                    : 'border-gray-300'
-                                }`}
-                              />
-                              <GoogleDriveFilePicker
-                                buttonText="Select from Drive"
-                                accept="image/*"
-                                onFileSelected={(url) => setGymForm({ ...gymForm, logo_url: url })}
-                              />
-                              <button
-                                type="button"
-                                aria-label="Show Drive upload info"
-                                onClick={() => {
-                                  setShowDriveInfoDialog(true);
-                                }}
-                                className="text-blue-600 hover:text-blue-800 focus:outline-none p-1 rounded-full transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-blue-500"
-                                title="How to upload images to Google Drive"
-                              >
-                                <Info className="h-5 w-5" />
-                              </button>
-                              </div>
-                              <div>
+                            <label className="block text-sm font-semibold text-gray-900 mb-1">Logo</label>
+                            <div className="flex flex-col md:flex-row md:items-center gap-3">
+                              <div className="flex-1 flex flex-col gap-2">
+                                <Input
+                                  placeholder="Paste Google Drive share link or direct image URL"
+                                  value={gymForm.logo_url}
+                                  onChange={(e) => setGymForm({ ...gymForm, logo_url: e.target.value })}
+                                  className={`rounded-lg border shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                                    gymForm.logo_url && !validateImageUrl(gymForm.logo_url) 
+                                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                                      : 'border-gray-300'
+                                  }`}
+                                />
+                                <div className="flex gap-2">
+                                  <GoogleDriveFilePicker
+                                    buttonText="Select from Drive"
+                                    accept="image/*"
+                                    onFileSelected={(url) => setGymForm({ ...gymForm, logo_url: url })}
+                                  />
+                                  <button
+                                    type="button"
+                                    aria-label="Show Drive upload info"
+                                    onClick={() => setShowDriveInfoDialog(true)}
+                                    className="text-blue-600 hover:text-blue-800 focus:outline-none p-1 rounded-full transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-blue-500"
+                                    title="How to upload images to Google Drive"
+                                  >
+                                    <Info className="h-5 w-5" />
+                                  </button>
+                                </div>
                                 <GoogleOAuthButton
                                   onSuccess={handleGoogleSignIn}
                                   onError={handleGoogleSignInError}
                                   userType="owner"
                                   variant="owner"
-                                  className="w-fit"
+                                  className="w-fit mt-1"
                                 >
                                   Sign in with Google for Drive Picker
                                 </GoogleOAuthButton>
+                                {gymForm.logo_url && !validateImageUrl(gymForm.logo_url) && (
+                                  <p className="text-sm text-red-600 mt-1">
+                                    Please enter a valid image URL or Google Drive share link
+                                  </p>
+                                )}
                               </div>
-                            </div>
-                            {gymForm.logo_url && !validateImageUrl(gymForm.logo_url) && (
-                              <p className="text-sm text-red-600">
-                                Please enter a valid image URL or Google Drive share link
-                              </p>
-                            )}
-                            {gymForm.logo_url && validateImageUrl(gymForm.logo_url) && (
-                              <div className="mt-2">
-                                <label className="block text-sm font-semibold text-gray-900 mb-2">Logo Preview</label>
-                                <div className="w-20 h-20 rounded-lg border border-gray-300 overflow-hidden bg-gray-50 flex items-center justify-center">
-                                  <img 
-                                    src={getDriveImageUrl(gymForm.logo_url) || gymForm.logo_url} 
-                                    alt="Logo Preview" 
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                      e.target.style.display = 'none';
-                                      e.target.nextSibling.style.display = 'flex';
-                                    }}
-                                  />
-                                  <div className="hidden text-gray-400 text-xs text-center p-2">
-                                    Invalid image
-                                  </div>
+                              <div className="flex-shrink-0 flex flex-col items-center">
+                                <span className="block text-xs text-gray-500 mb-1">Logo Preview</span>
+                                <div className="w-24 h-24 rounded-lg border-2 border-dashed border-gray-300 bg-white flex items-center justify-center overflow-hidden">
+                                  {gymForm.logo_url && validateImageUrl(gymForm.logo_url) ? (
+                                    <img
+                                      src={getDriveImageUrl(gymForm.logo_url) || gymForm.logo_url}
+                                      alt="Logo Preview"
+                                      className="w-full h-full object-cover"
+                                      onError={(e) => {
+                                        e.target.style.display = 'none';
+                                        e.target.nextSibling.style.display = 'flex';
+                                      }}
+                                    />
+                                  ) : (
+                                    <span className="text-gray-400 text-xs">Invalid image</span>
+                                  )}
                                 </div>
                               </div>
-                            )}
+                            </div>
                           </div>
-                          <Textarea
-                            placeholder="Contact Information"
-                            value={gymForm.contact_info}
-                            onChange={(e) => setGymForm({ ...gymForm, contact_info: e.target.value })}
-                          />
-                          <Button type="submit">Update Gym</Button>
+                          <div className="space-y-1">
+                            <label className="block text-sm font-semibold text-gray-900 mb-1">Contact Information</label>
+                            <Textarea
+                              placeholder="Enter your gym's contact information"
+                              value={gymForm.contact_info}
+                              onChange={(e) => setGymForm({ ...gymForm, contact_info: e.target.value })}
+                              className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                          <div className="flex justify-end pt-2">
+                            <Button type="submit" className="px-6 py-2 rounded-lg text-base font-semibold">Update Gym</Button>
+                          </div>
                         </form>
                       </DialogContent>
                     </Dialog>
