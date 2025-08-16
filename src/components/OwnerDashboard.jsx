@@ -521,6 +521,11 @@ const OwnerDashboard = ({ setAuthenticated, setUserType }) => {
                                     : 'border-gray-300'
                                 }`}
                               />
+                              <GoogleDriveFilePicker
+                                buttonText="Select from Drive"
+                                accept="image/*"
+                                onFileSelected={(url) => setGymForm({ ...gymForm, logo_url: url })}
+                              />
                               <button
                                 type="button"
                                 aria-label="Show Drive upload info"
