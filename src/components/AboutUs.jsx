@@ -240,14 +240,14 @@ const AboutUs = () => {
               <Button
                 variant="outline"
                 className="border-white text-black hover:bg-white hover:text-purple-600"
-                onClick={() => navigate('/register/owner')}
+                // Registration via Google only; navigation removed
               >
                 For Gym Owners
               </Button>
               <Button
                 variant="outline"
                 className="border-white text-black hover:bg-white hover:text-purple-600"
-                onClick={() => navigate('/register/client')}
+                // Registration via Google only; navigation removed
               >
                 For Members
               </Button>

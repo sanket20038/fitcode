@@ -135,7 +135,7 @@ const Contact = () => {
                 <div className="bg-white rounded-lg p-4 border">
                   <h4 className="font-semibold text-gray-900 mb-2">How do I get started with FitCode?</h4>
                   <p className="text-gray-700 text-sm">
-                    Simply register for an account as either a gym owner or client, and follow the setup instructions provided.
+                    Simply sign in with your Google account as either a gym owner or client, and follow the setup instructions provided.
                   </p>
                 </div>
                 <div className="bg-white rounded-lg p-4 border">

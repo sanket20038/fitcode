@@ -34,8 +34,7 @@ api.interceptors.response.use(
 
 // Auth API
 export const authAPI = {
-  registerOwner: (data) => api.post('/auth/register/owner', data),
-  registerClient: (data) => api.post('/auth/register/client', data),
+  // registerOwner and registerClient removed: registration is handled via Google login only
   loginOwner: (data) => api.post('/auth/login/owner', data),
   loginClient: (data) => api.post('/auth/login/client', data),
   verifyToken: () => api.post('/auth/verify-token'),

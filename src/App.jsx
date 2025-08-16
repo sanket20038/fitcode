@@ -3,9 +3,6 @@ import { useState, useEffect } from 'react';
 import './App.css';
 
 // Components
-import Register from './components/Register';
-import ClientRegister from './components/ClientRegister';
-import OwnerRegister from './components/OwnerRegister';
 import OwnerDashboard from './components/OwnerDashboard';
 import ClientDashboard from './components/ClientDashboard';
 import QRScanner from './components/QRScanner';
@@ -99,30 +96,7 @@ function App() {
                 <OwnerLogin setAuthenticated={setAuthenticated} setUserType={setUserType} />
             }
           />
-          <Route 
-            path="/register" 
-            element={
-              authenticated ? 
-                <Navigate to={userType === 'owner' ? '/owner/dashboard' : '/client/dashboard'} replace /> : 
-                <Register />
-            } 
-          />
-          <Route
-            path="/register/client"
-            element={
-              authenticated ?
-                <Navigate to="/client/dashboard" replace /> :
-                <ClientRegister />
-            }
-          />
-          <Route
-            path="/register/owner"
-            element={
-              authenticated ?
-                <Navigate to="/owner/dashboard" replace /> :
-                <OwnerRegister />
-            }
-          />
+          {/* Registration routes removed: registration is handled via Google login only */}
           {/* Reset Password Route */}
           <Route 
             path="/reset-password" 

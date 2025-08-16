@@ -1,0 +1,1 @@
+This file was removed as registration is now handled via Google login only.

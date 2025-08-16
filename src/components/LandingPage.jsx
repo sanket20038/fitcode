@@ -863,7 +863,7 @@ const LandingPage = () => {
             </ul>
             <Button
               className="bg-gradient-to-r from-cyan-400 to-purple-500 text-black font-bold px-8 py-4 text-lg rounded-full hover:from-cyan-500 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 animate-bounce-slow"
-              onClick={() => navigate('/register/owner')}
+              // Registration via Google only; navigation removed
             >
               Become a Partner
             </Button>
