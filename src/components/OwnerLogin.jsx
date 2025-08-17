@@ -29,18 +29,15 @@ const OwnerLogin = ({ setAuthenticated, setUserType }) => {
         username: googleData.username
       });
       
-      const { userExists, message, token, user } = response.data;
-      
-      // Unified flow - handle both login and registration
+      const { token, user, message } = response.data;
       if (token && user) {
-        // Successful authentication (login or registration)
         setAuth(token, user, 'owner');
         setAuthenticated(true);
         setUserType('owner');
         navigate('/owner/dashboard');
         return { success: true };
       } else {
-        setError(message);
+        setError(message || 'Login failed.');
         return { success: false };
       }
     } catch (error) {
